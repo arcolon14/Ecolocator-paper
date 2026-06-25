@@ -355,7 +355,7 @@ covariates, $x_i$ and $y_i$ are the true longitude and latitude of sample $i$,
 $\hat{x}_i$ and $\hat{y}_i$ are the predicted coordinates, $z_{ij}$ is the true
 value of covariate $j$ for sample $i$, $\hat{z}_{ij}$ is the predicted value,
 and $w_{\text{loc}}, w_{\text{env}} \geq 0$ are loss
-weights (both defaulting to 1.0, see \textbf{Supplemental Figure 1.}). 
+weights (both defaulting to 1.0, see \Cref{fig:S1}).
 The network is trained using a standard validation scheme in which a user-specified 
 fraction of samples (default 0.9) is used for model fitting, while the remaining fraction is 
 held out for validation, enabling convergence monitoring, early stopping, 
@@ -735,10 +735,10 @@ containing selected variants,
 and permutations of loci in linkage disequilibrium (LD)
 with those windows.
 LD partners were identified using pairwise correlation thresholds
-(see \textbf{Supplemental Figure 2.}),
+(see \Cref{fig:S2}),
 and permutations were applied either to the selected window alone
 or jointly with subsets of LD-linked sites
-stratified by LD strength (\textbf{Supplemental Figure 3.}).
+stratified by LD strength (\Cref{fig:S3}).
 This framework enables systematic evaluation
 of how predictive performance responds to disruption
 of adaptive loci, correlated hitchhiking regions,
@@ -915,7 +915,7 @@ We ran 100 simulation replicates for each parameter combination in our continuou
 and we ran 30 replicates for the discrete space simulations, 
 following \citet{booker_wza_2024}. We summarized
 the distribution of local adaptation scores
-calculated from each replicate within each regime (see \textbf{Supplemental Figure 4.}).
+calculated from each replicate within each regime (see \Cref{fig:S4}).
 Under restricted dispersal (d = 0.1)
 and a smaller standard deviation of the fitness function
 (stronger selection, \(\sigma_K\)=0.5),
@@ -1382,8 +1382,8 @@ were centered and scaled prior to model training.
 \subsubsection*{Prediction accuracy}
 
 EcoLocator predicted source latitudes and longitudes with R\textsuperscript{2}
-values of 0.84 and 0.76 respectively ((Figure~\ref{fig:4}), Supplemental Table 1.). Combined latitude
-and longitude for each sample gave predicted geographic origins that showed a median error of 51.6km (see \textbf{Supplemental Figure 6.}).
+values of 0.84 and 0.76 respectively (\Cref{fig:5}, \Cref{tab:supptable1}). Combined latitude
+and longitude for each sample gave predicted geographic origins that showed a median error of 51.6km (see \Cref{fig:S6}).
 Minimum errors were as low as 1.2km, while maximum errors were as high as 646km. Errors
 greater than 200km appeared as unusual outliers and were not associated with obvious
 geographic features (e.g. edge of range; clustered locations). Label errors or failed predictions are likely
@@ -1393,7 +1393,7 @@ We evaluated climate predictions using two approaches: using direct climate pred
 from Ecolocator; or indirect climate predictions from Ecolocator geographic predictions
 combined with climate values estimated from ClimateNA. Direct estimates from Ecolocator 
 showed higher accuracy than translating locations 
-to climate via ClimateNA variables (ref. \textbf{Supplemental Table 1.}), indicating Ecolocator's ability to
+to climate via ClimateNA variables (ref. \Cref{tab:supptable1}), indicating Ecolocator's ability to
 identify climate-related covariance in the geographic-genomic matrix, and ability to use
 this covariance to improve local climate estimates. Among the three modeled climate variables, 
 Mean Cold Month Temperature (MCMT) showed the highest predicted R\textsuperscript{2} of 0.73, with May to September
@@ -1983,12 +1983,12 @@ rather than as individual causal variants.
 This issue was especially apparent in our initial simulations,
 where a recombination rate of (10\textsuperscript{-8})
 within a 1 Mb genomic element generated extensive LD
-between the selected window and distant sites (ref \textbf{Supplemental Figure 2., panel a.}).
+between the selected window and distant sites (ref \Cref{fig:S2a}).
 Increasing recombination to (10\textsuperscript{-6})
 reduced this long-range LD
 and provided a clearer setting for evaluating whether SHAP
 could distinguish causal regions from linked background signal
-(ref \textbf{Supplemental Figure 2., panel b.}).
+(ref \Cref{fig:S2b}).
 
 The permutation-based sensitivity analyses
 complement SHAP by providing a different lens
@@ -2003,7 +2003,7 @@ Permuting the selected window alone produced only modest changes
 in prediction performance,
 whereas jointly permuting the selected window
 with LD-linked sites caused much larger losses in accuracy
-(ref \textbf{Supplemental Figure 3.}).
+(ref \Cref{fig:S3}).
 For example,
 when the selected window and all LD-linked sites were permuted together,
 prediction accuracy dropped below zero for all three targets
@@ -2121,7 +2121,198 @@ over single-task or univariate alternatives.
 \beginsupplement
 \section*{Supplementary Materials}
 
-Supplement goes here.
+%%%%%% Supplemental Figure 1 %%%%%%
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/suppfig1_lossweight_env.png}
+        \caption{}
+        \label{fig:S1a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/suppfig1_lossweight_loc.png}
+        \caption{}
+        \label{fig:S1b}
+    \end{subfigure}
+    \caption{\textbf{Loss weight cross validation.}
+    To determine the default loss weight value for location and
+    environmental prediction, we tested sliding this value at the command
+    line for each output task (location prediction and environmental
+    covariate prediction) on the empirical \dfir{} data, while holding
+    the other value at 1. In panel \textbf{a)}, we see that when the loss weight is
+    held at a value of 0 for environmental covariate prediction, EcoLocator
+    essentially ``focuses'' entirely on the location prediction task,
+    reflected in the low R\textsuperscript{2} scores for all three environmental targets and
+    high prediction scores for location. We see the same effect in the
+    opposite direction in panel \textbf{b)}, where we held the loss weight of the
+    environmental output head at 1 and scaled the loss weight for location
+    prediction from 0--1. Again we see that when loss weight for location
+    prediction is held at 0, the model prioritizes predicting on
+    environmental covariates. Reassuringly, this analysis also demonstrates
+    that EcoLocator recovers the true values for environmental covariates
+    without over-reliance on the spatial information housed in the location
+    values. Lastly, we see negligible effects of prediction performance in
+    one output or the other when one output head is essentially turned
+    off/down. Because of this, we hold the default value for both prediction
+    tasks at 1.0.}
+    \label{fig:S1}
+\end{figure}
+
+%%%%%% Supplemental Figure 2 %%%%%%
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/suppfig2_LD_lowrecomb.png}
+        \caption{}
+        \label{fig:S2a}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.49\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/suppfig2_LD_highrecomb.png}
+        \caption{}
+        \label{fig:S2b}
+    \end{subfigure}
+    \caption{\textbf{Linkage disequilibrium under different
+    recombination rates for genomic architecture 1
+    (\textbf{a)} Recombination = 10\textsuperscript{-8};
+    \textbf{b)} Recombination = 10\textsuperscript{-6}).}
+    Linkage disequilibrium between selected QTL windows and SNPs outside the
+    selected region. To identify SNPs in linkage disequilibrium (LD) with
+    the selected QTL window used in genetic architecture 1, we calculated
+    pairwise correlations between SNPs inside the selected window and SNPs
+    outside the window. These plots do not represent genome-wide LD decay or
+    complete LD structure across the simulated genomic element; rather, they
+    show the subset of outside-window SNPs that pass the LD threshold with
+    SNPs in the selected region. Panel \textbf{a} shows LD partners under lower
+    recombination, where LD extends more broadly away from the selected
+    window. Under this parameterization, 525 SNP pairs showed very strong LD
+    ($r^2 \geq 0.8$), 1,026 showed strong LD ($r^2 \geq 0.5$), and 2,923 showed moderate
+    LD ($r^2 \geq 0.2$). Panel \textbf{b} shows the same analysis under higher
+    recombination, where LD with the selected window is reduced. Under this
+    parameterization, 9 SNP pairs showed very strong LD ($r^2 \geq 0.8$), 24
+    showed strong LD ($r^2 \geq 0.5$), and 309 showed moderate LD ($r^2 \geq 0.2$).
+    Because SNPs were filtered to include only LD partners of the selected
+    QTL window, long-range LD in these panels should be interpreted as
+    evidence of SNPs that remain correlated with the selected region, rather
+    than as a general description of background LD across the genome.}
+    \label{fig:S2}
+\end{figure}
+
+%%%%%% Supplemental Figure 3 %%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/suppfig3_permutation.png}
+    \caption{\textbf{RMSE and R\textsuperscript{2} of EcoLocator predictions under
+    different permutation regimes (combinations of random \% permuted and
+    sites in LD permuted).}
+    EcoLocator prediction performance under random and LD-targeted
+    permutation regimes. To assess whether prediction accuracy depends
+    primarily on the selected QTL window, SNPs in linkage disequilibrium
+    with that window, or genome-wide signal distributed across the genotype
+    matrix, we permuted subsets of the genotype matrix across individuals
+    prior to prediction. The left column shows targeted permutations of the
+    selected window alone and the selected window combined with SNPs in
+    moderate, high, or all LD with the selected region. The right column
+    shows random genome-wide permutations of increasing proportions of SNPs.
+    The top row shows root mean squared error (RMSE), and the bottom row
+    shows R\textsuperscript{2} for X coordinate (longitude), Y coordinate (latitude), and the
+    environmental covariate. In both permutation designs, prediction
+    accuracy declines as more genotype information is shuffled, indicating
+    that EcoLocator relies on genetic signal distributed across the genotype
+    matrix. However, permuting the selected window together with all
+    LD-linked sites causes a sharp loss of performance, suggesting that SNPs
+    correlated with the selected region carry important predictive
+    information. Randomly permuting all SNPs produces similarly poor
+    performance, confirming that prediction accuracy is lost when
+    genotype--environment and genotype--location associations are fully
+    disrupted. Note that the ``window + all LD'' grouping comprised roughly
+    75\% of sites, so comparing that to the random 75\% permutation again
+    reiterates the importance of SNPs in LD.}
+    \label{fig:S3}
+\end{figure}
+
+%%%%%% Supplemental Figure 4 %%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/suppfig4_localadaptation.png}
+    \caption{\textbf{Distribution of strength of local adaptation across parameter space.}
+    Kernel density estimates of local adaptation (LA) values for 100
+    simulation replicates per parameter combination across three parameter
+    explorations on an 8\texttimes 8 grid-like landscape with Hurst = 0 (no
+    autocorrelation between space and environment). LA is calculated as the
+    mean absolute difference between individual phenotypic values and their
+    local optima; lower values indicate stronger local adaptation. The
+    selection parameter $s$ controls the standard deviation of the fitness
+    function, where smaller values produce a tighter fitness distribution
+    and thus stronger selection. Dispersal ($d$ = 0.1, 0.3, 0.5; genetic
+    architecture 1 and $s$ = 0.5 fixed): increasing dispersal progressively
+    eroded local adaptation, with mean LA values of 0.096, 0.130, and 0.146
+    for $d$ = 0.1, 0.3, and 0.5, respectively. Genetic architecture ($g$ = 1, 2,
+    3; $d$ = 0.1 and $s$ = 0.5 fixed): distributing QTLs increasingly across the
+    genomic element had a modest effect on local adaptation, with mean LA
+    values of 0.095, 0.100, and 0.103 for $g$ = 1, 2, and 3, respectively.
+    Selection ($s$ = 0.5, 0.7, 0.9; genetic architecture 1 and $d$ = 0.3 fixed):
+    weaker selection substantially reduced local adaptation, with mean LA
+    values of 0.134, 0.187, and 0.228 for $s$ = 0.5, 0.7, and 0.9,
+    respectively.}
+    \label{fig:S4}
+\end{figure}
+
+%%%%%% Supplemental Figure 5 %%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/suppfig5_downsampling.png}
+    \caption{\textbf{Effects of down-sampling individuals and SNPs as input to EcoLocator.}
+    EcoLocator performance under various downsampling regimes of the same
+    simulated data ($d$ = 0.1, $s$ = 0.5, $g$ = 1). In the top row, there are 1000 SNPs
+    made available to the model; in the middle and bottom rows, there are
+    500 and 100 SNPs respectively. In the columns we vary sample size, with
+    100, 500, and 1000 samples from left to right. R\textsuperscript{2} values across 100
+    simulation replicates are summarized in boxplots, with Longitude (x) in
+    purple, Latitude (y) in teal, and Environment in yellow. Because
+    EcoLocator learns from variation present in the data, it is no surprise
+    that we observe the highest prediction accuracy across targets
+    (Lon. R\textsuperscript{2} = 0.954, Lat. R\textsuperscript{2} = 0.953, and Env. R\textsuperscript{2} = 0.756) with 1000 samples and
+    1000 SNPs (top right corner), and we see the lowest prediction accuracy
+    (Lon. R\textsuperscript{2} = 0.742, Lat. R\textsuperscript{2} = 0.769, and Env. R\textsuperscript{2} = 0.493) with only 100
+    SNPs and 100 samples (bottom left corner). Under the sample sizes and
+    SNP sets explored here, we do not observe diminishing returns with ``too
+    much'' data being shown to the model, and similarly, we do not see a
+    complete absence of predictive performance when sample size and SNP set
+    are restricted.}
+    \label{fig:S5}
+\end{figure}
+
+%%%%%% Supplemental Figure 6 %%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{figures/suppfig6_geoerror.png}
+    \caption{\textbf{Distribution of geographic prediction errors on \dfir{} data.}}
+    \label{fig:S6}
+\end{figure}
+
+%%%%%% Supplemental Table 1 %%%%%%
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{R\textsuperscript{2} values for EcoLocator climate variable predictions versus ClimateNA modelled values from predicted locations.}}
+  \label{tab:supptable1}
+  \begin{tabular}{@{}p{6.5cm}cc@{}}
+  \hline
+  \textbf{Predicted Location and Climate} & \shortstack{\textbf{Geolocation and}\\ \textbf{Climate Prediction}} & \shortstack{\textbf{Geolocation}\\ \textbf{and ClimateNA}} \\
+  \hline
+  Latitude (LAT, \textdegree) & 0.84 & -- \\
+  Longitude (LON, \textdegree) & 0.76 & -- \\
+  Mean Cold Month Temperature (MCMT, \textdegree C) & 0.75 & 0.65 \\
+  May to September Precipitation (MSP, mm) & 0.51 & 0.31 \\
+  Summer heat:moisture index (SHM, \textdegree C/um) & 0.53 & 0.30 \\
+  \hline
+  \end{tabular}
+\end{table}
 
 
 \end{document}

@@ -51,3 +51,6 @@ Thumbs.db
 
 # Compiled paper output
 main.pdf
+
+# Reference copy of the software package (not part of the manuscript)
+ecolocator-ref/
