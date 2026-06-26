@@ -82,7 +82,7 @@ and thus carries information about the processes
 that generate and maintain it
 \citep{lewontin_genetic_1974, hartl_principles_1980, ellegren_determinants_2016}.
 In spatially structured, locally adapted populations,
-genetic variation encodes information about both geographic location
+this variation encodes information about both geographic location
 and climate of origin.
 Geographic structure arises because local mating and limited dispersal
 generate isolation by distance,
@@ -94,26 +94,25 @@ produces allele frequency clines that parallel ecological gradients,
 as individuals carrying locally beneficial variants
 enjoy higher fitness in particular environments
 \citep{endler_geographic_1977, kawecki_conceptual_2004}.
-At the same time, neutral demographic processes---historical
-range expansions, bottlenecks, and genetic drift---can
-generate allele frequency gradients that mimic adaptive signals
-\citep{excoffier_genetic_2009, novembre_spatial_2009}.
-Whereas neutral structure aligns primarily with geographic distance,
-adaptive signals track specific environmental
-variables---temperature, moisture, seasonality---that
-impose fitness differentials on individuals
+These two signals are partly separable:
+neutral structure aligns primarily with geographic distance,
+whereas adaptive signals track specific environmental
+variables---temperature, moisture, seasonality
 \citep{rellstab_practical_2015, hoban_finding_2016, tigano_genomics_2016, coop_using_2010}.
+Yet the distinction is not clean,
+because neutral demographic processes---historical
+range expansions, bottlenecks, and genetic drift---can
+themselves generate allele frequency gradients that mimic adaptive clines
+\citep{excoffier_genetic_2009, novembre_spatial_2009}.
 
-Local adaptation provides the clearest link
-between genetic variation and environmental context.
-It arises when spatially heterogeneous selection outweighs
-the homogenizing effects of gene flow,
-causing allele frequencies to covary with environmental gradients
+Local adaptation---the covariation of allele frequencies
+with environmental gradients---emerges when spatially heterogeneous
+selection outweighs the homogenizing effects of gene flow
 \citep{savolainen_ecological_2013, lenormand_gene_2002}.
-This process not only increases fitness locally
-but also sustains genetic diversity across heterogeneous landscapes
+Beyond increasing local fitness,
+it sustains genetic diversity across heterogeneous landscapes
 by maintaining multiple adaptive alleles,
-ensuring that populations retain the variation
+helping populations retain the variation
 on which selection can act as environments change \citep{hereford_quantitative_2009}.
 Classic models---Wright's isolation-by-distance
 and stepping-stone frameworks \citep{wright_isolation_1943},
@@ -124,12 +123,9 @@ to shape predictable spatial patterns of variation.
 More recent syntheses show that even modest selection
 can create steep genomic clines under limited dispersal
 \citep{tigano_genomics_2016, yeaman_genetic_2011},
-while strong gene flow can swamp adaptive alleles
+whereas strong gene flow can swamp adaptive alleles
 unless they are tightly linked or of large effect
 \citep{slatkin_gene_1975}.
-Together, these insights demonstrate that evolutionary forces
-structure spatial genetic variation in predictable ways,
-revealing how populations interact with their environments.
 
 Understanding this relationship is especially urgent
 as anthropogenic climate change rapidly disrupts the match
@@ -252,35 +248,36 @@ identifying which variants contribute most strongly
 to adaptive differentiation across landscapes.
 
 We evaluate \ecolocator across a range of simulation parameterizations
-to identify the conditions that yield strong performance,
-then apply \ecolocator to an empirical dataset of coastal Douglas-fir
+to identify the conditions under which it performs best,
+then apply it to an empirical dataset of coastal Douglas-fir
 (\textit{Pseudotsuga menziesii} var.\ \textit{menziesii}).
 Simulations provide a controlled setting
 where evolutionary and environmental parameters are known,
 allowing us to benchmark prediction accuracy against ground truth
 before moving to more complex natural systems.
-As an empirical test case we focus on coastal Douglas-fir,
-a member of the pine family with a lineage dating to the Paleocene \citep{hermann_genus_1985},
-and with a natural range spanning extensive climatic
-gradients across the North American Pacific coast from California
-to British Columbia. While most populations are characterized by
+
+Coastal Douglas-fir is a member of the pine family
+with a lineage dating to the Paleocene \citep{hermann_genus_1985}
+and a natural range spanning extensive climatic
+gradients along the North American Pacific coast from California
+to British Columbia. Although most populations are characterized by
 low genetic differentiation, high gene flow, and high outcrossing rates \citep{slavov_pollen_2005},
-Douglas-fir populations still exhibit strong signatures of local adaptation, as adaptive
-quantitative phenotypes track climatic features such as winter cold
-temperatures and summer aridity \citep{stclair_genecology_2005}.
-These features, combined with a long history
-of ecological and silvicultural study,
-make Douglas-fir a natural bridge
+they still exhibit strong signatures of local adaptation,
+with adaptive quantitative phenotypes tracking climatic features
+such as winter cold temperatures and summer aridity \citep{stclair_genecology_2005}.
+This combination of strong local adaptation and a long history
+of ecological and silvicultural study
+makes Douglas-fir a natural bridge
 between controlled simulations and real-world management applications.
 For the U.S. Forest Service,
-understanding seed source--climate relationships
-is central to (mal)adaptation \citep{stclair_1912_2020},
+seed source--climate relationships
+are central to (mal)adaptation \citep{stclair_1912_2020},
 reforestation success, and assisted migration planning \citep{stclair_genetic_2007}.
-By accurately matching genotypes to suitable environments,
-\ecolocator complements long-standing traditional knowledge on seed sourcing
-(such as `seed zones' \citep{randall_forest_1996}), and expands management
-options that are essential for predicting individual tree and forest contributions
-to productivity and resilience to climate change.
+By matching genotypes to suitable environments,
+\ecolocator complements long-standing knowledge on seed sourcing
+(such as `seed zones' \citep{randall_forest_1996})
+and expands the management options essential for sustaining
+forest productivity and resilience under climate change.
 Importantly, \ecolocator is not limited to this system;
 it offers a pathway to inform management
 in any species or taxon where
