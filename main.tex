@@ -97,7 +97,7 @@ Environmental selection, in contrast,
 produces allele frequency clines that parallel ecological gradients,
 as individuals carrying locally beneficial variants
 enjoy higher fitness in particular environments
-\citep{endler_geographic_1977, clausen_experimental_1948, kawecki_conceptual_2004}.
+\citep{endler1977geographic, clausen_experimental_1948, kawecki_conceptual_2004}.
 These two signals are partly separable:
 neutral structure aligns primarily with geographic distance,
 whereas adaptive signals track specific environmental
@@ -121,7 +121,7 @@ on which selection can act as environments change \citep{hereford_quantitative_2
 Classic models---Wright's isolation-by-distance
 and stepping-stone frameworks \citep{wright_isolation_1943},
 Levene's multiple-niche equilibrium \citep{levene_genetic_1953},
-and Endler's cline theory \citep{endler_geographic_1977}---describe
+and Endler's cline theory \citep{endlergeographic1977}---describe
 how selection, migration, and drift interact
 to shape predictable spatial patterns of variation.
 More recent syntheses show that even modest selection
@@ -206,7 +206,6 @@ We propose that Machine learning (ML) can better leverage
 information in the data to outperform the existing GEA methods,
 while also providing a unique framing on the problem to gain new insights
 and interpretations, about geographic structure and climate of origin.
-\sbt{not married to this, just giving a try at framing differently.}
 ML methods excel at extracting patterns
 from high-dimensional data,
 naturally handling nonlinear interactions among loci
@@ -304,7 +303,7 @@ with broad implications for conservation and species management.
 
 \section{\ecolocator}
 
-\sbt{We will probabky be asked to stick to standard section style, but maybe put this as a subsection of the results?}
+\sbt{We will probably be asked to stick to standard section style, but maybe put this as a subsection of the results?}
 
 \ecolocator is an open-source Python package
 for predicting the geographic origin and climate of origin
@@ -552,7 +551,7 @@ which record the ancestry and mutational history of all individuals.
 Neutral mutations are then overlaid onto these tree sequences
 using msprime \texttt{v.1.1.1} \citep{baumdicker2022efficient},
 allowing us to track both adaptive
-and neutral background variation separately. \sbt{though don't we only evaluate using neutral variations?}
+and neutral background variation separately. \sbt{though don't we only evaluate using neutral variants or do non-neutral mutations stay in?}
 This compact representation provides the full genomic context needed
 to explore the link between genetic variation
 and environmental adaptation.
@@ -1807,7 +1806,7 @@ on DNA-based methods to identify the geographic source of tissues
 such as wood.
 Adding climatic source information to these investigations
 could help discriminate among geographically similar
-but climatically distinct sources.
+but climatically distinct sources. %great point!
 Finally,
 traditional reforestation programs based on seed transfer guidelines
 and common-garden trials are increasingly strained
@@ -1908,7 +1907,7 @@ These patterns suggest that prediction errors are not only statistical residuals
 but can also point to biologically meaningful features of the study system,
 including ancestry transitions,
 complex topography,
-and uncertainty in historical source records.
+and uncertainty in historical source records \citep{rehmann2024evaluating}.
 
 More broadly,
 the approach is not limited to Douglas-fir
