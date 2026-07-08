@@ -18,6 +18,7 @@
 \usepackage[capitalize]{cleveref}
 \usepackage{xspace}
 \usepackage{xcolor}
+\usepackage{multirow}
 \linenumbers
 
 %%%%%% Running header %%%%%%
@@ -453,7 +454,7 @@ but are briefly described here from completeness.
 To capture the joint effects of selection, dispersal,
 and spatial dynamics,
 we simulate individuals in continuous space
-on top of an environmental grid.
+on top of an environmental grid (see \Cref{fig:S7}).
 We initialize each simulation
 by randomly placing individuals across the landscape.
 The environment is represented as a 8\texttimes 8 grid,
@@ -551,7 +552,7 @@ which record the ancestry and mutational history of all individuals.
 Neutral mutations are then overlaid onto these tree sequences
 using msprime \texttt{v.1.1.1} \citep{baumdicker2022efficient},
 allowing us to track both adaptive
-and neutral background variation separately. \sbt{though don't we only evaluate using neutral variants or do non-neutral mutations stay in?}
+and neutral background variation separately.
 This compact representation provides the full genomic context needed
 to explore the link between genetic variation
 and environmental adaptation.
@@ -683,7 +684,6 @@ and the strength of selection was controlled by a fixed selection coefficient.
 This formulation produces strong genotype--environment associations
 localized to a relatively small number of genomic regions.
 
-/sbt{does this apply to both simulations or just the stepping-stone? Burn-in wasnt' mentioned for above sims}
 Simulations were run in two phases:
 an initial neutral burn-in period
 to establish population structure and linkage patterns,
@@ -1017,7 +1017,8 @@ geographic and environmental signal when population structure
 and genotype--environment associations are strong,
 while also highlighting how differences in demographic structure,
 selection model,
-and genetic architecture may shape prediction difficulty.
+and genetic architecture may shape prediction difficulty. We summarize 
+the full simulation R\textsuperscript{2} results in \Cref{tab:supptable2}.
 
 \begin{figure}[H] 
     \adjustimage{width=1.1\textwidth,center}{figures/FIG2_simssetups.pdf}
@@ -1388,11 +1389,22 @@ were centered and scaled prior to model training.
 
 \begin{figure}[H] % or [h] if you prefer floating
     \adjustimage{width=1.1\textwidth,center}{figures/dfirresults.pdf}
-    \caption{Douglas fir case study results. }
+    \caption{Douglas fir case study results. \textbf{Panels a-e.} show true
+    vs. predicted scatterplots across all prediction targets. From left to right,
+    we show Longitude (R\textsuperscript{2}=0.76), Latitude (R\textsuperscript{2}= 0.83)
+    , Mean Cold month Temperature (MCMT)(R\textsuperscript{2}= 0.73), Summer Heat Moisture Index (SHM)
+    (R\textsuperscript{2}= 0.49), and Mean Summer Precipitation (MSP) (R\textsuperscript{2}= 0.52). \textbf{Panels f-g.}
+    both show the sampling range, with \textbf{Panel f.} being the sample locations
+    and \textbf{Panel g.} being the seed zone map, with labels only on the seed zones containing
+    samples. \textbf{Panels h-j.} show where \ecolocator predictions fall within the 
+    established seed zones, with grey boxes showing the environmental covariate's ranges in a
+    given zone, 'x's' representing the source sample value, and colored dots representing Ecolocator 
+    predictions inside each zone. From left to right, we show MCMT in pink, SHM in yellow, and MSP
+    in orange. 
+    }
     \label{fig:5}
 \end{figure}
 
-%RC NOTE: Will send scripts & data so that figure can be finalized 6/23
 
 \subsubsection*{Prediction accuracy}
 
@@ -2307,8 +2319,24 @@ over single-task or univariate alternatives.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{figures/suppfig6_geoerror.png}
-    \caption{\textbf{Distribution of geographic prediction errors on \dfir{} data.}}
+    \caption{\textbf{Distribution of geographic prediction errors on \dfir{} data.}
+    A histogram of geographic distance prediction errors in our
+    empirical application of Ecolocator on the \dfir case study data.
+    Distance in kilometers (km) is on the x-axis and count is on the y-axis. 
+    Most errors fall between 0-100km, with others as high as $>$600km.}
     \label{fig:S6}
+\end{figure}
+
+%%%%%% Supplemental Figure 7 %%%%%%
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{figures/suppfig7_envmaps.pdf}
+    \caption{\textbf{Environmental Maps used in Continuous Space SLiMulations.}
+    Environmental maps generated with the \texttt{NLMpy} python package 
+    with pixel count set to 8x8 and hurst (autocorrelation)
+    set to H=0. We generated 110 maps and sampled 100 of them randomly
+    for each simulation regime we simulated. }
+    \label{fig:S7}
 \end{figure}
 
 %%%%%% Supplemental Table 1 %%%%%%
@@ -2328,6 +2356,35 @@ over single-task or univariate alternatives.
   \hline
   \end{tabular}
 \end{table}
+
+%%%%%% Supplemental Table 2 %%%%%%
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Mean R\textsuperscript{2} values for \ecolocator predictions of longitude, latitude, and environment across simulation types.}}
+  \label{tab:supptable2}
+  \begin{tabular}{@{}llccc@{}}
+  \hline
+  \textbf{Simulation type} & \textbf{Parameter} & \textbf{Longitude R\textsuperscript{2}} & \textbf{Latitude R\textsuperscript{2}} & \textbf{Environment R\textsuperscript{2}} \\
+  \hline
+  Wright-Fisher (discrete space) & -- & 0.986 & 0.985 & 0.916 \\
+  \hline
+  \multirow{9}{*}{Non-Wright-Fisher (continuous space)}
+   & $g=1$ & 0.967 & 0.967 & 0.759 \\
+   & $g=2$ & 0.967 & 0.967 & 0.771 \\
+   & $g=3$ & 0.968 & 0.968 & 0.787 \\
+   \cline{2-5}
+   & $s=0.3$ & 0.917 & 0.916 & 0.609 \\
+   & $s=0.5$ & 0.911 & 0.911 & 0.561 \\
+   & $s=0.7$ & 0.906 & 0.907 & 0.421 \\
+   \cline{2-5}
+   & $d=0.1$ & 0.968 & 0.967 & 0.769 \\
+   & $d=0.3$ & 0.912 & 0.911 & 0.556 \\
+   & $d=0.5$ & 0.815 & 0.814 & 0.336 \\
+  \hline
+  \end{tabular}
+\end{table}
+
+
 
 
 \end{document}
