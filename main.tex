@@ -2132,6 +2132,31 @@ may be a powerful complement to traditional GEA approaches,
 particularly under polygenic adaptation
 where per-locus signals are subtle.
 
+One limit, however, is worth stating plainly.
+Across most real landscapes, climate changes together with geography:
+places that are close together tend to have similar climates.
+When that is true, a variant that simply tracks geography---through
+limited dispersal or genetic drift, with no role in adaptation---will
+look just as tied to climate as a variant that is genuinely under
+climate selection. From genotype alone, there is no way to tell the two apart.
+Feature attribution will therefore highlight both kinds of variant,
+and no amount of extra data or model tuning can separate them;
+the same difficulty applies to conventional GEA methods
+\citep{booker_wza_2024, meirmans_ibd_2012}.
+Our continuous-space simulations avoid this problem by design,
+holding climate independent of geography (H=0)
+so that only genotype--climate signal can drive environmental prediction;
+this is why attribution concentrates at causal loci there
+(Figure~\ref{fig:3}).
+In real data, where climate and geography move together, that separation is lost.
+The Douglas-fir results show this directly:
+the regions with the strongest attribution for climate (MCMT)
+are the same ones flagged for longitude (\Cref{fig:S9}),
+exactly what we expect when the two cannot be told apart from genotype.
+Attribution in these settings should therefore be read
+as pointing to genomic regions associated with a climatic gradient---candidates
+for further study---rather than as proof of the specific loci driving adaptation.
+
 \subsection{Future directions}
 
 Several extensions of this work merit exploration.
