@@ -28,6 +28,7 @@
 %%%%%% Commands %%%%%%
 \newcommand{\dfir}{Douglas fir}
 \newcommand{\ecolocator}{\texttt{EcoLocator}\xspace}
+\newcommand{\slim}{\texttt{SLiM}\xspace}
 
 \newcommand{\beginsupplement}{%
     \setcounter{table}{0}
@@ -184,7 +185,7 @@ at detecting multilocus adaptive signatures
 and gradient forest methods model
 nonlinear allele--environment relationships
 across the genome \citep{fitzpatrick_gradient_2015}.
-More recently, the Weighted-Z Analysis (WZA) introduced
+More recently, the Weighted-Z Analysis (\texttt{WZA}) introduced
 a window-based framework for aggregating
 single-locus GEA statistics
 into region-level summaries of adaptive signal
@@ -380,10 +381,10 @@ both neutral spatial structure and environment-driven selection.
 
 
 \begin{figure}[H]
-    \adjustimage{width=1.1\textwidth,center}{figures/EcoLocatorARC.pdf}
+    \adjustimage{width=1.1\textwidth,center}{figures/EcolocatorARC.pdf}
     \caption{\ecolocator architecture. \textbf{Panel A} shows the training regime,
     with the inputs traversing the network in a supervised fashion; network weights 
-    are updated through backpropagation until predictions are optimized towards the
+    are updated through backpropagation until predictions are optimized toward the
     true value, with the process shown here in blue. Once trained, \ecolocator enters the prediction
     step, shown here in \textbf{Panel B}. Given genotypes alone, the trained network
     jointly predicts climate-of-origin and geographic location, shown in yellow. }
@@ -429,7 +430,7 @@ from step 5 can be used to pinpoint the loci driving each prediction.
 \subsection{Simulating local adaptation in continuous space (non-Wright--Fisher)}
 
 To explore under which evolutionary scenarios \ecolocator performs best,
-we used SLiM \texttt{v.4.2.2} \citep{haller2023slim4} 
+we used \slim \texttt{v.4.2.2} \citep{haller2023slim4} 
 to simulate a spatially explicit non-Wright-Fisher population
 experiencing local adaptation of a quantitative trait
 that evolves to track a single continuously varying environmental axis.
@@ -558,7 +559,7 @@ within three smaller 100 kb windows,
 or within five 100 kb windows distributed across the element.
 (Figure 3., panel c)
 
-We only simulate non-neutral mutations within SLiM.
+We only simulate non-neutral mutations within \slim.
 Genomic information is stored in tree sequences \citep{haller2019treeseq},
 which record the ancestry and mutational history of all individuals.
 Neutral mutations are then overlaid onto these tree sequences
@@ -627,17 +628,22 @@ These parameter combinations generate
 a set of evolutionary scenarios that differ in the balance
 between gene flow, selection,
 and genomic distribution of adaptive alleles.
-In each parameter variation test case,
+In each parameterization test case,
 we held the other parameters at an intermediate value
 (i.e., when testing dispersal parameters,
 we held \(\sigma_K\) at 0.5).
-While the units in SLiM are arbitrary,
-they can be interpreted qualitatively:
-smaller dispersal values correspond to localized neighborhoods,
+Spatial and phenotypic scales in these simulations are defined relative to the simulated landscape
+and environmental gradient rather than to physical distances,
+and are therefore best interpreted as ratios 
+(mutation and recombination rates, by contrast, are in standard per-base, per-generation units).
+Smaller dispersal values correspond to localized neighborhoods,
 smaller (\(\sigma_K\)) values correspond
 to stronger local adaptation pressures,
-and greater clustering of QTLs corresponds
-to tighter genomic control of adaptive traits.
+and the three genomic architectures distribute adaptive variation
+differently along the chromosome,
+from a single 200 kb QTL window
+to three or five 100 kb windows
+spaced evenly across the 1 Mb element.
 By exploring this parameter space,
 we created simulations that range from highly structured,
 strongly adapted populations
@@ -651,7 +657,7 @@ they differ from the discrete, stepping-stone simulation framework
 used in prior evaluations of genome--environment association (GEA) methods \citep{booker_wza_2024}.
 To facilitate more direct comparison with these approaches,
 we also implemented a set of simulations
-used to benchmark the Weighted-Z Analysis (WZA),
+used to benchmark the Weighted-Z Analysis (\texttt{WZA}),
 a method that aggregates SNP-level association signals across genomic windows to detect loci involved in local adaptation.
 
 \subsection{Simulating local adaptation in discrete space (Wright--Fisher)}
@@ -660,12 +666,12 @@ To complement our spatially explicit simulations,
 we implemented a second set of forward-in-time simulations
 based on the Wright--Fisher framework
 described in \citet{booker_wza_2024}. Simulation design and parameterization closely followed
-the implementation provided in the WZA GitHub repository
+the implementation provided in the \texttt{WZA} GitHub repository
 (\url{https://github.com/TBooker/WZA/tree/master}),
 with minor modifications to ensure compatibility
-with the current version of SLiM.
+with the current version of \slim.
 These simulations were designed to more closely mirror
-the evolutionary scenarios used to evaluate WZA,
+the evolutionary scenarios used to evaluate \texttt{WZA},
 allowing for a more direct comparison
 between \ecolocator and existing GEA methods.
 
@@ -690,7 +696,7 @@ Specifically, a set of 12 loci distributed across the genome
 contribute to local adaptation,
 with alleles experiencing spatially varying fitness effects
 depending on the local environmental optimum.
-Selected mutations were modeled as semidominant,
+Selected mutations were modeled as genic selection,
 such that heterozygous individuals experience intermediate fitness effects,
 and the strength of selection was controlled by a fixed selection coefficient.
 This formulation produces strong genotype--environment associations
@@ -733,7 +739,7 @@ providing a useful contrast to more complex spatial scenarios.
 To quantify the contribution of individual genetic features
 to \ecolocator's predictions,
 we applied SHapley Additive exPlanations (SHAP)
-\citep{lundberg_shap_2017},
+\citep{lundberg_shap_2017}, %ADK -- didn't you use a software package for this? If so, cite it here.
 a game-theoretic framework that assigns importance scores
 based on each feature's marginal contribution to the model output
 across all possible feature coalitions.
@@ -778,7 +784,7 @@ To benchmark the ability of \ecolocator-derived feature attribution
 to identify adaptive loci,
 we compared SHAP-based variant rankings
 to two genome--environment association (GEA) approaches:
-the Weighted-Z Analysis (WZA) \citep{booker_wza_2024}
+the Weighted-Z Analysis (\texttt{WZA}) \citep{booker_wza_2024}
 and the top-candidate method \citep{yeaman_convergent_2016}.
 These comparisons were performed across both simulation regimes
 described above,
@@ -800,23 +806,23 @@ the former localize candidate sites,
 whereas the latter summarize the extent to which signal is clustered
 across linked loci.
 
-WZA and the top-candidate method
+\texttt{WZA} and the top-candidate method
 are both window-based approaches designed to capture
 this regional structure in adaptive signal.
-WZA combines SNP-level association statistics across genomic windows
+\texttt{WZA} combines SNP-level association statistics across genomic windows
 using a weighted Z framework,
 whereas the top-candidate method tests whether a region
 contains an excess of highly associated SNPs.
-As Booker et al. argue,
+As Booker et al. (2024)argue,
 aggregating information across linked sites can reduce noise
 and take advantage of the elevated linkage disequilibrium
 expected around loci involved in local adaptation.
 Consistent with this intuition,
-\citet{booker_wza_2024} showed that WZA and the top-candidate method
+\citet{booker_wza_2024} showed that \texttt{WZA} and the top-candidate method
 performed as well as or better than a range of single-SNP methods,
-including Kendall's $\tau$, BayPass, LFMM, and RDA,
+including Kendall's $\tau$, \texttt{BayPass}, \texttt{LFMM}, and \texttt{RDA},
 across both strong and weak local adaptation scenarios.
-We therefore focus on WZA and the top-candidate method
+We therefore focus on \texttt{WZA} and the top-candidate method
 as representative region-based approaches
 that provide strong benchmarks for comparison.
 Comparing SHAP-based attribution from \ecolocator to these methods
@@ -853,8 +859,8 @@ these p-values represent an empirical,
 supervised estimate of significance
 rather than a model-based or permutation-based test.
 
-\paragraph{Weighted-Z Analysis (WZA).}
-WZA aggregates SNP-level signals
+\paragraph{Weighted-Z Analysis (\texttt{WZA}).}
+\texttt{WZA} aggregates SNP-level signals
 within genomic regions
 to test whether a window shows evidence
 of association with environmental variation.
@@ -888,7 +894,7 @@ of the SNP-level p-value distribution.
 \paragraph{Integration across methods.}
 For each simulation replicate,
 we combined SNP-level SHAP p-values,
-window-level WZA p-values,
+window-level \texttt{WZA} p-values,
 and top-candidate p-values
 into a unified dataset.
 Window-based statistics were mapped back to individual SNPs
@@ -1185,7 +1191,7 @@ This allows direct comparison between model-derived attribution scores
 and traditional GEA approaches for identifying adaptive loci.
 Using SHAP values computed from trained \ecolocator models,
 we ranked variants according to their contribution to environmental prediction
-and compared their performance to Weighted-Z Analysis (WZA)
+and compared their performance to Weighted-Z Analysis (\texttt{WZA})
 \citep{booker_wza_2024}
 and the top-candidate method \citep{yeaman_convergent_2016}.
 
@@ -1215,19 +1221,19 @@ a higher proportion of true adaptive variants
 than either comparison method in the pooled precision--recall analysis.
 Under genetic architecture 1,
 SHAP achieved a pooled AUC-PR of 0.173,
-substantially exceeding WZA (0.079)
+substantially exceeding \texttt{WZA} (0.079)
 and the top-candidate approach (0.078),
 and outperforming the random expectation (0.043).
 Under genetic architecture 2,
 SHAP again showed improved performance
 (pooled AUC-PR = 0.187)
-relative to WZA (0.065)
+relative to \texttt{WZA} (0.065)
 and the top-candidate method (0.063),
 with a random baseline of 0.051.
 Similarly,
 under genetic architecture 3,
 SHAP yielded a pooled AUC-PR of 0.179,
-compared to 0.082 for WZA
+compared to 0.082 for \texttt{WZA}
 and 0.079 for the top-candidate approach
 (random = 0.071).
 
@@ -1237,19 +1243,19 @@ Under genetic architecture 1,
 (mean AUC-PR = 0.208),
 followed by the top-candidate method
 (mean AUC-PR = 0.128)
-and WZA
+and \texttt{WZA}
 (mean AUC-PR = 0.121).
 Under genetic architecture 2,
 \ecolocator\texttimes SHAP again showed the highest mean performance
 (mean AUC-PR = 0.221),
 followed by the top-candidate method
 (mean AUC-PR = 0.103)
-and WZA
+and \texttt{WZA}
 (mean AUC-PR = 0.100).
 Under genetic architecture 3,
 \ecolocator\texttimes SHAP maintained the highest mean AUC-PR
 (mean AUC-PR = 0.205),
-followed by WZA
+followed by \texttt{WZA}
 (mean AUC-PR = 0.113)
 and the top-candidate method
 (mean AUC-PR = 0.105).
@@ -1260,7 +1266,7 @@ where SHAP maintained substantially higher precision,
 indicating that the highest-ranked loci
 were enriched for true causal variants.
 In contrast,
-WZA and the top-candidate method showed rapid declines in precision,
+\texttt{WZA} and the top-candidate method showed rapid declines in precision,
 approaching random expectations across much of the recall range.
 Notably,
 SHAP maintained improved performance
@@ -1268,7 +1274,7 @@ across all genetic architectures,
 despite differences in the number
 and genomic distribution of adaptive loci.
 SHAP-based attribution retained its 
-advantage over WZA and the top-candidate method under 
+advantage over \texttt{WZA} and the top-candidate method under 
 this same spatially correlated design (\Cref{fig:S8}).
 
 In the discrete-space Wright--Fisher simulations,
@@ -1277,20 +1283,20 @@ of adaptive loci,
 achieving a pooled AUC-PR of 0.843
 relative to a random baseline of 0.0149
 (Figure 4, panel d).
-WZA also performed well in this regime
+\texttt{WZA} also performed well in this regime
 (pooled AUC-PR = 0.498),
 whereas the top-candidate method showed substantially lower recovery
 (pooled AUC-PR = 0.071).
 Replicate-level AUC-PR values followed the same ordering,
 with \ecolocator\texttimes SHAP showing the highest mean performance
 (mean AUC-PR = 0.906),
-followed by WZA
+followed by \texttt{WZA}
 (mean AUC-PR = 0.619)
 and the top-candidate method
 (mean AUC-PR = 0.102).
 
 The higher performance of both \ecolocator\texttimes SHAP
-and WZA in the Wright--Fisher simulations
+and \texttt{WZA} in the Wright--Fisher simulations
 is consistent with the way local adaptation was modeled:
 adaptive signal was concentrated in a smaller number
 of causal loci with strong,
@@ -1306,7 +1312,7 @@ or embedded in more complex spatial structure.
 
 \begin{figure}[H] % or [h] if you prefer floating
     \adjustimage{width=1.1\textwidth,center}{figures/GEAcomparisonfig.pdf}
-    \caption{AUC-PR curve comparison between SHAP, WZA, and top-candidate methods.
+    \caption{AUC-PR curve comparison between SHAP, \texttt{WZA}, and top-candidate methods.
     Each column represents a different simulation regime. \textbf{Panel a)} represents
     genetic architecture 1, \textbf{Panel b)} represents genetic architecture 2,
     and \textbf{Panel c)} represents genetic architecture 3. \textbf{Panel d)}
@@ -1318,7 +1324,7 @@ or embedded in more complex spatial structure.
     per-replicate AUC-PR values, where each point represents one simulation
     replicate and the horizontal bar indicates the mean; this view captures
     replicate-to-replicate variability in performance. In all panels,
-    purple indicates \ecolocator\texttimes SHAP, yellow indicates WZA,
+    purple indicates \ecolocator\texttimes SHAP, yellow indicates \texttt{WZA},
     and blue indicates the top-candidate method.}
     \label{fig:4}
 \end{figure}
@@ -1423,7 +1429,7 @@ were centered and scaled prior to model training.
     both show the sampling range, with \textbf{Panel f.} being the sample locations
     and \textbf{Panel g.} being the seed zone map, with labels only on the seed zones containing
     samples. \textbf{Panels h-j.} show where \ecolocator predictions fall within the 
-    established seed zones, with grey boxes showing the environmental covariate's ranges in a
+    established seed zones, with gray boxes showing the environmental covariate's ranges in a
     given zone, 'x's' representing the source sample value, and colored dots representing Ecolocator 
     predictions inside each zone. From left to right, we show MCMT in pink, SHM in yellow, and MSP
     in orange. 
@@ -2109,7 +2115,7 @@ and where the true causal variants are rarely known.
 Notably,
 SHAP-based attribution from \ecolocator
 shows greater power to identify adaptive loci
-than WZA \citep{booker_wza_2024}
+than \texttt{WZA} \citep{booker_wza_2024}
 and top-candidate approaches
 in our simulation comparisons
 (Figure~\ref{fig:4}).
@@ -2393,7 +2399,7 @@ over single-task or univariate alternatives.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/suppfig7_envmaps.pdf}
-    \caption{\textbf{Environmental Maps used in Continuous Space SLiMulations.}
+    \caption{\textbf{Environmental Maps used in Continuous Space \slim simulations.}
     Environmental maps generated with the \texttt{NLMpy} python package 
     with pixel count set to 8x8 and hurst (autocorrelation)
     set to H=0. We generated 110 maps and sampled 100 of them randomly
@@ -2405,18 +2411,18 @@ over single-task or univariate alternatives.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/suppfig8_shap_wza_topcan_aucpr_corrspace.pdf}
-    \caption{\textbf{AUC-PR of Ecolocator/SHAP, WZA, and Top-Candidate GEA Methods Across Two Dispersal/Selection Regimes.}
+    \caption{\textbf{AUC-PR of Ecolocator/SHAP, \texttt{WZA}, and Top-Candidate GEA Methods Across Two Dispersal/Selection Regimes.}
     Precision-recall curves (top) and per-replicate AUC-PR violin plots (bottom) comparing three
     genotype-environment association methods for identifying adaptive SNPs: Ecolocator/SHAP (purple;
     mean $\lvert\mathrm{SHAP}\rvert$ for the environmental covariate, ranked by an empirical false-discovery-proportion 
-    score computed from known ground-truth adaptive status), WZA (yellow), and top-candidate (blue). 
+    score computed from known ground-truth adaptive status), \texttt{WZA} (yellow), and top-candidate (blue). 
     Top row: precision-recall curves pooling all SNPs across 100 simulation replicates per regime, 
     scored by $-\log_{10}$(p-value) against true adaptive status;
     dashed line = random-baseline AUC-PR (proportion of adaptive SNPs). Bottom row: distribution of
     AUC-PR computed separately within each of the 100 replicates, showing the consistency of each
     method's performance across independent simulations. Left: limited-dispersal, strong-selection
     regime (dispersal=0.1, std.\ dev.\ of fitness function=0.5). Right: higher-dispersal, weaker-selection
-    regime (dispersal=0.5, std.\ dev.\ of fitness function=0.7). Ecolocator/SHAP outperforms WZA and
+    regime (dispersal=0.5, std.\ dev.\ of fitness function=0.7). Ecolocator/SHAP outperforms \texttt{WZA} and
     top-candidate under both regimes, both pooled and at the per-replicate level.}
     \label{fig:S8}
 \end{figure}
@@ -2442,7 +2448,7 @@ over single-task or univariate alternatives.
     \centering
     \includegraphics[width=\textwidth]{figures/suppfig10_LA_greyscale4.png}
     \caption{\textbf{Environmental Map used in Correlated Space Simulations.}
-    A greyscale left-right gradient image used in simulations to represent 
+    A grayscale left-right gradient image used in simulations to represent 
     an arbitrary environmental variable correlated with space along the longitudinal axis.}
     \label{fig:S10}
 \end{figure}
