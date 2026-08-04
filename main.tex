@@ -1540,7 +1540,7 @@ and is considered a "match".
 Using a focal point approach, we find that 93.1\% of the MCMT predictions 
 show lower distances from the true value than the 100th percentile 
 range of the source seed zones, and that the number of matches 
-drop to 87\% of predictions when using the 98th percentile range 
+drop to 87.1\% of predictions when using the 98th percentile range 
 (\Cref{tab:table2}). Predictions for MSP and SHM showed higher accuracies,
 with 98.6\% and 97.7\% of estimates falling within the 100th 
 percentile range of the source seed zone. As was observed with 
@@ -1584,8 +1584,8 @@ training data.
 
 These results demonstrate that \ecolocator
 can predict the climate of origin of individual genotypes
-with accuracy that is statistically meaningful
-and practically relevant for seed transfer management.
+at a resolution finer than the climatic breadth of existing seed zones,
+the tolerance that actually governs seed transfer decisions.
 They further illustrate the value of seed zone benchmarking
 as a biologically grounded validation framework:
 predictions that fall within a seed zone climate envelope
@@ -1609,7 +1609,7 @@ with coastal populations experiencing milder winters than those toward
 the Cascade crest---the same pattern we recover in simulation when 
 environment is spatially correlated with geography (\Cref{fig:env-map-correlated}, \Cref{fig:shap-manhattan-sim}). 
 The highest-attribution SNPs in \Cref{fig:shap-manhattan-dfir} are candidates for future investigation, 
-though we have not yet cross-referenced them against gene models or functional annotation.
+although we are not yet able to cross-reference them against gene models or functional annotation.
 %% JR NOTE / TODO: once gene models and functional annotation (GO terms) for
 %% DFv5.29 are available, cross-reference the high-attribution candidate
 %% SNPs from Fig S9 (exported to dfir_top_hits_*.tsv and sent to Rich) against nearby gene
@@ -1855,12 +1855,12 @@ common occurrence in forestry, both in the management of native forests
 and in introduced species trials.
 These unintended `local adaptation experiments' provide clear examples of 
 maladaptive responses, but they are usually associated with a poor
-understanding of the seed source. Tools like \ecolocator have the potential to 
-provide estimates of the source location and environment, 
+understanding of the seed source. Tools like \ecolocator can
+provide estimates of the source location and environment,
 making it possible to interpret maladaptive responses in large-scale 
 plantings in light of geographic or climatic transfer distances. 
-Applying \ecolocator to trials of suspected `off-site' origin has
-the potential to dramatically expand our knowledge of growth and 
+Applying \ecolocator to trials of suspected `off-site' origin could
+substantially expand our knowledge of growth and
 fitness responses of large climate transfers, as designed provenance tests with 
 `off-site' materials are limited in number for most tree species.
 
@@ -1910,9 +1910,16 @@ in Oregon and Washington span approximately
 Our results suggest that \ecolocator predictions fall
 within these climate tolerances 87.1\% of the time with Douglas-fir. 
 Importantly,
-this level of accuracy was achieved using a modestly sized dataset
-of 348 trees and approximately 18,000 SNPs
-without known genomic coordinates. %except we DO have this nowww, think about how to fold it in
+this level of accuracy was achieved with a modestly sized dataset
+of 348 trees and approximately 18,000 SNPs,
+and without any use of genomic position.
+\ecolocator operates on the genotype matrix alone,
+so neither a contiguous assembly nor an ordered marker map is required---an
+advantage in species whose genomic resources remain incomplete.
+The approximate chromosomal coordinates recovered by aligning probe
+sequences to the DFv5.29 draft assembly were used only to place SHAP
+attributions in genomic context (\Cref{fig:shap-manhattan-dfir}),
+not for prediction.
 Although additional sampling is not evaluated empirically here, downsampling in
 our simulations (see \Cref{fig:downsampling}), and
 previous work with Locator suggests that geographic prediction accuracy
@@ -1953,11 +1960,11 @@ positional inaccuracies that are amplified in topographically complex terrain.
 Finally,
 Douglas-fir populations east of the Cascade crest show evidence of introgression
 with interior Douglas-fir
-(\textit{Pseudotsuga menziesii} var.\ \textit{glauca}) \cite{stclair_genecology_2005},
+(\textit{Pseudotsuga menziesii} var.\ \textit{glauca}) \citep{stclair_genecology_2005},
 and trees with greater interior ancestry may show higher prediction error
 when evaluated with a model trained primarily on coastal Douglas-fir
 genomic and climatic data.
-These patterns suggest that prediction errors may
+These patterns suggest that prediction errors
 point to biologically meaningful features of the study system,
 including ancestry transitions,
 complex topography,
@@ -1968,7 +1975,7 @@ the approach is not limited to Douglas-fir
 or to species with extensive prior characterization.
 Any system with georeferenced genotypes and associated environmental data
 can be analyzed with \ecolocator,
-making it a potentially useful tool for less-studied species
+making it a useful tool for less-studied species
 where common-garden data are scarce or absent.
 In these systems,
 even weak or uneven predictive performance may be informative.
@@ -1998,9 +2005,10 @@ family structure,
 uncertain source records,
 or mismatch between sampled tissue and the individual or population
 whose origin is being inferred.
-These considerations do not limit the utility of \ecolocator,
-but they highlight the importance of interpreting predictions
-within the biological and management context of each application.
+These considerations do not preclude application,
+but they set the conditions under which predictions can be trusted,
+and they make interpreting predictions within the biological
+and management context of each application essential.
 
 % RC: I’ll add something to this over the weekend. Climate prediction errors are lowest along the coastal seed zones, highest in the Cascade crest, and intermediate in the Cascades. I think the higher errors are entirely due to climate variability in the Cascades.
 
@@ -2052,12 +2060,12 @@ rather than as individual causal variants.
 This issue was especially apparent in our initial simulations,
 where a recombination rate of ($10^{-8}$)
 within a 1 Mb genomic element generated extensive LD
-between the selected window and distant sites (ref \Cref{fig:ld-decay-low-recomb}).
+between the selected window and distant sites (\Cref{fig:ld-decay-low-recomb}).
 Increasing recombination to ($10^{-6}$)
 reduced this long-range LD
 and provided a clearer setting for evaluating whether SHAP
 could distinguish causal regions from linked background signal
-(ref \Cref{fig:ld-decay-high-recomb}).
+(\Cref{fig:ld-decay-high-recomb}).
 
 The permutation-based sensitivity analyses
 complement SHAP by providing a different lens
@@ -2072,7 +2080,7 @@ Permuting the selected window alone produced only modest changes
 in prediction performance,
 whereas jointly permuting the selected window
 with LD-linked sites caused much larger losses in accuracy
-(ref \Cref{fig:permutation}).
+(\Cref{fig:permutation}).
 For example,
 when the selected window and all LD-linked sites were permuted together,
 prediction accuracy dropped below zero for all three targets
@@ -2092,7 +2100,6 @@ These findings suggest that \ecolocator is not relying
 on the selected window alone,
 but on a broader LD-associated haplotypic signal
 that can obscure the distinction between causal and linked variants.
-
 
 The SHAP and permutation analyses show that \ecolocator's predictions
 are grounded in biologically meaningful genetic variation,
@@ -2133,7 +2140,7 @@ but whose combined effect is detectable
 in the context of the full genotype.
 This shows that supervised prediction
 followed by post hoc feature attribution
-may be a powerful complement to traditional GEA approaches,
+can be a powerful complement to traditional GEA approaches,
 particularly under polygenic adaptation
 where per-locus signals are subtle.
 
