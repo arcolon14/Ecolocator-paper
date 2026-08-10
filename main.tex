@@ -738,8 +738,8 @@ providing a useful contrast to more complex spatial scenarios.
 
 To quantify the contribution of individual genetic features
 to \ecolocator's predictions,
-we applied SHapley Additive exPlanations (SHAP)
-\citep{lundberg_shap_2017}, %ADK -- didn't you use a software package for this? If so, cite it here.
+we applied SHapley Additive exPlanations (SHAP) \texttt{v.$\geq$0.47.0}
+\citep{lundberg_shap_2017},
 a game-theoretic framework that assigns importance scores
 based on each feature's marginal contribution to the model output
 across all possible feature coalitions.
@@ -1418,13 +1418,43 @@ geographic coordinates and climate values.
 Geographic coordinates and environmental covariates
 were centered and scaled prior to model training.
 
+Following model training and prediction, 
+SHAP values were summarized across leave-one-out 
+folds by calculating the mean absolute attribution 
+for each of the 18,732 SNPs separately for latitude, longitude, 
+MCMT, MSP, and SHM. For each prediction target, 
+we retained the 179 highest-attribution SNPs, 
+approximately the top 1\% of the ranked SHAP distribution, 
+as candidate loci for downstream comparison and biological interpretation. 
+This threshold was used for prioritization rather than as a test of 
+statistical significance. We then compared pairwise overlap 
+among the five target-specific SNP sets to determine the extent 
+to which geographic and climatic predictions relied on shared genomic features.
+
+To characterize the potential biological functions represented 
+among high-attribution loci, SNP identifiers were used to retrieve their source 
+cDNA sequences. Available sequence annotations included best protein matches 
+to \textit{Arabidopsis thaliana} and \textit{Populus trichocarpa}, 
+along with Mercator gene descriptions and PANTHER functional classes and family 
+identifiers. We used these annotations descriptively to identify recurring biological 
+functions and functional themes among high-attribution loci and to compare these patterns 
+across prediction targets. Because these functional assignments rely in part on 
+homology to angiosperm proteins and SHAP quantifies predictive importance 
+rather than causality, we interpret the resulting annotations as a means of 
+prioritizing and biologically contextualizing candidate loci rather than as 
+evidence that individual SNPs are causal targets of local adaptation.
+
+% TODO: Confirm the specific annotation resource/database versions with Rich
+% and add citations for PANTHER and Mercator as appropriate.
+
+
 \begin{figure}[H] % or [h] if you prefer floating
     \adjustimage{width=1.1\textwidth,center}{figures/dfirresults.pdf}
     \caption{Douglas fir case study results. \textbf{Panels a-e.} show true
     vs. predicted scatterplots across all prediction targets. From left to right,
-    we show Longitude ($R^2$=0.76), Latitude ($R^2$= 0.83)
-    , Mean Cold Month Temperature (MCMT)($R^2$= 0.73), Summer Heat Moisture Index (SHM)
-    ($R^2$= 0.49), and Mean Summer Precipitation (MSP) ($R^2$= 0.52). \textbf{Panels f-g.}
+    we show Longitude ($R^2$=0.75), Latitude ($R^2$= 0.83)
+    , Mean Cold Month Temperature (MCMT)($R^2$= 0.72), Summer Heat Moisture Index (SHM)
+    ($R^2$= 0.52), and Mean Summer Precipitation (MSP) ($R^2$= 0.54). \textbf{Panels f-g.}
     both show the sampling range, with \textbf{Panel f.} being the sample locations
     and \textbf{Panel g.} being the seed zone map, with labels only on the seed zones containing
     samples. \textbf{Panels h-j.} show where \ecolocator predictions fall within the 
@@ -1440,7 +1470,7 @@ were centered and scaled prior to model training.
 \subsubsection*{Prediction accuracy}
 
 \ecolocator predicted source latitudes and longitudes with $R^2$
-values of 0.84 and 0.76 respectively (\Cref{fig:dfir-results}, \Cref{tab:supptable1}). Combined latitude
+values of 0.83 and 0.75 respectively (\Cref{fig:dfir-results}). Combined latitude
 and longitude for each sample gave predicted geographic origins that showed a median error of 51.6km (see \Cref{fig:geo-error}), with
 minimum errors as low as 1.2km and maximum errors as high as 646km. Errors
 greater than 200km appeared as extreme outliers and were not associated with obvious
@@ -1469,8 +1499,8 @@ to climate via ClimateNA variables (ref. \Cref{tab:supptable1}), indicating that
 identifies climate-related covariance in the geographic--genomic matrix
 beyond what geography alone supplies,
 and uses this covariance to improve local climate estimates. Among the three modeled climate variables,
-Mean Cold Month Temperature (MCMT) showed the highest predicted $R^2$ of 0.73, with May to September
-Precipitation (MSP) ($R^2$=0.52) and summer heat:moisture index (SHM) ($R^2$=0.49)
+Mean Cold Month Temperature (MCMT) showed the highest predicted $R^2$ of 0.72, with May to September
+Precipitation (MSP) ($R^2$=0.54) and summer heat:moisture index (SHM) ($R^2$=0.52)
 showing lower and comparable prediction accuracies. These correlations are consistent 
 with climate patterns in the Pacific Northwestern U.S., as monthly minimum air temperatures
 are easier to model than precipitation or aridity due to complex interactions
@@ -1570,9 +1600,9 @@ geographic predictions (\Cref{tab:table2}).
 Prediction error for different climate variables was not uniform across seed zones,
 and patterns differed by MCMT, MSP, and SHM.
 (\Cref{fig:dfir-results}, panels h-j). In our sample, trees from coastal seed 
-zones in Oregon and Washington (e.g., zones 031, 041, 051, 061) showed significantly lower prediction
+zones in Oregon and Washington (e.g., zones 031, 041, 051, 061) showed lower prediction
 errors for MCMT than either Cascade or Cascade Crest sources.
-Conversely, trees from Oregon and Washington Cascades seed zones showed significantly
+Conversely, trees from Oregon and Washington Cascades seed zones showed
 lower prediction errors for MSP and SHM than did Coastal or Cascade Crest trees. The independence
 of these patterns from specific geographic locations suggests that they are attributable to some combination
 of climatic and topographic complexity, variable sampling density (or sample size), and possibly
@@ -1608,49 +1638,49 @@ temperature covaries with longitude across coastal Douglas-fir's range,
 with coastal populations experiencing milder winters than those toward 
 the Cascade crest---the same pattern we recover in simulation when 
 environment is spatially correlated with geography (\Cref{fig:env-map-correlated}, \Cref{fig:shap-manhattan-sim}). 
-The highest-attribution SNPs in \Cref{fig:shap-manhattan-dfir} are candidates for future investigation, 
-although we are not yet able to cross-reference them against gene models or functional annotation.
-%% JR NOTE / TODO: once gene models and functional annotation (GO terms) for
-%% DFv5.29 are available, cross-reference the high-attribution candidate
-%% SNPs from Fig S9 (exported to dfir_top_hits_*.tsv and sent to Rich) against nearby gene
-%% annotations and slot the results in as a new paragraph immediately
-%% following this one.
 
-% NOTE FOR DISCUSSION: Rich raised several points about how Douglas-fir
-% biology relates to the assumptions of the SLiM simulations.
-% Douglas-fir may be well represented by low dispersal, strong selection,
-% and a polygenic adaptive architecture with many dispersed loci rather
-% than a few genes of major effect. This aligns most closely with our
-% simulation scenarios involving restricted dispersal and stronger local
-% adaptation.
-% NOTE FOR DISCUSSION: Rich also noted that Douglas-fir pollen and seed
-% dispersal are asymmetric and biologically distinct. Gene flow occurs
-% through both pollen movement during mating and seed movement during
-% progeny dispersal, with most pollen and seeds moving short distances.
-% In reality, nearby pollen donors are more likely than distant donors,
-% and paternity is unlikely to be uniform across a local pixel.
-% NOTE FOR DISCUSSION: Rich emphasized that Douglas-fir regeneration may
-% involve strong recruitment bottlenecks. Many offspring die under the
-% maternal canopy, and replacement may occur mainly after disturbance
-% such as fire, disease, or windthrow. This could make net migration
-% smaller than a simple dispersal kernel might imply.
-% NOTE FOR DISCUSSION: Consider explicitly distinguishing what the SLiM
-% simulations are meant to test from what the empirical Douglas-fir case
-% study demonstrates. The simulations test general conditions under
-% which \ecolocator succeeds, whereas Douglas-fir provides a biologically
-% realistic system where low dispersal, strong selection, and polygenic
-% adaptation are plausible.
-% NOTE FOR DISCUSSION/FUTURE WORK: Hebo, Oregon may be a strong applied
-% example. The area burned in the 1850s, remained poorly forested
-% decades later, and was later replanted by the early USFS using many
-% off-site or unknown seed sources. This creates a 100-year-old mixture
-% of potentially well-adapted and maladapted trees that could be
-% evaluated with \ecolocator.
-% NOTE FOR DISCUSSION/FUTURE WORK: The Hebo example could be used to
-% motivate \ecolocator as a tool for reconstructing seed-source history
-% or identifying climate-of-origin mismatches in legacy reforestation
-% stands, but this should probably be included only after the field trip,
-% photos, or historical documentation are incorporated.
+We next asked whether the same genomic features contributed strongly across geographic 
+and climatic prediction targets. Comparing the 179 highest-attribution SNPs for 
+each target revealed substantial variation in pairwise overlap (\Cref{tab:dfir-shap-overlap}). 
+Only 13 SNPs were shared between latitude and MCMT (7.3\%), 
+whereas longitude and MCMT shared 97 SNPs (54.2\%). 
+The strongest overlap occurred between MSP and SHM, which shared 133 SNPs (74.3\%). 
+These overlap patterns mirror relationships among the prediction targets themselves. 
+MSP and SHM both capture variation related to summer moisture availability and showed 
+the strongest overlap among high-attribution SNPs. Similarly, 
+MCMT varies strongly along the longitudinal transition from relatively mild 
+maritime environments toward colder environments closer to the Cascade Range 
+and shared substantial genomic signal with longitude. In contrast, 
+latitude and MCMT shared relatively few high-attribution loci (7.3\%), 
+consistent with latitude representing a north--south geographic axis rather 
+than the longitudinal winter-temperature gradient captured by MCMT.
+
+Functional annotation of the high-attribution SNPs revealed additional 
+differences among prediction targets. Among loci with informative annotations, 
+latitude-associated candidates included putative homologs involved in 
+phytochrome-mediated light signaling, circadian and seasonal regulation, 
+and developmental timing, including \textit{PIF3}, \textit{FPA}, WNK-family kinases, 
+and several MYB transcription factors. MCMT- and longitude-associated candidates 
+included putative \textit{ELF3} and DREB/AP2-family transcription factors, 
+SPL-family regulators, molecular chaperones including DnaJ proteins, 
+membrane lipid and desaturase-associated genes, and genes involved in 
+carbohydrate and trehalose metabolism. These annotations represented 
+functions associated with seasonal regulation, temperature-stress response, 
+membrane remodeling, and acclimation \citep{lee_photoperiodic_2012, chen_acyl_2013}. 
+
+A distinct but internally consistent set of functions was observed 
+among the strongly overlapping MSP and SHM candidate sets. 
+These included putative PYL-family ABA receptors, PP2C phosphatases \citep{park_abscisic_2009}, LEA proteins, 
+an osmosis-responsive factor, GST-family proteins, membrane transporters, 
+and other genes associated with cellular stress protection. 
+SHM additionally included candidates associated with heat-shock, mitochondrial stress, 
+and redox-response pathways. Although many high-attribution loci were 
+poorly annotated or had functions that were difficult to relate directly to climate, 
+the interpretable candidates repeatedly represented processes associated with 
+environmental timing, temperature acclimation, water-stress signaling, 
+membrane remodeling, and oxidative-stress response. % TODO: Add final Supplementary Data S1 file and verify all named candidate annotations against the complete annotation list.
+The complete set of high-attribution SNPs and associated functional annotations is provided in Supplementary Data~S1.
+
 
 
 
@@ -1737,47 +1767,54 @@ diffuse genetic architectures,
 high dispersal,
 or weak selection can weaken the signals that \ecolocator is designed to learn.
 
-The Douglas-fir case study extends these findings
-to a natural system where the ground truth
-is not fully known.
-\ecolocator's predictions of geographic origin and climate variables
-in coastal Douglas-fir are consistent
-with the species' well-documented patterns
-of local adaptation along steep latitudinal
-and elevational gradients in western North America
-\citep{aitken_assisted_2013}.
+The Douglas-fir case study extends these findings to a natural 
+system where the ground truth is not fully known. 
+\ecolocator's predictions of geographic origin and 
+climate variables in coastal Douglas-fir are consistent with the 
+species' well-documented patterns of local adaptation along steep 
+latitudinal and elevational gradients in western 
+North America \citep{aitken_assisted_2013}. 
 That the model performs well in this system 
-(Lon. $R^2$=0.76, Lat. $R^2$=0.83, 
-MCMT $R^2$=0.73, MSP $R^2$=0.52 , 
-SHM $R^2$=0.49)---despite a documented low 
-population differentiation \citep{krutovsky_estimation_2009},
-the absence of a contiguous reference genome \citep{neale_douglas-fir_2017},
-and a relatively modest number of SNPs---suggests
-that the joint prediction framework captures
-biologically meaningful signal even with incomplete genomic resources.
+(Lon. $R^2$=0.75, Lat. $R^2$=0.83, MCMT $R^2$=0.72, MSP $R^2$=0.54, SHM $R^2$=0.52), 
+despite low population differentiation \citep{krutovsky_estimation_2009}, 
+incomplete genomic resources \citep{neale_douglas-fir_2017}, 
+and a relatively modest number of SNPs, 
+suggests that the joint prediction framework can recover 
+informative genomic signal even under challenging empirical conditions. 
+Feature attribution provides additional resolution into how that signal 
+is distributed across prediction targets. 
+High-attribution SNP sets showed the greatest overlap between targets 
+representing closely related geographic or environmental gradients, 
+while more distinct targets relied on increasingly different sets of 
+genomic features. Functional annotations among prioritized loci also 
+corresponded to biological processes relevant to seasonal regulation, 
+temperature acclimation, and water-stress response. 
+The combination of predictive performance, structured feature overlap, 
+and biologically interpretable annotations indicates that \ecolocator 
+is recovering both shared and target-specific components of genomic 
+variation associated with geography and environment in Douglas-fir, 
+while the evolutionary causes of those associations remain subject 
+to the limitations of empirical genotype--environment data discussed below.
+
 
 \subsection{Strengths and limitations}
 
-A key strength of \ecolocator is its multitask design,
-which simultaneously models geographic and environmental variation.
-This joint framework offers advantages
-over methods that treat spatial and environmental signals separately:
-by sharing information across prediction targets during training,
-the model can leverage correlations
-between spatial structure and environmental gradients
-while also learning to distinguish the two.
-This design also sidesteps a well-documented pitfall
-of conventional GEA methods.
-When population structure aligns with environmental gradients---as
-it often does in nature---methods that correct for structure
-can inadvertently remove true adaptive signal
-along with neutral confounders
-\citep{lotterhos_recombination_2019, booker_wza_2024}.
-Because \ecolocator models geography and environment jointly
-rather than regressing one out of the other,
-it avoids this over-correction
-while still accounting for spatial structure
-through the geographic prediction task.
+A key strength of \ecolocator is its multitask design, 
+which simultaneously models geographic and environmental variation. 
+This joint framework allows the model to learn both shared and target-specific 
+components of genomic variation and, when sufficient information is present in the 
+genotype data, to distinguish signals associated with geographic structure from those 
+associated with environmental variation. This design also addresses a well-documented 
+challenge of conventional GEA methods. When population structure aligns with 
+environmental gradients, as it often does in nature, methods that correct for 
+structure can inadvertently remove true adaptive signal along with neutral 
+confounders \citep{lotterhos_recombination_2019, booker_wza_2024}. 
+Rather than regressing geographic structure out prior to environmental prediction, 
+\ecolocator models geographic and environmental variation as related but distinct 
+prediction tasks. However, when geographic and environmental gradients 
+are strongly correlated, shared genomic signal between these tasks cannot 
+necessarily be attributed uniquely to demographic structure or local adaptation.
+
 Furthermore, the multitask framework
 is naturally suited to systems
 where adaptation occurs along multiple environmental axes.
@@ -2013,7 +2050,7 @@ and management context of each application essential.
 % RC: I’ll add something to this over the weekend. Climate prediction errors are lowest along the coastal seed zones, highest in the Cascade crest, and intermediate in the Cascades. I think the higher errors are entirely due to climate variability in the Cascades.
 
 \subsection{Feature attribution as a tool
-for identifying adaptive loci}
+for identifying candidate adaptive loci}
 
 SHAP-based feature attribution provides a window
 into which genomic regions drive \ecolocator's predictions.
@@ -2144,30 +2181,51 @@ can be a powerful complement to traditional GEA approaches,
 particularly under polygenic adaptation
 where per-locus signals are subtle.
 
-One limit, however, is worth stating plainly.
-Across most real landscapes, climate changes together with geography:
-places that are close together tend to have similar climates.
-When that is true, a variant that simply tracks geography---through
-limited dispersal or genetic drift, with no role in adaptation---will
-look just as tied to climate as a variant that is genuinely under
-climate selection. From genotype alone, there is no way to tell the two apart.
-Feature attribution will therefore highlight both kinds of variant,
-and no amount of extra data or model tuning can separate them;
-the same difficulty applies to conventional GEA methods
-\citep{booker_wza_2024, meirmans_ibd_2012}.
-Our continuous-space simulations avoid this problem by design,
-holding climate independent of geography (H=0)
-so that only genotype--climate signal can drive environmental prediction;
-this is why attribution concentrates at causal loci there
-(\Cref{fig:shap-attribution}).
-In real data, where climate and geography move together, that separation is lost.
-The Douglas-fir results show this directly:
-the regions with the strongest attribution for climate (MCMT)
-are the same ones flagged for longitude (\Cref{fig:shap-manhattan-dfir}),
-exactly what we expect when the two cannot be told apart from genotype.
-Attribution in these settings should therefore be read
-as pointing to genomic regions associated with a climatic gradient---candidates
-for further study---rather than as proof of the specific loci driving adaptation.
+One limitation, however, is particularly important when 
+extending feature attribution from simulations to empirical landscapes. 
+Geography and climate frequently covary, such that variants associated 
+with spatial population structure may also appear associated with 
+environmental gradients even when they are not themselves targets of 
+climate-mediated selection. This challenge is shared by conventional 
+GEA approaches \citep{booker_wza_2024, meirmans_ibd_2012}. 
+Our continuous-space simulations largely avoid this problem by design, 
+holding climate independent of geography ($H=0$) so that genotype--climate 
+signal can be evaluated against known causal loci (\Cref{fig:shap-attribution}). 
+In empirical systems where geography and environment covary, attribution alone 
+cannot establish whether a high-attribution locus reflects direct environmental 
+selection, demographic structure, linkage to a selected locus, or some 
+combination of these processes. High-attribution loci should therefore be 
+interpreted as candidate genomic regions associated with the predicted 
+gradient rather than as confirmed causal targets of adaptation.
+
+The Douglas-fir results nevertheless provide additional information 
+about how this signal is structured. Overlap among high-attribution SNPs 
+was greatest between prediction targets that represent closely related 
+environmental or geographic gradients: MSP and SHM shared 74.3\% of their 
+highest-attribution loci, while longitude and MCMT shared 54.2\%. 
+In contrast, latitude and MCMT shared only 7.3\% (\Cref{tab:dfir-shap-overlap}). 
+This pattern suggests that \ecolocator is not assigning uniformly high 
+attribution to the same spatially structured loci across all prediction targets, 
+but instead recovers partially target-specific genomic signal corresponding 
+to different axes of geographic and environmental variation. 
+Functional annotations provide complementary biological support for this 
+interpretation. Latitude-associated candidates represented light sensing 
+and seasonal developmental regulation, consistent with known effects of 
+photoperiod and temperature on seasonal growth 
+cessation in coast Douglas-fir \citep{ford_photoperiod_2017}.
+Longitude and MCMT candidates included functions related to seasonal 
+regulation and temperature acclimation, consistent with previous genomic 
+evidence for polygenic cold adaptation involving growth, phenology, 
+and stress signaling in Douglas-fir \citep{delatorre_polygenic_2021}. 
+MSP and SHM candidates repeatedly represented ABA-mediated water-stress signaling, 
+osmotic protection, and redox response, while previous common-garden work in coastal 
+Douglas-fir has similarly demonstrated climate-related genetic variation in drought 
+and cold hardiness across winter-temperature and summer-precipitation 
+gradients \citep{bansal_tolerance_2016}. Viewed together, 
+these patterns suggest that environmental timing, including the timing of growth, 
+dormancy, acclimation, and stress response, may be an important component of the 
+genotype--environment signal captured by \ecolocator in Douglas-fir. 
+
 
 \subsection{Future directions}
 
@@ -2443,7 +2501,7 @@ over single-task or univariate alternatives.
     assembly DFv5.29; SNP positions resolved by SAM alignment restricted to primary, high-confidence
     mappings, MAPQ $\geq$ 30) for five prediction targets, top to bottom: longitude, latitude, mean
     coldest-month temperature (MCMT), summer heat:moisture index (SHM), and mean summer precipitation
-    (MSP). SNPs in the top 1\% of mean $\lvert\mathrm{SHAP}\rvert$ for a given target are highlighted
+    (MSP). SNPs in the 179 highest-attribution SNPs (approximately the top 1\%) of mean $\lvert\mathrm{SHAP}\rvert$ for a given target are highlighted
     in pink; all other SNPs are shown in blue. Alternating background shading demarcates chromosome
     boundaries.}
     \label{fig:shap-manhattan-dfir}
@@ -2544,7 +2602,24 @@ over single-task or univariate alternatives.
   \end{tabular}
 \end{table}
 
-
+%%%%%% Supplemental Table 3 %%%%%%
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Pairwise overlap among high-attribution SNPs across 
+  \ecolocator prediction targets in coastal Douglas-fir.}}
+  \label{tab:dfir-shap-overlap}
+  \begin{tabular}{@{}lccccc@{}}
+  \hline
+  \textbf{Prediction target} & \textbf{LAT} & \textbf{LON} & \textbf{MCMT} & \textbf{MSP} & \textbf{SHM} \\
+  \hline
+  Latitude (LAT)  & 179 & 10 (5.6\%) & 13 (7.3\%) & 33 (18.4\%) & 31 (17.3\%) \\
+  Longitude (LON) &     & 179        & 97 (54.2\%) & 5 (2.8\%) & 4 (2.2\%) \\
+  MCMT            &     &            & 179         & 5 (2.8\%) & 5 (2.8\%) \\
+  MSP             &     &            &             & 179       & 133 (74.3\%) \\
+  SHM             &     &            &             &           & 179 \\
+  \hline
+  \end{tabular}
+\end{table}
 
 
 \end{document}
