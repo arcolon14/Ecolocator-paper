@@ -26,7 +26,7 @@
 \fancyhead[R]{\textbf{machine learning local adaptation}}
 
 %%%%%% Commands %%%%%%
-\newcommand{\dfir}{Douglas fir}
+\newcommand{\dfir}{Douglas-fir\xspace}
 \newcommand{\ecolocator}{\texttt{EcoLocator}\xspace}
 \newcommand{\slim}{\texttt{SLiM}\xspace}
 
@@ -112,9 +112,9 @@ range expansions, bottlenecks, and genetic drift---can
 themselves generate allele frequency gradients that mimic adaptive clines
 \citep{excoffier_genetic_2009, novembre_spatial_2009}.
 
-Local adaptation---the covariation of allele frequencies
-with environmental gradients---emerges when spatially heterogeneous
-selection outweighs the homogenizing effects of gene flow
+Local adaptation, in which populations evolve higher fitness in their local environments, 
+can generate covariation of allele frequencies with environmental gradients 
+when spatially heterogeneous selection outweighs the homogenizing effects of gene flow
 \citep{savolainen_ecological_2013, lenormand_gene_2002}.
 Beyond increasing local fitness,
 it sustains genetic diversity across heterogeneous landscapes
@@ -258,14 +258,14 @@ to adaptive differentiation across landscapes.
 
 We evaluate \ecolocator across a range of simulation parameterizations
 to identify the conditions under which it performs best,
-then apply it to an empirical dataset of coastal Douglas-fir
+then apply it to an empirical dataset of coastal \dfir
 (\textit{Pseudotsuga menziesii} var.\ \textit{menziesii}).
 Simulations provide a controlled setting
 where evolutionary and environmental parameters are known,
 allowing us to benchmark prediction accuracy against ground truth
 before moving to more complex natural systems.
 
-Coastal Douglas-fir is a member of the pine family
+Coastal \dfir is a member of the pine family
 with a lineage dating to the Paleocene \citep{hermann_genus_1985}
 and a natural range spanning extensive climatic
 gradients along the North American Pacific coast from California
@@ -276,7 +276,7 @@ with adaptive quantitative phenotypes tracking climatic features
 such as winter cold temperatures and summer aridity \citep{stclair_genecology_2005}.
 This combination of strong local adaptation and a long history
 of ecological and silvicultural study
-makes Douglas-fir a natural bridge
+makes \dfir a natural bridge
 between controlled simulations and real-world management applications.
 For the U.S. Forest Service,
 seed source--climate relationships
@@ -305,8 +305,6 @@ for understanding the genetic basis of adaptation,
 with broad implications for conservation and species management.
 
 \section{\ecolocator}
-
-\sbt{We will probably be asked to stick to standard section style, but maybe put this as a subsection of the results?}
 
 \ecolocator is an open-source Python package
 for predicting the geographic origin and climate of origin
@@ -376,7 +374,7 @@ fraction of samples (default 0.9) is used for model fitting, while the remaining
 held out for validation, enabling convergence monitoring, early stopping, 
 and adaptive learning rate reduction to prevent overfitting. 
 By explicitly coupling geographic and climatic inference, the model captures 
-both neutral spatial structure and environment-driven selection.
+both neutral spatial structure and environment-associated genomic variation.
 
 
 
@@ -408,7 +406,7 @@ automatically.
 
 \item Evaluate model performance using \texttt{ecolocator loo}, 
 which iteratively holds out each sample with known coordinates, trains 
-on the remainder, and predicts the held-out individual (leave-one-out cross validation). The resulting 
+on the remainder, and predicts the held-out individual (leave-one-out cross-validation). The resulting 
 predictions can be compared against true values to assess spatial and 
 environmental accuracy before applying the model to unknown samples.
 
@@ -423,7 +421,7 @@ identify loci driving each prediction.
 
 The predicted coordinates and environmental values from steps 2--4 provide 
 continuous estimates of geographic and climatic origin, and SHAP attributions 
-from step 5 can be used to pinpoint the loci driving each prediction. 
+from step 5 can be used to identify loci contributing most strongly to each prediction. 
 
 \section{Methods}
 
@@ -431,11 +429,10 @@ from step 5 can be used to pinpoint the loci driving each prediction.
 
 To explore under which evolutionary scenarios \ecolocator performs best,
 we used \slim \texttt{v.4.2.2} \citep{haller2023slim4} 
-to simulate a spatially explicit non-Wright-Fisher population
+to simulate a spatially explicit non-Wright--Fisher population
 experiencing local adaptation of a quantitative trait
 that evolves to track a single continuously varying environmental axis.
-By varying simulation parameters such as dispersal,
-recombination rate, genetic architecture of the quantitative trait,
+By varying simulation parameters such as dispersal, genetic architecture of the quantitative trait,
 and the strength of stabilizing selection,
 the evolutionary trajectory of a given population
 can be changed in predictable ways.
@@ -526,14 +523,14 @@ and local density.
 By varying the dispersal parameter
 and the standard deviation of the fitness function,
 we can impact the strength of local adaptation
-in the simulation (Figure~3).
+in the simulation (\Cref{fig:sim-performance}, \Cref{fig:local-adaptation}).
 
 Together, stabilizing selection, competition, dispersal,
 and local mating govern the survival and reproduction of individuals,
 creating a spatially explicit simulation framework
 that departs from Wright--Fisher assumptions.
 Local adaptation can then be quantified
-as the mean difference between each individual's phenotype
+as the mean absolute difference between each individual's phenotype
 and its local optimum,
 such that smaller values correspond to stronger local adaptation
 (\Cref{eq:localadapt}).
@@ -549,6 +546,16 @@ The genetics underlying adaptation are simulated
 with a 1 Mb genomic element carried by each individual.
 Mutations at quantitative trait loci (QTL) arise within this element,
 and their additive effects determine an individual's phenotype.
+Because the simulated genomic element spans only 1 Mb,
+a per-base recombination rate of \(10^{-8}\)
+produces very little recombination across the element
+and consequently extensive linkage.
+We therefore used \(10^{-6}\),
+which yields approximately one expected recombination breakpoint
+across the 1 Mb element per meiosis,
+reducing long-range LD
+and allowing clearer evaluation of locus-level feature attribution (\Cref{fig:ld-decay}).
+
 To explore whether the arrangement of adaptive loci
 influences the detectability of local adaptation,
 genomic architecture is varied
@@ -556,8 +563,8 @@ by altering the distribution of QTLs:
 mutations may occur within a single 200 kb window
 in the center of the element,
 within three smaller 100 kb windows,
-or within five 100 kb windows distributed across the element.
-(\Cref{fig:sim-performance}, panel a)
+or within five 100 kb windows distributed across the element
+(\Cref{fig:sim-performance}, panel a).
 
 We only simulate non-neutral mutations within \slim.
 Genomic information is stored in tree sequences \citep{haller2019treeseq},
@@ -587,7 +594,7 @@ we can assess under which evolutionary regimes
 spatial--environmental signals of adaptation
 are most readily captured.
 
-Dispersal distance (\(\sigma_D\)) sets the spatial scale
+Dispersal distance (\(\sigma_D\), also denoted as \(d\)) sets the spatial scale
 of gene flow in the simulation.
 Smaller values correspond to restricted movement,
 leading to stronger genetic differentiation
@@ -692,7 +699,7 @@ In contrast to our main simulations,
 which model stabilizing selection in continuous space,
 these Wright--Fisher simulations implement directional selection
 on a small number of causal loci.
-Specifically, a set of 12 loci distributed across the genome
+Specifically, 12 loci distributed across the genome
 contribute to local adaptation,
 with alleles experiencing spatially varying fitness effects
 depending on the local environmental optimum.
@@ -738,9 +745,9 @@ providing a useful contrast to more complex spatial scenarios.
 
 To quantify the contribution of individual genetic features
 to \ecolocator's predictions,
-we applied SHapley Additive exPlanations (SHAP)
-\citep{lundberg_shap_2017}, %ADK -- didn't you use a software package for this? If so, cite it here.
-a game-theoretic framework that assigns importance scores
+we applied SHapley Additive exPlanations (SHAP) using the Python \texttt{SHAP} package (\texttt{v.$\geq$0.47.0})
+\citep{lundberg_shap_2017},
+which is based on the game-theoretic framework that assigns importance scores
 based on each feature's marginal contribution to the model output
 across all possible feature coalitions.
 Attributions were computed separately for each prediction target
@@ -813,7 +820,7 @@ this regional structure in adaptive signal.
 using a weighted Z framework,
 whereas the top-candidate method tests whether a region
 contains an excess of highly associated SNPs.
-As Booker et al. (2024)argue,
+As Booker et al. (2024) argue,
 aggregating information across linked sites can reduce noise
 and take advantage of the elevated linkage disequilibrium
 expected around loci involved in local adaptation.
@@ -937,88 +944,66 @@ We evaluated \ecolocator
 across a range of simulation parameterizations (\Cref{fig:sim-performance}).
 We ran 100 simulation replicates for each parameter combination in our continuous space simulations,
 and we ran 30 replicates for the discrete space simulations, 
-following \citet{booker_wza_2024}. We summarized
+following \citet{booker_wza_2024}. We additionally summarized
 the distribution of local adaptation scores
-calculated from each replicate within each regime (see \Cref{fig:local-adaptation}).
-Under restricted dispersal (d = 0.1)
-and a smaller standard deviation of the fitness function
-(stronger selection, \(\sigma_K\)=0.5),
-simulated populations became strongly locally adapted
-to their environments (LA $<$ 0.1) after 10,000 generations. \ecolocator
-performed best when dispersal was constrained
-(d = 0.1, Lon. $R^2$=0.968, Lat. $R^2$=0.967, 
-Env. $R^2$=0.769)(\Cref{fig:sim-performance}, panel a).
-As dispersal increased,
-\ecolocator's ability to predict both geographic location
-and environmental covariates declined 
-(d=0.5, Lon. $R^2$=0.815, 
-Lat. $R^2$=0.814, Env. $R^2$=0.336)(\Cref{fig:sim-performance}, panel a).
-This pattern is consistent with increased gene flow eroding local adaptation
-and thereby reducing the correspondence
-between environmental and genetic variation.
-Location prediction accuracy similarly declined with increasing dispersal,
-likely reflecting reduced isolation by distance
-and weaker population structure in high-dispersal populations.
+across representative parameter ranges to illustrate
+how dispersal, selection strength, and genetic architecture
+influence the degree of local adaptation (see \Cref{fig:local-adaptation}).
 
-Decreasing the strength of selection also reduced \ecolocator's accuracy
-for environmental covariate prediction.
-Under weaker selection,
-intermediate genotypes are penalized less strongly,
-resulting in reduced local adaptation
-and a diminished genetic signal of environmental variation.
-In contrast to dispersal,
-varying selection strength did not significantly 
-affect location prediction (\(\sigma_K\)=0.3, Lon. $R^2$=0.917, 
+Under restricted dispersal (d = 0.1) and
+stronger selection (\(\sigma_K\)=0.5),
+simulated populations became strongly locally adapted
+to their environments (LA $<$ 0.1) after 10,000 generations. 
+\ecolocator performed best when dispersal was constrained
+(d = 0.1, Lon. $R^2$=0.968, Lat. $R^2$=0.967, 
+Env. $R^2$=0.769) (\Cref{fig:sim-performance}, panel a),
+while increasing dispersal reduced accuracy
+for both geographic and environmental prediction 
+(d=0.5, Lon. $R^2$=0.815, 
+Lat. $R^2$=0.814, Env. $R^2$=0.336) (\Cref{fig:sim-performance}, panel a).
+This pattern is consistent with increasing gene flow weakening both
+isolation-by-distance structure and genotype--environment correspondence.
+
+Weakening selection also reduced environmental prediction accuracy 
+\((\sigma_K\)=0.3, Env. $R^2$=0.609;
+\(\sigma_K\)=0.5, Env. $R^2$=0.561;
+\(\sigma_K\)=0.7, Env. $R^2$=0.421).
+In contrast, geographic prediction remained largely unchanged
+across selection regimes 
+(\(\sigma_K\)=0.3, Lon. $R^2$=0.917, 
 Lat. $R^2$=0.916; \(\sigma_K\)=0.5, Lon. $R^2$=0.911, 
 Lat. $R^2$=0.911; \(\sigma_K\)=0.7, 
-Lon. $R^2$=0.906, Lat. $R^2$=0.907),
-which is expected given that dispersal was held constant (d = 0.1)
-across all selection regimes,
-maintaining a consistent spatial population structure
-across these simulations. The strength of selection does, however, impact
-prediction accuracy of the environmental variable
-(\(\sigma_K\)=0.3, Env. $R^2$=0.609, \(\sigma_K\)=0.5,
-Env. $R^2$=0.561, \(\sigma_K\)=0.7, Env. $R^2$=0.421).
-This dissociation is itself informative: as selection weakens,
-environmental accuracy falls while geographic accuracy is essentially unchanged.
-Were environmental prediction merely a readout of predicted location,
-the two would rise and fall together;
-instead, environmental accuracy tracks the strength of selection---and
-hence the strength of local adaptation---rather than the accuracy of localization.
+Lon. $R^2$=0.906, Lat. $R^2$=0.907).
+This dissociation is itself informative: environmental accuracy declined as selection weakened,
+whereas geographic accuracy remained stable because dispersal,
+and therefore the spatial structure of the populations,
+was held constant.
 Together with the spatially uncorrelated landscape (H=0),
-which prevents geography from informing the environmental target in the first place,
-this confirms that \ecolocator's environmental predictions draw on
-genotype--environment signal rather than on geographic structure.
+which prevents geography from directly predicting the environmental target,
+this result supports that \ecolocator can recover
+genotype--environment signal that is distinguishable from neutral geographic structure.
 
 Varying genetic architecture produced only a slight difference in local adaptation
-($\vec{\Delta}$LA between GA1 and GA3 = 0.0008),
+($\vec{\Delta}$LA between GA1 and GA3 = 0.008),
 despite the higher number of QTL mutations arising
-under genetic architecture 3
-relative to genetic architecture 1 (Non-neutral variants in GA1=25, GA3=35).
-Biologically, varying genetic architecture allows us to explore
-differences in how adaptive effects are distributed across loci,
-ranging from architectures dominated by fewer, larger-effect QTL
-to those involving many smaller-effect and potentially redundant loci
-contributing to similar phenotypic outcomes.
-Across architectures,
-\ecolocator's location prediction accuracy remained relatively unchanged
+under genetic architecture 3 
+(GA1=25, GA3=35).
+Geographic prediction accuracy remained nearly identical across architectures
 (GA1 - Lon. $R^2$=0.967, Lat. $R^2$=0.967; 
 GA2 - Lon. $R^2$=0.967, Lat. $R^2$=0.967; 
 GA3 - Lon. $R^2$=0.968, Lat. $R^2$=0.968),
-and environmental covariate prediction accuracy was largely similar 
+and environmental covariate prediction accuracy was similarly stable 
 (GA1 - Env. $R^2$=0.759; 
 GA2 - Env. $R^2$=0.771; 
-GA3 - Env. $R^2$=0.787),
-although predictions under genetic architecture 1
-exhibited more extreme outliers and genetic architecture 3 had the highest accuracy,
-likely due to more non-neutral variants being present.
-These results suggest that \ecolocator's performance is robust 
-to differences in genetic architecture within the range explored here. 
+GA3 - Env. $R^2$=0.787).
+Although genetic architecture 1
+exhibited more extreme outliers and genetic architecture 3 showed slightly higher environmental prediction accuracy,
+\ecolocator performance was relatively robust 
+to the genomic distribution of adaptive loci within the range explored here. 
+
 To test whether this robustness extends to landscapes where environmental 
-variation is not decoupled from geography, a common feature of 
-real-world environmental gradients, we ran an additional supplemental simulation 
-using genetic architecture 3, with the environmental axis instead 
-following a spatial gradient, under two combined dispersal/selection 
+variation covaries with geography, we ran additional supplemental simulations 
+using genetic architecture 3, under two combined dispersal/selection 
 regimes: limited dispersal with strong selection 
 ($\sigma_D=0.1$, $\sigma_K=0.5$), and higher dispersal with 
 weaker selection ($\sigma_D=0.5$, $\sigma_K=0.7$) (\Cref{fig:env-map-correlated}). 
@@ -1036,43 +1021,29 @@ Lat. $R^2$=0.985,
 Env. $R^2$=0.916).
 This high prediction accuracy is consistent with the structure
 of the Wright--Fisher simulations,
-in which migration is restricted among neighboring demes
-and local adaptation is driven by directional selection
-on a small number of causal loci.
-Together,
-these features generate strong spatial genetic structure
-and localized genotype--environment associations.
-This creates a more clearly structured prediction problem
-than the continuous-space simulations,
-because the adaptive signal is concentrated in a small number
-of causal loci rather than distributed more diffusely across the genome.
-These results demonstrate that \ecolocator can recover
-geographic and environmental signal when population structure
-and genotype--environment associations are strong,
-while also highlighting how differences in demographic structure,
-selection model,
-and genetic architecture may shape prediction difficulty. We summarize 
-the full simulation $R^2$ results in \Cref{tab:supptable2}.
+where restricted migration among neighboring demes
+generates strong spatial structure and local adaptation is driven
+by a small number of causal loci with localized genotype--environment associations.
+We summarize the full simulation $R^2$ results in \Cref{tab:supptable2}.
 
 \begin{figure}[H] 
     \adjustimage{width=1.1\textwidth,center}{figures/FIG2_simssetups.pdf}
     \caption{Effects of parameter variation on \ecolocator performance. \textbf{Panel a)} 
-    shows the continuous-space, non-Wright-Fisher simulation
+    shows the continuous-space, non-Wright--Fisher simulation
     parameterizations in the top row, with prediction accuracy for each respective
     parameter shown as boxplots in the bottom row. We varied dispersal
     (d = 0.1, 0.3, 0.5), selection strength
     (\(\sigma_K\) = 0.3, 0.5, 0.7), and genetic architecture
     (GA = 1, 2, 3). Yellow indicates parameter regimes expected to produce
-    stronger local adaptation, including limited dispersal, stronger selection,
-    and more distributed QTL architectures, whereas blue indicates parameter
-    regimes expected to produce weaker local adaptation, including higher
-    dispersal, weaker selection, and more restricted genetic architectures.
+    stronger local adaptation, including limited dispersal and stronger selection,
+    whereas blue indicates parameter regimes expected to produce weaker local adaptation, 
+    including higher dispersal and weaker selection.
     Boxplots show prediction accuracy, measured as $R^2$ using scikit-learn,
     for longitude, latitude, and environmental targets across the varied
     simulation parameters. Each continuous-space simulation parameter regime
     was replicated 100 times. \textbf{Panel b)} shows the discrete-space,
-    Wright-Fisher simulation regime in the top row, with corresponding
-    prediction accuracy shown in the bottom row. The Wright-Fisher simulations
+    Wright--Fisher simulation regime in the top row, with corresponding
+    prediction accuracy shown in the bottom row. The Wright--Fisher simulations
     were held under a fixed parameterization and replicated 30 times,
     providing a complementary comparison to the continuous-space parameter
     sweeps. Boxplots summarize \ecolocator prediction accuracy across
@@ -1157,11 +1128,6 @@ while also capturing signal from linked regions.
 The stronger enrichment observed in the Wright--Fisher simulations
 is consistent with the structure of that regime,
 where adaptive signal is concentrated in a small number of causal loci.
-In contrast,
-the continuous-space simulations likely represent a more diffuse attribution problem,
-where adaptive signal is distributed across genetic architectures
-and partially shared with linked regions through hitchhiking
-or spatially structured linkage disequilibrium.
 
 
 \begin{figure}[H]
@@ -1175,10 +1141,19 @@ or spatially structured linkage disequilibrium.
     genetic architecture 3. Across panels a, b, and c, dispersal was held constant
     at (d = 0.1), and the standard deviation of the fitness function was held
     constant at (\(\sigma_K\) = 0.5). \textbf{Panel d)} shows SHAP attributions
-    for the Wright-Fisher, discrete-space simulation regime, where 12 large-effect
+    for the Wright--Fisher, discrete-space simulation regime, where 12 large-effect
     causal loci were simulated.}
     \label{fig:shap-attribution}
 \end{figure}
+
+Permutation-based sensitivity analyses further showed that predictive signal was 
+not restricted to the selected QTL window. Permuting the selected window alone 
+produced only modest changes in prediction performance, whereas jointly permuting 
+the selected window and all LD-linked sites caused accuracy to fall below zero for 
+all three targets (X $R^2=-0.114$, Y $R^2=-0.181$, Env. $R^2=-0.267$; 
+\Cref{fig:permutation}). Random genome-wide permutation produced a more 
+gradual decline in performance, with complete randomization similarly 
+eliminating predictive accuracy (X $R^2=-0.507$, Y $R^2=-0.426$, Env. $R^2=-0.425$).
 
 
 \subsection{Comparison of \ecolocator to other GEA methods}
@@ -1239,21 +1214,21 @@ and 0.079 for the top-candidate approach
 
 The replicate-level violin plots showed the same overall ranking.
 Under genetic architecture 1, 
-\ecolocator SHAP had the highest mean AUC-PR
+\ecolocator\texttimes{}SHAP had the highest mean AUC-PR
 (mean AUC-PR = 0.208),
 followed by the top-candidate method
 (mean AUC-PR = 0.128)
 and \texttt{WZA}
 (mean AUC-PR = 0.121).
 Under genetic architecture 2,
-\ecolocator\texttimes SHAP again showed the highest mean performance
+\ecolocator\texttimes{}SHAP again showed the highest mean performance
 (mean AUC-PR = 0.221),
 followed by the top-candidate method
 (mean AUC-PR = 0.103)
 and \texttt{WZA}
 (mean AUC-PR = 0.100).
 Under genetic architecture 3,
-\ecolocator\texttimes SHAP maintained the highest mean AUC-PR
+\ecolocator\texttimes{}SHAP maintained the highest mean AUC-PR
 (mean AUC-PR = 0.205),
 followed by \texttt{WZA}
 (mean AUC-PR = 0.113)
@@ -1278,7 +1253,7 @@ advantage over \texttt{WZA} and the top-candidate method under
 this same spatially correlated design (\Cref{fig:gea-comparison-regimes}).
 
 In the discrete-space Wright--Fisher simulations,
-\ecolocator\texttimes SHAP showed particularly strong recovery
+\ecolocator\texttimes{}SHAP showed particularly strong recovery
 of adaptive loci,
 achieving a pooled AUC-PR of 0.843
 relative to a random baseline of 0.0149
@@ -1288,35 +1263,27 @@ relative to a random baseline of 0.0149
 whereas the top-candidate method showed substantially lower recovery
 (pooled AUC-PR = 0.071).
 Replicate-level AUC-PR values followed the same ordering,
-with \ecolocator\texttimes SHAP showing the highest mean performance
+with \ecolocator\texttimes{}SHAP showing the highest mean performance
 (mean AUC-PR = 0.906),
 followed by \texttt{WZA}
 (mean AUC-PR = 0.619)
 and the top-candidate method
 (mean AUC-PR = 0.102).
 
-The higher performance of both \ecolocator\texttimes SHAP
+The higher performance of both \ecolocator\texttimes{}SHAP
 and \texttt{WZA} in the Wright--Fisher simulations
 is consistent with the way local adaptation was modeled:
 adaptive signal was concentrated in a smaller number
 of causal loci with strong,
 localized genotype--environment associations.
-These results suggest that feature attribution from \ecolocator
-can be especially effective when adaptive variants produce clear,
-localized genomic signal,
-while performance in continuous-space simulations may be more limited
-when adaptive signal is weaker,
-more diffuse,
-or embedded in more complex spatial structure.
 
-
-\begin{figure}[H] % or [h] if you prefer floating
+\begin{figure}[H]
     \adjustimage{width=1.1\textwidth,center}{figures/GEAcomparisonfig.pdf}
     \caption{AUC-PR curve comparison between SHAP, \texttt{WZA}, and top-candidate methods.
     Each column represents a different simulation regime. \textbf{Panel a)} represents
     genetic architecture 1, \textbf{Panel b)} represents genetic architecture 2,
     and \textbf{Panel c)} represents genetic architecture 3. \textbf{Panel d)}
-    represents the Wright-Fisher, discrete-space simulation regime. The top row
+    represents the Wright--Fisher, discrete-space simulation regime. The top row
     shows precision-recall curves constructed by pooling SNPs across all simulation
     replicates within each regime; the area under each pooled curve reflects
     global discriminatory performance and is not directly comparable to the
@@ -1324,27 +1291,27 @@ or embedded in more complex spatial structure.
     per-replicate AUC-PR values, where each point represents one simulation
     replicate and the horizontal bar indicates the mean; this view captures
     replicate-to-replicate variability in performance. In all panels,
-    purple indicates \ecolocator\texttimes SHAP, yellow indicates \texttt{WZA},
+    purple indicates \ecolocator\texttimes{}SHAP, yellow indicates \texttt{WZA},
     and blue indicates the top-candidate method.}
     \label{fig:gea-comparison}
 \end{figure}
 
 
 \subsection{Predicting suitable environments
-for coastal Douglas Fir using \ecolocator}
+for coastal \dfir using \ecolocator}
 
 Simulations provide a controlled setting to benchmark \ecolocator,
 but the ultimate goal is to evaluate its performance in natural systems
 where demography, gene flow, selection, and management history
 interact in complex ways. To this end,
-we applied \ecolocator to predict the climate of origin of coastal Douglas-fir
+we applied \ecolocator to predict the climate of origin of coastal \dfir
 (\textit{Pseudotsuga menziesii} var. \textit{menziesii}),
 a keystone conifer of western North American forests
 that has been the focus of forest genetics research for over a century \citep{stclair_1912_2020}.
-Coastal Douglas-fir spans steep gradients in temperature,
+Coastal \dfir spans steep gradients in temperature,
 precipitation, elevation, and summer drought,
 and a century of provenance trials and seed-transfer research
-have shown that trees express maladaptive responses
+has shown that trees express maladaptive responses
 (e.g., slow growth, poor form, disease susceptibility) when moved beyond
 their local source climate \citep{stclair_genecology_2005,stclair_genetic_2007}.
 This pattern is well-documented in seedling and tree provenance trials,
@@ -1352,10 +1319,10 @@ which consistently show home-environment advantage and genotype--environment
 interactions along climatic gradients related primarily to winter cold,
 summer drought, and summer heat accumulation.
 
-To minimize maladaptation in Douglas-fir,
+To minimize maladaptation in \dfir,
 seed zones were developed to define geographic limits
 within which seedlings can be moved while preserving local adaptation.
-Douglas-fir seed zones were formalized for U.S. Forest
+\dfir seed zones were formalized for U.S. Forest
 Service forest lands in the 1940s \citep{kummel_forest_1944},
 and they were later expanded to include federal, state, and private lands
 in the 1960s and 1970s \citep{usdaforestservice_tree_1973}.
@@ -1364,26 +1331,26 @@ Modern seed transfer zones
 incorporate geographic and climatic factors,
 as well as experimental evidence from reciprocal transplant trials.
 This well-developed biological and management framework
-makes Douglas-fir a particularly powerful empirical system
+makes \dfir a particularly powerful empirical system
 for evaluating \ecolocator.
 
 
 \subsubsection*{Data and model application}
 
 Our empirical dataset consisted of open-pollinated seedlings from
-348 unrelated coastal Douglas-fir trees
+348 unrelated coastal \dfir trees
 sampled across Oregon and Washington. The maternal parents
 of these trees were woodsrun (unimproved) 'plus' trees, identified through 
 field observations as well-adapted to their local environment and exceptional 
-for diameter, height, and stem form. Leaf-derived DNA from individual trees was genotyped using the 58K Douglas-fir 
+for diameter, height, and stem form. Leaf-derived DNA from individual trees was genotyped using the 58K \dfir 
 Axiom Affymetrix SNP array \citep{howe_axiom_2020}, yielding 18,732 SNPs 
-after filtering. The Douglas-fir genome is large and incompletely 
+after filtering. The \dfir genome is large and incompletely 
 assembled ($\sim$16 Gb; \cite{neale_douglas-fir_2017}), so genomic positions of array SNPs are unknown, 
 precluding chromosome- or window-level analyses.
 
-Douglas-fir exhibits low self-fertility and 
+\dfir exhibits low self-fertility and 
 seeds derived from maternal parents are typically pollinated by multiple nearby 
-pollen donors. While the pollen pool is heterogeneous, pollen and seed movement in Douglas-fir
+pollen donors. While the pollen pool is heterogeneous, pollen and seed movement in \dfir
 is limited (typically <400km),
 making the maternal source environment a reasonable proxy for the source of open-pollinated
 seedlings.
@@ -1391,11 +1358,12 @@ To represent source climates,
 we chose 1970--2000 baseline climate normals modeled by
 ClimateNA \citep{mahony_global_2022} using source latitude, longitude, and elevation. 
 We focused on three climate variables shown to be significantly 
-associated with Douglas-fir growth and local adaptation \citep{stclair_genecology_2005}: 
+associated with \dfir growth and local adaptation \citep{stclair_genecology_2005}: 
 mean cold month temperature (MCMT), which shows the strongest 
 associations with the timing of summer budset and annual height 
-increment; and summer heat-moisture index (SHM) and mean summer 
-precipitation (MSP), both of which show strongest associations to 
+increment; and Summer Heat:Moisture Index (SHM) and mean summer 
+precipitation (MSP; May--September precipitation), 
+both of which show the strongest associations with 
 the timing of spring bud break and the magnitude of stem taper. 
 These variables capture the primary axes of climate variation 
 across the species' range and correspond directly to the selection 
@@ -1418,18 +1386,48 @@ geographic coordinates and climate values.
 Geographic coordinates and environmental covariates
 were centered and scaled prior to model training.
 
-\begin{figure}[H] % or [h] if you prefer floating
+Following model training and prediction, 
+SHAP values were summarized across leave-one-out 
+folds by calculating the mean absolute attribution 
+for each of the 18,732 SNPs separately for latitude, longitude, 
+MCMT, MSP, and SHM. For each prediction target, 
+we retained the 179 highest-attribution SNPs, 
+approximately the top 1\% of the ranked SHAP distribution, 
+as candidate loci for downstream comparison and biological interpretation. 
+This threshold was used for prioritization rather than as a test of 
+statistical significance. We then compared pairwise overlap 
+among the five target-specific SNP sets to determine the extent 
+to which geographic and climatic predictions relied on shared genomic features.
+
+To characterize the potential biological functions represented 
+among high-attribution loci, SNP identifiers were used to retrieve their source 
+cDNA sequences. Available sequence annotations included best protein matches 
+to \textit{Arabidopsis thaliana} and \textit{Populus trichocarpa}, 
+along with Mercator gene descriptions and PANTHER functional classes and family 
+identifiers. We used these annotations descriptively to identify recurring biological 
+functions and functional themes among high-attribution loci and to compare these patterns 
+across prediction targets. Because these functional assignments rely in part on 
+homology to angiosperm proteins and SHAP quantifies predictive importance 
+rather than causality, we interpret the resulting annotations as a means of 
+prioritizing and biologically contextualizing candidate loci rather than as 
+evidence that individual SNPs are causal targets of local adaptation.
+
+% TODO: Confirm the specific annotation resource/database versions with Rich
+% and add citations for PANTHER and Mercator as appropriate.
+
+
+\begin{figure}[H]
     \adjustimage{width=1.1\textwidth,center}{figures/dfirresults.pdf}
-    \caption{Douglas fir case study results. \textbf{Panels a-e.} show true
+    \caption{\dfir case study results. \textbf{Panels a-e.} show true
     vs. predicted scatterplots across all prediction targets. From left to right,
-    we show Longitude ($R^2$=0.76), Latitude ($R^2$= 0.83)
-    , Mean Cold Month Temperature (MCMT)($R^2$= 0.73), Summer Heat Moisture Index (SHM)
-    ($R^2$= 0.49), and Mean Summer Precipitation (MSP) ($R^2$= 0.52). \textbf{Panels f-g.}
+    we show Longitude ($R^2$=0.75), Latitude ($R^2$= 0.83), 
+    Mean Cold Month Temperature (MCMT) ($R^2$= 0.72), Summer Heat:Moisture Index (SHM) 
+    ($R^2$= 0.52), and Mean Summer Precipitation (MSP) ($R^2$= 0.54). \textbf{Panels f-g.}
     both show the sampling range, with \textbf{Panel f.} being the sample locations
     and \textbf{Panel g.} being the seed zone map, with labels only on the seed zones containing
     samples. \textbf{Panels h-j.} show where \ecolocator predictions fall within the 
     established seed zones, with gray boxes showing the environmental covariate's ranges in a
-    given zone, 'x's' representing the source sample value, and colored dots representing Ecolocator 
+    given zone, 'x's' representing the source sample value, and colored dots representing \ecolocator 
     predictions inside each zone. From left to right, we show MCMT in pink, SHM in yellow, and MSP
     in orange. 
     }
@@ -1440,13 +1438,12 @@ were centered and scaled prior to model training.
 \subsubsection*{Prediction accuracy}
 
 \ecolocator predicted source latitudes and longitudes with $R^2$
-values of 0.84 and 0.76 respectively (\Cref{fig:dfir-results}, \Cref{tab:supptable1}). Combined latitude
+values of 0.83 and 0.75, respectively (\Cref{fig:dfir-results}). Combined latitude
 and longitude for each sample gave predicted geographic origins that showed a median error of 51.6km (see \Cref{fig:geo-error}), with
 minimum errors as low as 1.2km and maximum errors as high as 646km. Errors
 greater than 200km appeared as extreme outliers and were not associated with obvious
-geographic (e.g. edge of range; clustered locations) or genetic (e.g., unusual homozygosity)
-attributes. Label errors or failed predictions are likely
-underlying sources for these unusually large errors. 
+geographic (e.g., edge of range; clustered locations) or genetic (e.g., unusual homozygosity)
+attributes. Label errors or failed predictions may contribute to these unusually large errors. 
 
 A central question for any genotype-to-climate model is whether
 its climate predictions reflect genuine genotype--environment signal
@@ -1465,12 +1462,12 @@ predictions, the indirect route---predicting location and then looking up its
 climate in ClimateNA---would do at least as well.
 Instead, direct estimates from \ecolocator
 showed higher accuracy than translating locations
-to climate via ClimateNA variables (ref. \Cref{tab:supptable1}), indicating that \ecolocator
+to climate via ClimateNA variables (\Cref{tab:supptable1}), indicating that \ecolocator
 identifies climate-related covariance in the geographic--genomic matrix
 beyond what geography alone supplies,
 and uses this covariance to improve local climate estimates. Among the three modeled climate variables,
-Mean Cold Month Temperature (MCMT) showed the highest predicted $R^2$ of 0.73, with May to September
-Precipitation (MSP) ($R^2$=0.52) and summer heat:moisture index (SHM) ($R^2$=0.49)
+Mean Cold Month Temperature (MCMT) showed the highest predicted $R^2$ of 0.72, with Mean Summer
+Precipitation (MSP) ($R^2$=0.54) and Summer Heat:Moisture Index (SHM) ($R^2$=0.52)
 showing lower and comparable prediction accuracies. These correlations are consistent 
 with climate patterns in the Pacific Northwestern U.S., as monthly minimum air temperatures
 are easier to model than precipitation or aridity due to complex interactions
@@ -1487,7 +1484,7 @@ seed transfer zones \citep{usdaforestservice_tree_1973} were narrowly
 defined to restrict movement and minimize maladaptive responses to winter 
 cold temperatures. `Second-generation' zones \citep{randall_forest_1996, randall_washington_2002}
 were subsequently developed after common garden experiments revealed that 
-Douglas-fir populations show broader climate tolerance than is reflected in first-generation zones.  
+\dfir populations show broader climate tolerance than is reflected in first-generation zones.  
 For our comparison, we compiled spatial layers for first-generation Oregon and Washington seed zones,
 along with climate summaries for seed zones divided into 1000 ft elevation bands, 
 instead of the original 500-foot elevation bands \citep{shalev_zone_2026}.
@@ -1508,9 +1505,9 @@ We compared predicted climate values to the 100th percentile range (defined by t
 and the 98th percentile range (defined by the 1st and 99th percentile values).  
 Using a fixed-zone approach, we find that 66.1\%
 of the MCMT predictions fall within seed zone--elevation band 100th 
-percentile ranges, and that the number of matches drop to 49.7\% of predictions when using the 
+percentile ranges, and that the number of matches drops to 49.7\% of predictions when using the 
 98th percentile range. The proportion of matches is higher for MSP (86.2\% for the 
-100th percentile range) and SHM (87.6\% for the 100th percentile range)(\Cref{tab:table1}). 
+100th percentile range) and SHM (87.6\% for the 100th percentile range) (\Cref{tab:table1}). 
 These values are all larger than similar estimates using ClimateNA predictions from 
 \ecolocator geographic predictions (\Cref{tab:table1}). 
 
@@ -1540,7 +1537,7 @@ and is considered a "match".
 Using a focal point approach, we find that 93.1\% of the MCMT predictions 
 show lower distances from the true value than the 100th percentile 
 range of the source seed zones, and that the number of matches 
-drop to 87.1\% of predictions when using the 98th percentile range 
+drops to 87.1\% of predictions when using the 98th percentile range 
 (\Cref{tab:table2}). Predictions for MSP and SHM showed higher accuracies,
 with 98.6\% and 97.7\% of estimates falling within the 100th 
 percentile range of the source seed zone. As was observed with 
@@ -1568,19 +1565,12 @@ geographic predictions (\Cref{tab:table2}).
 
 
 Prediction error for different climate variables was not uniform across seed zones,
-and patterns differed by MCMT, MSP, and SHM.
+and patterns differed by MCMT, MSP, and SHM
 (\Cref{fig:dfir-results}, panels h-j). In our sample, trees from coastal seed 
-zones in Oregon and Washington (e.g., zones 031, 041, 051, 061) showed significantly lower prediction
+zones in Oregon and Washington (e.g., zones 031, 041, 051, 061) showed lower prediction
 errors for MCMT than either Cascade or Cascade Crest sources.
-Conversely, trees from Oregon and Washington Cascades seed zones showed significantly
-lower prediction errors for MSP and SHM than did Coastal or Cascade Crest trees. The independence
-of these patterns from specific geographic locations suggests that they are attributable to some combination
-of climatic and topographic complexity, variable sampling density (or sample size), and possibly
-varied ancestry (e.g., degree of var. \textit{glauca} introgression) and not a systematic bias
-of the method (for example, highest errors always observed at the study margins). Explicitly
-testing variable sampling density over topographically complex regions could help determine
-whether region-specific anomalies are intractable or whether predictions can be improved by denser
-training data.  
+Conversely, trees from Oregon and Washington Cascades seed zones showed
+lower prediction errors for MSP and SHM than did Coastal or Cascade Crest trees.  
 
 These results demonstrate that \ecolocator
 can predict the climate of origin of individual genotypes
@@ -1593,7 +1583,7 @@ are not just numerically accurate,
 but they are close enough that forest managers
 would consider it an acceptable transfer source.
 
-Because the Douglas-fir genome is large and incompletely assembled, 
+Because the \dfir genome is large and incompletely assembled, 
 the SNP array used here does not carry chromosome coordinates by design. 
 As a supplemental analysis, we aligned array probe sequences to a recent 
 draft assembly (DFv5.29) and, restricting to primary, 
@@ -1603,54 +1593,54 @@ Plotting mean $\lvert\mathrm{SHAP}\rvert$ against these positions
 lets us view attribution scores in genomic context for each of the 
 five prediction targets (\Cref{fig:shap-manhattan-dfir}). 
 Several genomic regions show elevated attribution for both longitude and 
-MCMT simultaneously, consistent with the fact that mean coldest-month 
-temperature covaries with longitude across coastal Douglas-fir's range, 
+MCMT simultaneously, consistent with the fact that Mean Cold Month
+Temperature covaries with longitude across coastal \dfir's range, 
 with coastal populations experiencing milder winters than those toward 
 the Cascade crest---the same pattern we recover in simulation when 
 environment is spatially correlated with geography (\Cref{fig:env-map-correlated}, \Cref{fig:shap-manhattan-sim}). 
-The highest-attribution SNPs in \Cref{fig:shap-manhattan-dfir} are candidates for future investigation, 
-although we are not yet able to cross-reference them against gene models or functional annotation.
-%% JR NOTE / TODO: once gene models and functional annotation (GO terms) for
-%% DFv5.29 are available, cross-reference the high-attribution candidate
-%% SNPs from Fig S9 (exported to dfir_top_hits_*.tsv and sent to Rich) against nearby gene
-%% annotations and slot the results in as a new paragraph immediately
-%% following this one.
 
-% NOTE FOR DISCUSSION: Rich raised several points about how Douglas-fir
-% biology relates to the assumptions of the SLiM simulations.
-% Douglas-fir may be well represented by low dispersal, strong selection,
-% and a polygenic adaptive architecture with many dispersed loci rather
-% than a few genes of major effect. This aligns most closely with our
-% simulation scenarios involving restricted dispersal and stronger local
-% adaptation.
-% NOTE FOR DISCUSSION: Rich also noted that Douglas-fir pollen and seed
-% dispersal are asymmetric and biologically distinct. Gene flow occurs
-% through both pollen movement during mating and seed movement during
-% progeny dispersal, with most pollen and seeds moving short distances.
-% In reality, nearby pollen donors are more likely than distant donors,
-% and paternity is unlikely to be uniform across a local pixel.
-% NOTE FOR DISCUSSION: Rich emphasized that Douglas-fir regeneration may
-% involve strong recruitment bottlenecks. Many offspring die under the
-% maternal canopy, and replacement may occur mainly after disturbance
-% such as fire, disease, or windthrow. This could make net migration
-% smaller than a simple dispersal kernel might imply.
-% NOTE FOR DISCUSSION: Consider explicitly distinguishing what the SLiM
-% simulations are meant to test from what the empirical Douglas-fir case
-% study demonstrates. The simulations test general conditions under
-% which \ecolocator succeeds, whereas Douglas-fir provides a biologically
-% realistic system where low dispersal, strong selection, and polygenic
-% adaptation are plausible.
-% NOTE FOR DISCUSSION/FUTURE WORK: Hebo, Oregon may be a strong applied
-% example. The area burned in the 1850s, remained poorly forested
-% decades later, and was later replanted by the early USFS using many
-% off-site or unknown seed sources. This creates a 100-year-old mixture
-% of potentially well-adapted and maladapted trees that could be
-% evaluated with \ecolocator.
-% NOTE FOR DISCUSSION/FUTURE WORK: The Hebo example could be used to
-% motivate \ecolocator as a tool for reconstructing seed-source history
-% or identifying climate-of-origin mismatches in legacy reforestation
-% stands, but this should probably be included only after the field trip,
-% photos, or historical documentation are incorporated.
+We next asked whether the same genomic features contributed strongly across geographic 
+and climatic prediction targets. Comparing the 179 highest-attribution SNPs for 
+each target revealed substantial variation in pairwise overlap (\Cref{tab:dfir-shap-overlap}). 
+Only 13 SNPs were shared between latitude and MCMT (7.3\%), 
+whereas longitude and MCMT shared 97 SNPs (54.2\%). 
+The strongest overlap occurred between MSP and SHM, which shared 133 SNPs (74.3\%). 
+These overlap patterns mirror relationships among the prediction targets themselves. 
+MSP and SHM both capture variation related to summer moisture availability and showed 
+the strongest overlap among high-attribution SNPs. Similarly, 
+MCMT varies strongly along the longitudinal transition from relatively mild 
+maritime environments toward colder environments closer to the Cascade Range 
+and shares substantial genomic signal with longitude. In contrast, 
+latitude and MCMT shared relatively few high-attribution loci (7.3\%), 
+consistent with latitude representing a north--south geographic axis rather 
+than the longitudinal winter-temperature gradient captured by MCMT.
+
+Functional annotation of the high-attribution SNPs revealed additional 
+differences among prediction targets. Among loci with informative annotations, 
+latitude-associated candidates included putative homologs involved in 
+phytochrome-mediated light signaling, circadian and seasonal regulation, 
+and developmental timing, including \textit{PIF3}, \textit{FPA}, WNK-family kinases, 
+and several MYB transcription factors. MCMT- and longitude-associated candidates 
+included putative \textit{ELF3} and DREB/AP2-family transcription factors, 
+SPL-family regulators, molecular chaperones including DnaJ proteins, 
+membrane lipid and desaturase-associated genes, and genes involved in 
+carbohydrate and trehalose metabolism. These annotations represented 
+functions associated with seasonal regulation, temperature-stress response, 
+membrane remodeling, and acclimation \citep{lee_photoperiodic_2012, chen_acyl_2013}. 
+
+A distinct but internally consistent set of functions was observed 
+among the strongly overlapping MSP and SHM candidate sets. 
+These included putative PYL-family ABA receptors, PP2C phosphatases \citep{park_abscisic_2009}, LEA proteins, 
+an osmosis-responsive factor, GST-family proteins, membrane transporters, 
+and other genes associated with cellular stress protection. 
+Additional candidates across the MSP and SHM sets were associated with heat-shock, mitochondrial stress, and redox-response functions.
+Although many high-attribution loci were 
+poorly annotated or had functions that were difficult to relate directly to climate, 
+the interpretable candidates repeatedly represented processes associated with 
+environmental timing, temperature acclimation, water-stress signaling, 
+membrane remodeling, and oxidative-stress response. % TODO: Add final Supplementary Data S1 file and verify all named candidate annotations against the complete annotation list.
+The complete set of high-attribution SNPs and associated functional annotations is provided in Supplementary Data~S1.
+
 
 
 
@@ -1707,6 +1697,34 @@ allele frequency clines that track ecological gradients---a
 signal that is eroded
 when gene flow overwhelms local selection.
 
+Varying genetic architecture allowed us to test whether
+\ecolocator's performance depends on how adaptive effects
+are distributed across the genome.
+Despite differences in the number and distribution of adaptive loci,
+prediction accuracy remained largely unchanged across the three
+architectures tested.
+This suggests that \ecolocator can recover geographic
+and environmental signal across both more concentrated
+and more distributed architectures,
+although the range explored here represents only a subset
+of the genetic complexity expected in natural populations.
+
+Our primary continuous-space simulations deliberately decoupled
+environment from geography, but environmental gradients commonly
+covary with geographic structure in natural landscapes
+\citep{meirmans_ibd_2012}.
+We therefore repeated our analysis under a spatially correlated
+environmental gradient to ask whether the same general patterns
+persist when geography and environment share spatial structure.
+Prediction accuracy again declined under higher dispersal
+and weaker selection, indicating that the relationships observed
+in the decoupled simulations persist under this more realistic
+spatial configuration.
+However, when geography and environment covary,
+shared predictive signal cannot necessarily be attributed uniquely
+to demographic structure or local adaptation,
+an important limitation that we return to below.
+
 The Wright--Fisher results illustrate the upper end of \ecolocator performance
 under strong,
 structured genotype--environment associations.
@@ -1715,10 +1733,7 @@ where individuals vary continuously across space
 and local adaptation emerges under stabilizing selection on a quantitative trait,
 the Wright--Fisher simulations impose spatial structure through discrete demes
 and directional selection on a small number of causal loci.
-\ecolocator performed particularly well in this setting
-(Lon. $R^2$=0.986,
-Lat. $R^2$=0.985,
-Env. $R^2$=0.916),
+\ecolocator performed particularly well in this setting,
 suggesting that the model readily recovers geographic and environmental signal
 when spatial structure is strong
 and genotype--environment associations are concentrated in the genome.
@@ -1737,47 +1752,382 @@ diffuse genetic architectures,
 high dispersal,
 or weak selection can weaken the signals that \ecolocator is designed to learn.
 
-The Douglas-fir case study extends these findings
-to a natural system where the ground truth
-is not fully known.
-\ecolocator's predictions of geographic origin and climate variables
-in coastal Douglas-fir are consistent
-with the species' well-documented patterns
-of local adaptation along steep latitudinal
-and elevational gradients in western North America
-\citep{aitken_assisted_2013}.
+The \dfir case study extends these findings to a natural 
+system where the ground truth is not fully known. 
+\ecolocator's predictions of geographic origin and 
+climate variables in coastal \dfir are consistent with the 
+species' well-documented patterns of local adaptation along steep 
+latitudinal and elevational gradients in western 
+North America \citep{aitken_assisted_2013}. 
 That the model performs well in this system 
-(Lon. $R^2$=0.76, Lat. $R^2$=0.83, 
-MCMT $R^2$=0.73, MSP $R^2$=0.52 , 
-SHM $R^2$=0.49)---despite a documented low 
-population differentiation \citep{krutovsky_estimation_2009},
-the absence of a contiguous reference genome \citep{neale_douglas-fir_2017},
-and a relatively modest number of SNPs---suggests
-that the joint prediction framework captures
-biologically meaningful signal even with incomplete genomic resources.
+(Lon. $R^2$=0.75, Lat. $R^2$=0.83, MCMT $R^2$=0.72, MSP $R^2$=0.54, SHM $R^2$=0.52), 
+despite low population differentiation \citep{krutovsky_estimation_2009}, 
+incomplete genomic resources \citep{neale_douglas-fir_2017}, 
+and a relatively modest number of SNPs, 
+suggests that the joint prediction framework can recover 
+informative genomic signal even under challenging empirical conditions. 
+Feature attribution provides additional resolution into how this 
+predictive signal is distributed across geographic and environmental
+targets, which we discuss in detail below.
 
+
+\subsection{Feature attribution as a tool for identifying candidate adaptive loci}
+
+SHAP-based feature attribution provides a window
+into which genomic regions drive \ecolocator's predictions.
+Our simulation results demonstrate
+that non-neutral variants consistently receive
+higher attribution scores than neutral sites,
+confirming that the model preferentially weights loci
+under selection.
+This signal persists across genetic architectures
+despite modest effect sizes
+(Cohen's $d \approx 0.14$--$0.18$),
+indicating that SHAP can detect the distributed signature
+of polygenic adaptation
+even when individual locus effects are small.
+
+However,
+the modest effect sizes also highlight
+an inherent challenge:
+under polygenic adaptation,
+the signal at any single locus is subtle,
+and attribution scores for adaptive and neutral loci
+overlap substantially.
+This is consistent with the broader finding
+that GEA methods are generally underpowered
+under weak selection,
+and that detecting most causal loci
+requires tolerating a substantial false positive rate
+\citep{lotterhos_whitlock_2015, booker_wza_2024}.
+\ecolocator's feature attribution faces the same trade-off:
+thresholding on SHAP values to identify candidate loci
+will inevitably involve a balance
+between sensitivity and specificity
+that depends on the unknown strength of selection
+and the genetic architecture of adaptation.
+
+The continuous-space simulations therefore represent
+a comparatively diffuse attribution problem,
+with adaptive effects distributed across loci
+and additional predictive signal extending into linked sites
+through hitchhiking.
+Linkage disequilibrium further complicates interpretation,
+as SHAP values are elevated not only at causal variants
+but also at linked neutral sites.
+This is expected,
+because LD spreads adaptive signal
+across genomic neighborhoods,
+but it means that high-attribution regions
+should be interpreted as candidate windows
+rather than as individual causal variants.
+The recombination-rate comparison illustrates this effect directly:
+LD extended much more broadly beyond the selected QTL window
+under \(10^{-8}\) than under the \(10^{-6}\) rate
+used for the analyses reported here
+(\Cref{fig:ld-decay}).
+Together, distributed adaptive effects and signal shared among linked sites
+help explain both the modest separation between neutral
+and non-neutral SHAP distributions
+and the difficulty of resolving individual causal sites.
+
+The permutation-based sensitivity analyses
+complement SHAP by providing a different lens
+on the same question.
+By disrupting specific genomic regions
+and measuring the resulting loss in prediction accuracy,
+these analyses show how much predictive information is carried
+by the selected window,
+by linked sites,
+and by genome-wide background variation.
+Prediction declined much more strongly
+when the selected window and LD-linked sites were permuted together
+than when the selected window alone was disrupted
+(\Cref{fig:permutation}).
+These findings suggest that \ecolocator is not relying
+on the selected window alone,
+but on a broader LD-associated haplotypic signal
+that can obscure the distinction between causal and linked variants.
+
+The SHAP and permutation analyses show that \ecolocator's predictions
+are grounded in biologically meaningful genetic variation,
+but they also highlight an important limitation of feature attribution:
+when LD is strong,
+linked neutral sites can mask or share signal with the true causal loci.
+In this sense,
+SHAP may be most reliable for identifying candidate genomic regions
+or haplotypic blocks associated with local adaptation,
+rather than for pinpointing individual causal mutations.
+This interpretation is particularly important for empirical systems,
+where LD can reflect physical linkage,
+demographic history,
+selection,
+population structure,
+or unobserved ancestry,
+and where the true causal variants are rarely known.
+
+Notably,
+SHAP-based attribution from \ecolocator
+shows greater power to identify adaptive loci
+than \texttt{WZA} \citep{booker_wza_2024}
+and top-candidate approaches
+in our simulation comparisons
+(\Cref{fig:gea-comparison}).
+This advantage likely reflects the fact
+that SHAP attribution operates on a model
+that has already learned the joint relationship
+between genotypes,
+geography,
+and environment,
+rather than testing each locus independently
+against a single environmental predictor.
+By conditioning on a trained multitask model,
+SHAP can capture contributions from loci
+whose individual marginal correlations with environment are weak
+but whose combined effect is detectable
+in the context of the full genotype.
+This shows that supervised prediction
+followed by post hoc feature attribution
+can be a powerful complement to traditional GEA approaches,
+particularly under polygenic adaptation
+where per-locus signals are subtle.
+At the same time, 
+the stronger performance of both SHAP and \texttt{WZA}
+in the Wright--Fisher simulations suggests that 
+locus-identification performance can improve 
+when adaptive signal is strong and localized,
+whereas more diffuse adaptive architectures 
+present a more difficult inference problem.
+
+One limitation, however, is particularly important when 
+extending feature attribution from simulations to empirical landscapes. 
+Geography and climate frequently covary, such that variants associated 
+with spatial population structure may also appear associated with 
+environmental gradients even when they are not themselves targets of 
+climate-mediated selection. This challenge is shared by conventional 
+GEA approaches \citep{booker_wza_2024, meirmans_ibd_2012}. 
+Our continuous-space simulations largely avoid this problem by design, 
+holding climate independent of geography ($H=0$) so that genotype--climate 
+signal can be evaluated against known causal loci (\Cref{fig:shap-attribution}). 
+In empirical systems where geography and environment covary, attribution alone 
+cannot establish whether a high-attribution locus reflects direct environmental 
+selection, demographic structure, linkage to a selected locus, or some 
+combination of these processes. High-attribution loci should therefore be 
+interpreted as candidate genomic regions associated with the predicted 
+gradient rather than as confirmed causal targets of adaptation.
+
+The \dfir results nevertheless provide additional information 
+about how this signal is structured. Overlap among high-attribution SNPs 
+was greatest between prediction targets that represent closely related 
+environmental or geographic gradients: MSP and SHM shared 74.3\% of their 
+highest-attribution loci, while longitude and MCMT shared 54.2\%. 
+In contrast, latitude and MCMT shared only 7.3\% (\Cref{tab:dfir-shap-overlap}). 
+This pattern suggests that \ecolocator is not assigning uniformly high 
+attribution to the same spatially structured loci across all prediction targets, 
+but instead recovers partially target-specific genomic signal corresponding 
+to different axes of geographic and environmental variation. 
+Functional annotations provide complementary biological support for this 
+interpretation. Latitude-associated candidates represented light sensing 
+and seasonal developmental regulation, consistent with known effects of 
+photoperiod and temperature on seasonal growth 
+cessation in coastal \dfir \citep{ford_photoperiod_2017}.
+Longitude and MCMT candidates included functions related to seasonal 
+regulation and temperature acclimation, consistent with previous genomic 
+evidence for polygenic cold adaptation involving growth, phenology, 
+and stress signaling in \dfir \citep{delatorre_polygenic_2021}. 
+MSP and SHM candidates repeatedly represented ABA-mediated water-stress signaling, 
+osmotic protection, and redox response, while previous common-garden work in coastal 
+\dfir has similarly demonstrated climate-related genetic variation in drought 
+and cold hardiness across winter-temperature and summer-precipitation 
+gradients \citep{bansal_tolerance_2016}. Viewed together, 
+these patterns suggest that environmental timing, including the timing of growth, 
+dormancy, acclimation, and stress response, may be an important component of the 
+genotype--environment signal captured by \ecolocator in \dfir.
+
+\subsection{Implications for \dfir management and forestry}
+
+For natural resource management,
+\ecolocator addresses a practical need:
+identifying the geographic and climatic source of biological materials
+under historical, current, or projected future climates.
+Seed transfer guidelines have been used on U.S. Forest Service lands
+for over a half century \citep{kummel_forest_1944}, and comparable guidelines 
+extend back nearly a century in Europe \citep{myking_historic_2016}. 
+Despite the history and ubiquity of seed transfer zones, 
+large-scale restoration efforts with non-local materials have been a 
+common occurrence in forestry, both in the management of native forests
+and in introduced species trials.
+These unintended `local adaptation experiments' provide clear examples of 
+maladaptive responses, but they are usually associated with a poor
+understanding of the seed source. Tools like \ecolocator can
+provide estimates of the source location and environment,
+making it possible to interpret maladaptive responses in large-scale 
+plantings in light of geographic or climatic transfer distances. 
+Applying \ecolocator to trials of suspected `off-site' origin could
+substantially expand our knowledge of growth and
+fitness responses of large climate transfers, as designed provenance tests with 
+`off-site' materials are limited in number for most tree species.
+
+Similarly,
+forest tree provenance tests established outside native ranges
+typically have the goal of identifying high-performing genotypes and geographic
+sources where additional material can be selected.
+Incomplete records or missing tree identities limit the utility of these tests
+by making it difficult to match similar climates to identify pre-adapted seed for screening
+and breeding.
+Efforts to combat illegal logging now increasingly rely
+on DNA-based methods to identify the geographic source of tissues,
+such as wood.
+Adding climatic source information to these investigations
+can help investigators discriminate among geographically similar
+but climatically distinct sources (such as those separated by elevation).
+Finally,
+traditional reforestation programs based on seed transfer guidelines
+and common-garden trials are increasingly strained
+by the pace of climate change \citep{aitken_bemmels_2016},
+and new tools are needed to manage climate uncertainty.
+Genomic tools that predict the climate of origin of a given genotype
+offer a unique strategy for answering these questions,
+enabling managers to evaluate whether replanting resources
+are well-matched to the conditions they will encounter
+at a given site.
+
+Coastal \dfir is a natural test case for this application.
+Its economic importance,
+extensive provenance trial data,
+and strong signals of local adaptation along climate gradients
+provide both the motivation and the validation framework
+for genomic prediction tools.
+By predicting climate of origin alongside geographic location,
+\ecolocator provides information that is directly relevant
+to seed transfer decisions:
+two seed sources from similar geographic locations may differ
+in their predicted climate of origin,
+reflecting adaptive differences that might be missed
+by geography-based guidelines alone.
+By comparing \ecolocator predictions to \dfir seed zones,
+these predictions become interpretable in definable management terms.
+For example,
+the most recently proposed seed zone--elevation bands
+in Oregon and Washington span approximately
+2.5\textdegree C in MCMT across the 98th percentile range \citep{shalev_zone_2026}.
+Our results suggest that \ecolocator predictions fall
+within these climate tolerances 87.1\% of the time with \dfir. 
+Importantly,
+this level of accuracy was achieved with a modestly sized dataset
+of 348 trees and approximately 18,000 SNPs,
+and without any use of genomic position.
+\ecolocator operates on the genotype matrix alone,
+so neither a contiguous assembly nor an ordered marker map is required---an
+advantage in species whose genomic resources remain incomplete.
+The approximate chromosomal coordinates recovered by aligning probe
+sequences to the DFv5.29 draft assembly were used only to place SHAP
+attributions in genomic context (\Cref{fig:shap-manhattan-dfir}),
+not for prediction.
+Although additional sampling is not evaluated empirically here, downsampling in
+our simulations (see \Cref{fig:downsampling}) and
+previous work with Locator suggest that geographic prediction accuracy
+increases with increased sampling density and,
+to a lesser extent,
+increased genomic sampling \citep{battey_predicting_2020}.
+Similar improvements should be possible for \ecolocator,
+particularly in regions where current predictions are limited
+by sparse sampling or rapidly changing environmental gradients.
+
+At the same time,
+the interpretation of \ecolocator predictions depends on
+the sampling history and biological structure of the material being analyzed.
+The \dfir individuals used here were designated as ``plus'' trees,
+meaning they were identified through provenance trials
+or field observations as being particularly well-adapted
+to their local environments.
+This selection criterion may strengthen genotype--environment correspondence
+and aid climate prediction,
+but it could also overestimate performance relative to
+less-characterized or more heterogeneous samples.
+The spatial distribution of prediction error also highlights
+important considerations for applying \ecolocator in complex landscapes.
+For example, the highest prediction errors for MCMT in our dataset 
+were concentrated near the eastern crest of the Cascade Range,
+where several non-mutually exclusive factors may contribute to reduced prediction accuracy.
+First,
+steep elevational gradients near the Cascade crest generate sharp climate transitions
+in MCMT and MSP that may be difficult to model,
+especially with relatively low local sampling density.
+Second,
+many seed sources in this dataset predate civilian GPS use,
+and source locations were recorded using Township--Range--Section estimates.
+Estimation,
+rounding,
+and digitization errors may have introduced
+positional inaccuracies that are amplified in topographically complex terrain.
+Finally,
+\dfir populations east of the Cascade crest show evidence of introgression
+with interior \dfir
+(\textit{Pseudotsuga menziesii} var.\ \textit{glauca}) \citep{stclair_genecology_2005},
+and trees with greater interior ancestry may show higher prediction error
+when evaluated with a model trained primarily on coastal \dfir
+genomic and climatic data.
+These patterns suggest that prediction errors
+point to biologically meaningful features of the study system,
+including ancestry transitions,
+complex topography,
+and uncertainty in historical source records \citep{rehmann2024evaluating}.
+
+More broadly,
+the approach is not limited to \dfir
+or to species with extensive prior characterization.
+Any system with georeferenced genotypes and associated environmental data
+can be analyzed with \ecolocator,
+making it a useful tool for less-studied species
+where common-garden data are scarce or absent.
+In these systems,
+even weak or uneven predictive performance may be informative.
+Poor environmental prediction may suggest that genetic variation
+is not strongly tracking the environmental variable being modeled,
+whereas poor geographic prediction may indicate weak population structure,
+high gene flow,
+or limited spatial signal in the sampled genomic data.
+Interpreting these predictions,
+however,
+will require careful attention
+to the provenance,
+sampling design,
+and reproductive biology of the focal system.
+For highly curated datasets,
+such as provenance trials or plus-tree collections,
+\ecolocator may provide a strong test of climate-of-origin prediction
+under conditions where genotype--environment relationships are expected
+to be pronounced.
+For less-characterized datasets,
+predictions may be more sensitive to mixed ancestry,
+family structure,
+uncertain source records,
+or mismatch between sampled tissue and the individual or population
+whose origin is being inferred.
+These considerations do not preclude application,
+but they set the conditions under which predictions can be trusted,
+and they make interpreting predictions within the biological
+and management context of each application essential.
+ 
 \subsection{Strengths and limitations}
 
-A key strength of \ecolocator is its multitask design,
-which simultaneously models geographic and environmental variation.
-This joint framework offers advantages
-over methods that treat spatial and environmental signals separately:
-by sharing information across prediction targets during training,
-the model can leverage correlations
-between spatial structure and environmental gradients
-while also learning to distinguish the two.
-This design also sidesteps a well-documented pitfall
-of conventional GEA methods.
-When population structure aligns with environmental gradients---as
-it often does in nature---methods that correct for structure
-can inadvertently remove true adaptive signal
-along with neutral confounders
-\citep{lotterhos_recombination_2019, booker_wza_2024}.
-Because \ecolocator models geography and environment jointly
-rather than regressing one out of the other,
-it avoids this over-correction
-while still accounting for spatial structure
-through the geographic prediction task.
+A key strength of \ecolocator is its multitask design, 
+which simultaneously models geographic and environmental variation. 
+This joint framework allows the model to learn both shared and target-specific 
+components of genomic variation and, when sufficient information is present in the 
+genotype data, to distinguish signals associated with geographic structure from those 
+associated with environmental variation. This design also addresses a well-documented 
+challenge of conventional GEA methods. When population structure aligns with 
+environmental gradients, as it often does in nature, methods that correct for 
+structure can inadvertently remove true adaptive signal along with neutral 
+confounders \citep{lotterhos_recombination_2019, booker_wza_2024}. 
+Rather than regressing geographic structure out prior to environmental prediction, 
+\ecolocator models geographic and environmental variation as related but distinct 
+prediction tasks. However, when geographic and environmental gradients 
+are strongly correlated, shared genomic signal between these tasks cannot 
+necessarily be attributed uniquely to demographic structure or local adaptation.
+
 Furthermore, the multitask framework
 is naturally suited to systems
 where adaptation occurs along multiple environmental axes.
@@ -1789,8 +2139,8 @@ may differ across gradients.
 \ecolocator's ability to predict multiple environmental covariates
 simultaneously may help retain signal in such cases,
 though this remains to be tested explicitly.
-The approach is agnostic to genetic architecture,
-performing comparably across simulations
+Within the range of architectures tested,
+\ecolocator performed comparably across simulations
 with clustered and distributed QTL arrangements,
 and it requires no prior specification of candidate loci
 or assumptions about the genetic basis of adaptation.
@@ -1840,335 +2190,6 @@ rather than individual causal variants,
 particularly when adaptive loci are in LD
 with surrounding neutral sites.
 
-\subsection{Implications for Douglas-fir management and forestry}
-
-For natural resource management,
-\ecolocator addresses a practical need:
-identifying the geographic and climatic source of biological materials
-under historical, current, or projected future climates.
-Seed transfer guidelines have been used on U.S. Forest Service lands
-for over a half century \citep{kummel_forest_1944}, and comparable guidelines 
-extend back nearly a century in Europe \citep{myking_historic_2016}. 
-Despite the history and ubiquity of seed transfer zones, 
-large-scale restoration efforts with non-local materials have been a 
-common occurrence in forestry, both in the management of native forests
-and in introduced species trials.
-These unintended `local adaptation experiments' provide clear examples of 
-maladaptive responses, but they are usually associated with a poor
-understanding of the seed source. Tools like \ecolocator can
-provide estimates of the source location and environment,
-making it possible to interpret maladaptive responses in large-scale 
-plantings in light of geographic or climatic transfer distances. 
-Applying \ecolocator to trials of suspected `off-site' origin could
-substantially expand our knowledge of growth and
-fitness responses of large climate transfers, as designed provenance tests with 
-`off-site' materials are limited in number for most tree species.
-
-Similarly,
-forest tree provenance tests established outside native ranges
-typically have the goal of identifying high-performing genotypes and geographic
-sources where additional material can be selected.
-Incomplete records or missing tree identities limit the utility of these tests
-by making it difficult to match similar climates to identify pre-adapted seed for screening
-and breeding.
-Efforts to combat illegal logging now increasingly rely
-on DNA-based methods to identify the geographic source of tissues,
-such as wood.
-Adding climatic source information to these investigations
-can help investigators discriminate among geographically similar
-but climatically distinct sources (such as those separated by elevation).
-Finally,
-traditional reforestation programs based on seed transfer guidelines
-and common-garden trials are increasingly strained
-by the pace of climate change \citep{aitken_bemmels_2016},
-and new tools are needed to manage climate uncertainty.
-Genomic tools that predict the climate of origin of a given genotype
-offer a unique strategy for answering these questions,
-enabling managers to evaluate whether replanting resources
-are well-matched to the conditions they will encounter
-at a given site.
-
-Coastal Douglas-fir is a natural test case for this application.
-Its economic importance,
-extensive provenance trial data,
-and strong signals of local adaptation along climate gradients
-provide both the motivation and the validation framework
-for genomic prediction tools.
-By predicting climate of origin alongside geographic location,
-\ecolocator provides information that is directly relevant
-to seed transfer decisions:
-two seed sources from similar geographic locations may differ
-in their predicted climate of origin,
-reflecting adaptive differences that might be missed
-by geography-based guidelines alone.
-By comparing \ecolocator predictions to Douglas-fir seed zones,
-these predictions become interpretable in definable management terms.
-For example,
-the most recently proposed seed zone--elevation bands
-in Oregon and Washington span approximately
-2.5\textdegree C in MCMT across the 98th percentile range \citep{shalev_zone_2026}.
-Our results suggest that \ecolocator predictions fall
-within these climate tolerances 87.1\% of the time with Douglas-fir. 
-Importantly,
-this level of accuracy was achieved with a modestly sized dataset
-of 348 trees and approximately 18,000 SNPs,
-and without any use of genomic position.
-\ecolocator operates on the genotype matrix alone,
-so neither a contiguous assembly nor an ordered marker map is required---an
-advantage in species whose genomic resources remain incomplete.
-The approximate chromosomal coordinates recovered by aligning probe
-sequences to the DFv5.29 draft assembly were used only to place SHAP
-attributions in genomic context (\Cref{fig:shap-manhattan-dfir}),
-not for prediction.
-Although additional sampling is not evaluated empirically here, downsampling in
-our simulations (see \Cref{fig:downsampling}), and
-previous work with Locator suggests that geographic prediction accuracy
-increases with increased sampling density and,
-to a lesser extent,
-increased genomic sampling \citep{battey_predicting_2020}.
-Similar improvements should be possible for \ecolocator,
-particularly in regions where current predictions are limited
-by sparse sampling or rapidly changing environmental gradients.
-
-At the same time,
-the interpretation of \ecolocator predictions depends on
-the sampling history and biological structure of the material being analyzed.
-The Douglas-fir individuals used here were designated as ``plus'' trees,
-meaning they were identified through provenance trials
-or field observations as being particularly well-adapted
-to their local environments.
-This selection criterion may strengthen genotype--environment correspondence
-and aid climate prediction,
-but it could also overestimate performance relative to
-less-characterized or more heterogeneous samples.
-The spatial distribution of prediction error also highlights
-important considerations for applying \ecolocator in complex landscapes.
-For example, the highest prediction errors for MCMT in our dataset 
-were concentrated near the eastern crest of the Cascade Range,
-where several non-mutually exclusive factors may contribute to reduced prediction accuracy.
-First,
-steep elevational gradients near the Cascade crest generate sharp climate transitions
-in MCMT and MSP that may be difficult to model,
-especially with relatively low local sampling density.
-Second,
-many seed sources in this dataset predate civilian GPS use,
-and source locations were recorded using Township--Range--Section estimates.
-Estimation,
-rounding,
-and digitization errors may have introduced
-positional inaccuracies that are amplified in topographically complex terrain.
-Finally,
-Douglas-fir populations east of the Cascade crest show evidence of introgression
-with interior Douglas-fir
-(\textit{Pseudotsuga menziesii} var.\ \textit{glauca}) \citep{stclair_genecology_2005},
-and trees with greater interior ancestry may show higher prediction error
-when evaluated with a model trained primarily on coastal Douglas-fir
-genomic and climatic data.
-These patterns suggest that prediction errors
-point to biologically meaningful features of the study system,
-including ancestry transitions,
-complex topography,
-and uncertainty in historical source records \citep{rehmann2024evaluating}.
-
-More broadly,
-the approach is not limited to Douglas-fir
-or to species with extensive prior characterization.
-Any system with georeferenced genotypes and associated environmental data
-can be analyzed with \ecolocator,
-making it a useful tool for less-studied species
-where common-garden data are scarce or absent.
-In these systems,
-even weak or uneven predictive performance may be informative.
-Poor environmental prediction may suggest that genetic variation
-is not strongly tracking the environmental variable being modeled,
-whereas poor geographic prediction may indicate weak population structure,
-high gene flow,
-or limited spatial signal in the sampled genomic data.
-Conversely,
-differences in predictive accuracy among environmental variables
-can help identify which environmental axes are most strongly reflected
-in genomic variation,
-providing hypotheses about the selective pressures shaping local adaptation.
-However,
-these applications will require careful attention
-to the provenance,
-sampling design,
-and reproductive biology of the focal system.
-For highly curated datasets,
-such as provenance trials or plus-tree collections,
-\ecolocator may provide a strong test of climate-of-origin prediction
-under conditions where genotype--environment relationships are expected
-to be pronounced.
-For less-characterized datasets,
-predictions may be more sensitive to mixed ancestry,
-family structure,
-uncertain source records,
-or mismatch between sampled tissue and the individual or population
-whose origin is being inferred.
-These considerations do not preclude application,
-but they set the conditions under which predictions can be trusted,
-and they make interpreting predictions within the biological
-and management context of each application essential.
-
-% RC: I’ll add something to this over the weekend. Climate prediction errors are lowest along the coastal seed zones, highest in the Cascade crest, and intermediate in the Cascades. I think the higher errors are entirely due to climate variability in the Cascades.
-
-\subsection{Feature attribution as a tool
-for identifying adaptive loci}
-
-SHAP-based feature attribution provides a window
-into which genomic regions drive \ecolocator's predictions.
-Our simulation results demonstrate
-that non-neutral variants consistently receive
-higher attribution scores than neutral sites,
-confirming that the model preferentially weights loci
-under selection.
-This signal persists across genetic architectures
-despite modest effect sizes
-(Cohen's $d \approx 0.14$--$0.18$),
-indicating that SHAP can detect the distributed signature
-of polygenic adaptation
-even when individual locus effects are small.
-
-However,
-the modest effect sizes also highlight
-an inherent challenge:
-under polygenic adaptation,
-the signal at any single locus is subtle,
-and attribution scores for adaptive and neutral loci
-overlap substantially.
-This is consistent with the broader finding
-that GEA methods are generally underpowered
-under weak selection,
-and that detecting most causal loci
-requires tolerating a substantial false positive rate
-\citep{lotterhos_whitlock_2015, booker_wza_2024}.
-\ecolocator's feature attribution faces the same trade-off:
-thresholding on SHAP values to identify candidate loci
-will inevitably involve a balance
-between sensitivity and specificity
-that depends on the unknown strength of selection
-and the genetic architecture of adaptation.
-Linkage disequilibrium further complicates interpretation,
-as SHAP values are elevated not only at causal variants
-but also at linked neutral sites.
-This is expected,
-because LD spreads adaptive signal
-across genomic neighborhoods,
-but it means that high-attribution regions
-should be interpreted as candidate windows
-rather than as individual causal variants.
-This issue was especially apparent in our initial simulations,
-where a recombination rate of ($10^{-8}$)
-within a 1 Mb genomic element generated extensive LD
-between the selected window and distant sites (\Cref{fig:ld-decay-low-recomb}).
-Increasing recombination to ($10^{-6}$)
-reduced this long-range LD
-and provided a clearer setting for evaluating whether SHAP
-could distinguish causal regions from linked background signal
-(\Cref{fig:ld-decay-high-recomb}).
-
-The permutation-based sensitivity analyses
-complement SHAP by providing a different lens
-on the same question.
-By disrupting specific genomic regions
-and measuring the resulting loss in prediction accuracy,
-these analyses show how much predictive information is carried
-by the selected window,
-by linked sites,
-and by genome-wide background variation.
-Permuting the selected window alone produced only modest changes
-in prediction performance,
-whereas jointly permuting the selected window
-with LD-linked sites caused much larger losses in accuracy
-(\Cref{fig:permutation}).
-For example,
-when the selected window and all LD-linked sites were permuted together,
-prediction accuracy dropped below zero for all three targets
-(X ($R^2$ = -0.114),
-Y ($R^2$ = -0.181),
-environment ($R^2$ = -0.267)),
-indicating that the disrupted regions contained most of the signal
-needed for accurate prediction.
-In contrast,
-random genome-wide permutations caused a gradual loss of performance
-as larger fractions of SNPs were shuffled,
-with complete randomization producing similarly poor performance
-(X ($R^2$ = -0.507),
-Y ($R^2$ = -0.426),
-environment ($R^2$ = -0.425)).
-These findings suggest that \ecolocator is not relying
-on the selected window alone,
-but on a broader LD-associated haplotypic signal
-that can obscure the distinction between causal and linked variants.
-
-The SHAP and permutation analyses show that \ecolocator's predictions
-are grounded in biologically meaningful genetic variation,
-but they also highlight an important limitation of feature attribution:
-when LD is strong,
-linked neutral sites can mask or share signal with the true causal loci.
-In this sense,
-SHAP may be most reliable for identifying candidate genomic regions
-or haplotypic blocks associated with local adaptation,
-rather than for pinpointing individual causal mutations.
-This interpretation is particularly important for empirical systems,
-where LD can reflect physical linkage,
-demographic history,
-selection,
-population structure,
-or unobserved ancestry,
-and where the true causal variants are rarely known.
-
-Notably,
-SHAP-based attribution from \ecolocator
-shows greater power to identify adaptive loci
-than \texttt{WZA} \citep{booker_wza_2024}
-and top-candidate approaches
-in our simulation comparisons
-(\Cref{fig:gea-comparison}).
-This advantage likely reflects the fact
-that SHAP attribution operates on a model
-that has already learned the joint relationship
-between genotypes,
-geography,
-and environment,
-rather than testing each locus independently
-against a single environmental predictor.
-By conditioning on a trained multitask model,
-SHAP can capture contributions from loci
-whose individual marginal correlations with environment are weak
-but whose combined effect is detectable
-in the context of the full genotype.
-This shows that supervised prediction
-followed by post hoc feature attribution
-can be a powerful complement to traditional GEA approaches,
-particularly under polygenic adaptation
-where per-locus signals are subtle.
-
-One limit, however, is worth stating plainly.
-Across most real landscapes, climate changes together with geography:
-places that are close together tend to have similar climates.
-When that is true, a variant that simply tracks geography---through
-limited dispersal or genetic drift, with no role in adaptation---will
-look just as tied to climate as a variant that is genuinely under
-climate selection. From genotype alone, there is no way to tell the two apart.
-Feature attribution will therefore highlight both kinds of variant,
-and no amount of extra data or model tuning can separate them;
-the same difficulty applies to conventional GEA methods
-\citep{booker_wza_2024, meirmans_ibd_2012}.
-Our continuous-space simulations avoid this problem by design,
-holding climate independent of geography (H=0)
-so that only genotype--climate signal can drive environmental prediction;
-this is why attribution concentrates at causal loci there
-(\Cref{fig:shap-attribution}).
-In real data, where climate and geography move together, that separation is lost.
-The Douglas-fir results show this directly:
-the regions with the strongest attribution for climate (MCMT)
-are the same ones flagged for longitude (\Cref{fig:shap-manhattan-dfir}),
-exactly what we expect when the two cannot be told apart from genotype.
-Attribution in these settings should therefore be read
-as pointing to genomic regions associated with a climatic gradient---candidates
-for further study---rather than as proof of the specific loci driving adaptation.
-
 \subsection{Future directions}
 
 Several extensions of this work merit exploration.
@@ -2188,17 +2209,44 @@ Extending simulations to include non-additive architectures
 would clarify whether \ecolocator's prediction accuracy
 and feature attribution remain robust
 when the genotype--phenotype map is more complex.
+
 Second, expanding the environmental complexity
-of simulations---multiple correlated environmental axes,
-spatially autocorrelated landscapes,
-and temporally varying selection---would
+of simulations to include multiple correlated environmental axes,
+more complex spatial covariance among those axes,
+and temporally varying selection would
 better approximate the conditions
-under which \ecolocator will be applied in practice.
-Third, the framework could be extended
-to predict performance under future climate scenarios
-by applying trained models to projected environmental surfaces,
-generating spatially explicit maps of predicted maladaptation
-that could inform assisted migration planning.
+under which \ecolocator will be applied in practice. 
+A particularly promising application is using 
+differences in environmental prediction accuracy
+to identify which environmental gradients
+are most strongly reflected in genomic variation.
+Many landscape genomic and genomic-offset approaches
+consider multiple environmental predictors,
+but not all environmental axes are expected
+to contribute equally to local adaptation.
+Because \ecolocator predicts each environmental target separately,
+variation in prediction accuracy among targets
+provides information about the strength
+of genotype--environment correspondence along each axis.
+For species with limited ecological or common-garden information,
+this could help researchers and managers prioritize
+which environmental variables warrant the greatest consideration
+when designing management strategies,
+seed-transfer guidelines,
+or subsequent experimental studies.
+
+Third, the framework could also be extended
+to future climate applications.
+\ecolocator-estimated climates of origin could be compared
+with projected future conditions
+to evaluate source--site climate mismatch and 
+identify candidate sources 
+for assisted migration or restoration.
+This would connect genotype-based inference
+of historical climate associations
+with decisions about where biological material
+may be best suited under changing conditions. 
+
 Finally, systematic comparison
 with a broader suite of GEA methods
 across a wider range of evolutionary scenarios
@@ -2207,14 +2255,6 @@ under which \ecolocator's joint prediction approach
 offers the greatest advantage
 over single-task or univariate alternatives.
 
-% RC NOTE : Wang et al. (2006) and St.Clair et al. (2019) recommended MAT transfer limits of 2-3°C MAT for lodgepole pine and Douglas-fir based on provenance test results. Wilhelmi et al. (2017) found a transfer limit of 159 mm MSP was necessary to maintain probabilities of Rhabdocline spp. infections below 25%, especially in transfers from low to high MSP.
-% JR NOTE: Need to standardize calls to figures and supplemental- currently some bolded some not
-% JR NOTE: Need to comb through and decide what else to add to supplemental. Sim stats tables? 
-% JR NOTE: Need to revisit discussion and make sure all points are touched on that are referenced earlier in the paper. 
-% JR NOTE: Might want to think through current organization and make sure everything feels right in its current section
-% JR NOTE: Read through for redundancy across sections and edit accordingly.
-% JR NOTE: Need to make sure naming in citations is standardized.
-% JR NOTE: Need to fix header overlap on pages
 
 \printbibliography
 
@@ -2238,7 +2278,7 @@ over single-task or univariate alternatives.
         \caption{}
         \label{fig:loss-weight-loc}
     \end{subfigure}
-    \caption{\textbf{Loss weight cross validation.}
+    \caption{\textbf{Loss weight cross-validation.}
     To determine the default loss weight value for location and
     environmental prediction, we tested sliding this value at the command
     line for each output task (location prediction and environmental
@@ -2255,7 +2295,7 @@ over single-task or univariate alternatives.
     environmental covariates. Reassuringly, this analysis also demonstrates
     that \ecolocator recovers the true values for environmental covariates
     without over-reliance on the spatial information housed in the location
-    values. Lastly, we see negligible effects of prediction performance in
+    values. Lastly, we see negligible effects on prediction performance in
     one output or the other when one output head is essentially turned
     off/down. Because of this, we hold the default value for both prediction
     tasks at 1.0.}
@@ -2348,18 +2388,20 @@ over single-task or univariate alternatives.
     autocorrelation between space and environment). LA is calculated as the
     mean absolute difference between individual phenotypic values and their
     local optima; lower values indicate stronger local adaptation. The
-    selection parameter $s$ controls the standard deviation of the fitness
+    selection parameter \(\sigma_K\) controls the standard deviation of the fitness
     function, where smaller values produce a tighter fitness distribution
     and thus stronger selection. Dispersal ($d$ = 0.1, 0.3, 0.5; genetic
-    architecture 1 and $s$ = 0.5 fixed): increasing dispersal progressively
+    architecture 1 and \(\sigma_K\) = 0.5 fixed): increasing dispersal progressively
     eroded local adaptation, with mean LA values of 0.096, 0.130, and 0.146
     for $d$ = 0.1, 0.3, and 0.5, respectively. Genetic architecture ($g$ = 1, 2,
-    3; $d$ = 0.1 and $s$ = 0.5 fixed): distributing QTLs increasingly across the
+    3; $d$ = 0.1 and \(\sigma_K\) = 0.5 fixed): distributing QTLs increasingly across the
     genomic element had a modest effect on local adaptation, with mean LA
     values of 0.095, 0.100, and 0.103 for $g$ = 1, 2, and 3, respectively.
-    Selection ($s$ = 0.5, 0.7, 0.9; genetic architecture 1 and $d$ = 0.3 fixed):
-    weaker selection substantially reduced local adaptation, with mean LA
-    values of 0.134, 0.187, and 0.228 for $s$ = 0.5, 0.7, and 0.9,
+    Selection (\(\sigma_K\) = 0.5, 0.7, 0.9; genetic architecture 1 and $d$ = 0.3 fixed): 
+    an extended range of selection strengths was used here to illustrate how 
+    local adaptation varies across increasingly weak selection regimes.
+    Weaker selection substantially reduced local adaptation, with mean LA
+    values of 0.134, 0.187, and 0.228 for \(\sigma_K\) = 0.5, 0.7, and 0.9,
     respectively.}
     \label{fig:local-adaptation}
 \end{figure}
@@ -2370,7 +2412,7 @@ over single-task or univariate alternatives.
     \includegraphics[width=\textwidth]{figures/suppfig5_downsampling.png}
     \caption{\textbf{Effects of down-sampling individuals and SNPs as input to \ecolocator.}
     \ecolocator performance under various downsampling regimes of the same
-    simulated data ($d$ = 0.1, $s$ = 0.5, $g$ = 1). In the top row, there are 1000 SNPs
+    simulated data ($d$ = 0.1, \(\sigma_K\) = 0.5, $g$ = 1). In the top row, there are 1000 SNPs
     made available to the model; in the middle and bottom rows, there are
     500 and 100 SNPs respectively. In the columns we vary sample size, with
     100, 500, and 1000 samples from left to right. $R^2$ values across 100
@@ -2395,7 +2437,7 @@ over single-task or univariate alternatives.
     \includegraphics[width=0.5\textwidth]{figures/suppfig6_geoerror.png}
     \caption{\textbf{Distribution of geographic prediction errors on \dfir{} data.}
     A histogram of geographic distance prediction errors in our
-    empirical application of Ecolocator on the \dfir case study data.
+    empirical application of \ecolocator on the \dfir case study data.
     Distance in kilometers (km) is on the x-axis and count is on the y-axis. 
     Most errors fall between 0-100km, with others as high as $>$600km.}
     \label{fig:geo-error}
@@ -2407,9 +2449,9 @@ over single-task or univariate alternatives.
     \includegraphics[width=\textwidth]{figures/suppfig7_envmaps.pdf}
     \caption{\textbf{Environmental Maps used in Continuous Space \slim simulations.}
     Environmental maps generated with the \texttt{NLMpy} python package 
-    with pixel count set to 8x8 and hurst (autocorrelation)
+    with pixel count set to 8x8 and Hurst (autocorrelation)
     set to H=0. We generated 110 maps and sampled 100 of them randomly
-    for each simulation regime we simulated. }
+    for each simulation regime. }
     \label{fig:env-maps}
 \end{figure}
 
@@ -2417,9 +2459,9 @@ over single-task or univariate alternatives.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/suppfig8_shap_wza_topcan_aucpr_corrspace.pdf}
-    \caption{\textbf{AUC-PR of Ecolocator/SHAP, \texttt{WZA}, and Top-Candidate GEA Methods Across Two Dispersal/Selection Regimes.}
+    \caption{\textbf{AUC-PR of \ecolocator\texttimes{}SHAP, \texttt{WZA}, and Top-Candidate GEA Methods Across Two Dispersal/Selection Regimes.}
     Precision-recall curves (top) and per-replicate AUC-PR violin plots (bottom) comparing three
-    genotype-environment association methods for identifying adaptive SNPs: Ecolocator/SHAP (purple;
+    genotype-environment association methods for identifying adaptive SNPs: \ecolocator\texttimes{}SHAP (purple;
     mean $\lvert\mathrm{SHAP}\rvert$ for the environmental covariate, ranked by an empirical false-discovery-proportion 
     score computed from known ground-truth adaptive status), \texttt{WZA} (yellow), and top-candidate (blue). 
     Top row: precision-recall curves pooling all SNPs across 100 simulation replicates per regime, 
@@ -2428,7 +2470,7 @@ over single-task or univariate alternatives.
     AUC-PR computed separately within each of the 100 replicates, showing the consistency of each
     method's performance across independent simulations. Left: limited-dispersal, strong-selection
     regime (dispersal=0.1, std.\ dev.\ of fitness function=0.5). Right: higher-dispersal, weaker-selection
-    regime (dispersal=0.5, std.\ dev.\ of fitness function=0.7). Ecolocator/SHAP outperforms \texttt{WZA} and
+    regime (dispersal=0.5, std.\ dev.\ of fitness function=0.7). \ecolocator\texttimes{}SHAP outperforms \texttt{WZA} and
     top-candidate under both regimes, both pooled and at the per-replicate level.}
     \label{fig:gea-comparison-regimes}
 \end{figure}
@@ -2437,13 +2479,13 @@ over single-task or univariate alternatives.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{figures/suppfig9_shap_manhattan_dfir_positional.pdf}
-    \caption{\textbf{Mean $\lvert\mathrm{SHAP}\rvert$ by Real Genomic Position Across Five Prediction Targets for Douglas-fir.}
+    \caption{\textbf{Mean $\lvert\mathrm{SHAP}\rvert$ by Real Genomic Position Across Five Prediction Targets for \dfir.}
     Manhattan-style plots of mean $\lvert\mathrm{SHAP}\rvert$ (averaged across leave-one-out
-    cross-validation folds) at real chromosomal positions (chromosomes 1--13, Douglas-fir reference
+    cross-validation folds) at real chromosomal positions (chromosomes 1--13, \dfir reference
     assembly DFv5.29; SNP positions resolved by SAM alignment restricted to primary, high-confidence
-    mappings, MAPQ $\geq$ 30) for five prediction targets, top to bottom: longitude, latitude, mean
-    coldest-month temperature (MCMT), summer heat:moisture index (SHM), and mean summer precipitation
-    (MSP). SNPs in the top 1\% of mean $\lvert\mathrm{SHAP}\rvert$ for a given target are highlighted
+    mappings, MAPQ $\geq$ 30) for five prediction targets, top to bottom: longitude, latitude, Mean
+    Cold Month Temperature (MCMT), Summer Heat:Moisture Index (SHM), and mean summer precipitation
+    (MSP). SNPs in the 179 highest-attribution SNPs (approximately the top 1\%) of mean $\lvert\mathrm{SHAP}\rvert$ for a given target are highlighted
     in pink; all other SNPs are shown in blue. Alternating background shading demarcates chromosome
     boundaries.}
     \label{fig:shap-manhattan-dfir}
@@ -2473,8 +2515,8 @@ over single-task or univariate alternatives.
     values (box = interquartile range, line = median, whiskers = 1.5\texttimes{}IQR, 
     points beyond whiskers = outlier replicates); numbers above each box 
     give the across-replicate mean $R^2$. Left: limited-dispersal, 
-    strong-selection regime (d=0.1, s=0.5). Right: higher-dispersal, 
-    weaker-selection regime (d=0.5, s=0.7). Prediction accuracy 
+    strong-selection regime (d=0.1, \(\sigma_K\)=0.5). Right: higher-dispersal, 
+    weaker-selection regime (d=0.5, \(\sigma_K\)=0.7). Prediction accuracy 
     is uniformly high and tightly distributed for all three targets 
     under limited dispersal/strong selection (mean $R^2$=0.95--0.96), 
     but declines and becomes more variable across replicates under higher 
@@ -2492,8 +2534,7 @@ over single-task or univariate alternatives.
     replicate (rep1), shown for three prediction targets (rows: latitude, longitude, environment) and
     both dispersal/selection regimes (columns: limited-dispersal, strong-selection, dispersal=0.1,
     std.\ dev.\ of fitness function=0.5, left; higher-dispersal, weaker-selection, dispersal=0.5,
-    std.\ dev.\ of fitness function=0.7, right). SNPs classified as non-neutral (true causal loci or in
-    linkage disequilibrium with a causal locus; magenta, black-outlined) are overlaid on all other
+    std.\ dev.\ of fitness function=0.7, right). SNPs classified as non-neutral (true causal loci; magenta, black-outlined) are overlaid on all other
     neutral/LD-linked SNPs (light blue).}
     \label{fig:shap-manhattan-sim}
 \end{figure}
@@ -2502,7 +2543,10 @@ over single-task or univariate alternatives.
 %%%%%% Supplemental Table 1 %%%%%%
 \begin{table}[ht]
   \centering
-  \caption{\textbf{$R^2$ values for \ecolocator climate variable predictions versus ClimateNA modelled values from predicted locations.}}
+  \caption{\textbf{$R^2$ values for \ecolocator climate variable predictions versus ClimateNA modeled values from predicted locations.} Values were calculated 
+  separately for this direct comparison between \ecolocator climate predictions and 
+  ClimateNA estimates and therefore differ slightly from the primary leave-one-out cross-validation 
+  metrics reported in the main text.}
   \label{tab:supptable1}
   \begin{tabular}{@{}p{6.5cm}cc@{}}
   \hline
@@ -2511,8 +2555,8 @@ over single-task or univariate alternatives.
   Latitude (LAT, \textdegree) & 0.84 & -- \\
   Longitude (LON, \textdegree) & 0.76 & -- \\
   Mean Cold Month Temperature (MCMT, \textdegree C) & 0.75 & 0.65 \\
-  May to September Precipitation (MSP, mm) & 0.51 & 0.31 \\
-  Summer heat:moisture index (SHM, \textdegree C/um) & 0.53 & 0.30 \\
+  Mean Summer Precipitation (MSP, mm) & 0.51 & 0.31 \\
+  Summer Heat:Moisture Index (SHM) & 0.53 & 0.30 \\
   \hline
   \end{tabular}
 \end{table}
@@ -2526,16 +2570,16 @@ over single-task or univariate alternatives.
   \hline
   \textbf{Simulation type} & \textbf{Parameter} & \textbf{Longitude $R^2$} & \textbf{Latitude $R^2$} & \textbf{Environment $R^2$} \\
   \hline
-  Wright-Fisher (discrete space) & -- & 0.986 & 0.985 & 0.916 \\
+  Wright--Fisher (discrete space) & -- & 0.986 & 0.985 & 0.916 \\
   \hline
-  \multirow{9}{*}{Non-Wright-Fisher (continuous space)}
+  \multirow{9}{*}{Non-Wright--Fisher (continuous space)}
    & $g=1$ & 0.967 & 0.967 & 0.759 \\
    & $g=2$ & 0.967 & 0.967 & 0.771 \\
    & $g=3$ & 0.968 & 0.968 & 0.787 \\
    \cline{2-5}
-   & $s=0.3$ & 0.917 & 0.916 & 0.609 \\
-   & $s=0.5$ & 0.911 & 0.911 & 0.561 \\
-   & $s=0.7$ & 0.906 & 0.907 & 0.421 \\
+   & $\sigma_K=0.3$ & 0.917 & 0.916 & 0.609 \\
+   & $\sigma_K=0.5$ & 0.911 & 0.911 & 0.561 \\
+   & $\sigma_K=0.7$ & 0.906 & 0.907 & 0.421 \\
    \cline{2-5}
    & $d=0.1$ & 0.968 & 0.967 & 0.769 \\
    & $d=0.3$ & 0.912 & 0.911 & 0.556 \\
@@ -2544,7 +2588,24 @@ over single-task or univariate alternatives.
   \end{tabular}
 \end{table}
 
-
+%%%%%% Supplemental Table 3 %%%%%%
+\begin{table}[ht]
+  \centering
+  \caption{\textbf{Pairwise overlap among high-attribution SNPs across 
+  \ecolocator prediction targets in coastal \dfir.}}
+  \label{tab:dfir-shap-overlap}
+  \begin{tabular}{@{}lccccc@{}}
+  \hline
+  \textbf{Prediction target} & \textbf{LAT} & \textbf{LON} & \textbf{MCMT} & \textbf{MSP} & \textbf{SHM} \\
+  \hline
+  Latitude (LAT)  & 179 & 10 (5.6\%) & 13 (7.3\%) & 33 (18.4\%) & 31 (17.3\%) \\
+  Longitude (LON) &     & 179        & 97 (54.2\%) & 5 (2.8\%) & 4 (2.2\%) \\
+  MCMT            &     &            & 179         & 5 (2.8\%) & 5 (2.8\%) \\
+  MSP             &     &            &             & 179       & 133 (74.3\%) \\
+  SHM             &     &            &             &           & 179 \\
+  \hline
+  \end{tabular}
+\end{table}
 
 
 \end{document}
