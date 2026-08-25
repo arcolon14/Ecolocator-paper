@@ -551,10 +551,10 @@ To explore whether the genomic distribution of adaptive loci
 influences the detectability of local adaptation,
 we varied the arrangement of quantitative trait loci (QTLs)
 along the 1 Mb chromosome.
-In one scenario, all QTLs were clustered
+In one scenario, all QTLs were clustered  
 within a single 200 kb window at the center of the chromosome.
-In the second, QTLs were distributed across three smaller windows.
-In the third, they were spread across five windows
+In the second, QTLs were distributed across three 100 kb windows.
+In the third, these smaller windows were spread across five windows
 distributed evenly along the chromosome.
 These treatments allowed us to test
 whether adaptive signals are easier to detect
@@ -562,10 +562,9 @@ when concentrated in specific genomic regions
 versus dispersed more broadly
 (\Cref{fig:sim-performance}, panel a).
 We only simulate non-neutral mutations within \slim.
-Genomic information is stored in tree sequences \citep{haller2019treeseq},
-which record the ancestry and mutational history of all individuals.
-\sbt{Recapitation with pyslim?}
-Neutral mutations are then overlaid onto these tree sequences
+Genomic information is stored in tree sequences
+and recapitated using pyslim 1.0.4 \citep{haller2019treeseq}.
+Neutral mutations are then overlaid onto the recapitated tree sequences
 using msprime \texttt{v.1.1.1} \citep{baumdicker2022efficient},
 allowing us to track both adaptive
 and neutral background variation separately.
@@ -891,14 +890,14 @@ with strength of local adaptation}
 
 We evaluated \ecolocator
 across a range of simulation parameterizations (\Cref{fig:sim-performance}).
-We ran 100 simulation replicates for each parameter combination in our continuous space simulations,
-and we ran 30 replicates for the discrete space simulations, 
-following \citet{booker_wza_2024}. We additionally summarized
+Following \citet{booker_wza_2024},
+we ran 100 simulation replicates for each parameter combination in our continuous space simulations,
+and we ran 30 replicates for the discrete space simulations.
+We additionally summarized
 the distribution of local adaptation scores
 across representative parameter ranges to illustrate
 how dispersal, selection strength, and genetic architecture
 influence the degree of local adaptation (see \Cref{fig:local-adaptation}).
-
 Under restricted dispersal (d = 0.1) and
 stronger selection (\(\sigma_K\)=0.5),
 simulated populations became strongly locally adapted
@@ -912,7 +911,6 @@ for both geographic and environmental prediction
 Lat. $R^2$=0.814, Env. $R^2$=0.336) (\Cref{fig:sim-performance}, panel a).
 This pattern is consistent with increasing gene flow weakening both
 isolation-by-distance structure and genotype--environment correspondence.
-
 Weakening selection also reduced environmental prediction accuracy 
 \((\sigma_K\)=0.3, Env. $R^2$=0.609;
 \(\sigma_K\)=0.5, Env. $R^2$=0.561;
@@ -931,7 +929,6 @@ Together with the spatially uncorrelated landscape (H=0),
 which prevents geography from directly predicting the environmental target,
 this result supports that \ecolocator can recover
 genotype--environment signal that is distinguishable from neutral geographic structure.
-
 Varying genetic architecture produced only a slight difference in local adaptation
 ($\vec{\Delta}$LA between GA1 and GA3 = 0.008),
 despite the higher number of QTL mutations arising
@@ -959,7 +956,6 @@ weaker selection ($\sigma_D=0.5$, $\sigma_K=0.7$) (\Cref{fig:env-map-correlated}
 Per-replicate LOOCV $R^2$ again declined with 
 increasing dispersal and weakening selection under this design, 
 most sharply for latitude (\Cref{fig:loocv-accuracy}).
-
 \ecolocator also performed strongly under the discrete-space,
 Wright--Fisher simulation regime (\Cref{fig:sim-performance}, panel b).
 Across 30 simulation replicates,
@@ -1056,7 +1052,6 @@ elevated attribution across all three targets, and longitude and
 environment tracked the same genomic regions in a representative 
 replicate (\Cref{fig:shap-manhattan-sim}), an expected consequence of the two 
 variables following a shared spatial gradient by design.
-
 We observed stronger separation between neutral and non-neutral sites
 in the discrete-space Wright--Fisher simulations
 (\Cref{fig:shap-attribution}, panel d),
@@ -1070,7 +1065,6 @@ This difference was highly significant
 ($p = 8.17 \times 10^{-9}$),
 indicating that \ecolocator concentrated attribution signal
 at causal loci in this discrete-deme simulation regime.
-
 These results show that SHAP-based feature attribution
 can highlight loci contributing to local adaptation,
 while also capturing signal from linked regions.
@@ -1160,7 +1154,6 @@ SHAP yielded a pooled AUC-PR of 0.179,
 compared to 0.082 for \texttt{WZA}
 and 0.079 for the top-candidate approach
 (random = 0.071).
-
 The replicate-level violin plots showed the same overall ranking.
 Under genetic architecture 1, 
 \ecolocator\texttimes{}SHAP had the highest mean AUC-PR
@@ -1183,7 +1176,6 @@ followed by \texttt{WZA}
 (mean AUC-PR = 0.113)
 and the top-candidate method
 (mean AUC-PR = 0.105).
-
 Performance differences were most pronounced
 at low recall values,
 where SHAP maintained substantially higher precision,
@@ -1200,7 +1192,6 @@ and genomic distribution of adaptive loci.
 SHAP-based attribution retained its 
 advantage over \texttt{WZA} and the top-candidate method under 
 this same spatially correlated design (\Cref{fig:gea-comparison-regimes}).
-
 In the discrete-space Wright--Fisher simulations,
 \ecolocator\texttimes{}SHAP showed particularly strong recovery
 of adaptive loci,
@@ -1218,7 +1209,6 @@ followed by \texttt{WZA}
 (mean AUC-PR = 0.619)
 and the top-candidate method
 (mean AUC-PR = 0.102).
-
 The higher performance of both \ecolocator\texttimes{}SHAP
 and \texttt{WZA} in the Wright--Fisher simulations
 is consistent with the way local adaptation was modeled:
@@ -1246,6 +1236,7 @@ localized genotype--environment associations.
 \end{figure}
 
 
+\sbt{THis all reads nicely, but it does depart a bit from separation of Intro, Methods, Results. Consider moving parts around to the respective sections?}
 \subsection{Predicting suitable environments
 for coastal \dfir using \ecolocator}
 
@@ -1283,14 +1274,13 @@ This well-developed biological and management framework
 makes \dfir a particularly powerful empirical system
 for evaluating \ecolocator.
 
-
 \subsubsection*{Data and model application}
 
 Our empirical dataset consisted of open-pollinated seedlings from
 348 unrelated coastal \dfir trees
-sampled across Oregon and Washington. The maternal parents
-of these trees were woodsrun (unimproved) 'plus' trees, identified through 
-field observations as well-adapted to their local environment and exceptional 
+sampled across Oregon and Washington.
+The maternal parents of these trees were woodsrun (unimproved) 'plus' trees, 
+identified through field observations as well-adapted to their local environment and exceptional 
 for diameter, height, and stem form. Leaf-derived DNA from individual trees was genotyped using the 58K \dfir 
 Axiom Affymetrix SNP array \citep{howe_axiom_2020}, yielding 18,732 SNPs 
 after filtering. The \dfir genome is large and incompletely 
@@ -1394,6 +1384,7 @@ greater than 200km appeared as extreme outliers and were not associated with obv
 geographic (e.g., edge of range; clustered locations) or genetic (e.g., unusual homozygosity)
 attributes. Label errors or failed predictions may contribute to these unusually large errors. 
 
+\sbt{This paragraph is probably too much narrative for results section.}
 A central question for any genotype-to-climate model is whether
 its climate predictions reflect genuine genotype--environment signal
 or simply ride on geographic prediction,
@@ -1512,7 +1503,6 @@ geographic predictions (\Cref{tab:table2}).
 \end{table}
 
 
-
 Prediction error for different climate variables was not uniform across seed zones,
 and patterns differed by MCMT, MSP, and SHM
 (\Cref{fig:dfir-results}, panels h-j). In our sample, trees from coastal seed 
@@ -1529,8 +1519,8 @@ They further illustrate the value of seed zone benchmarking
 as a biologically grounded validation framework:
 predictions that fall within a seed zone climate envelope
 are not just numerically accurate,
-but they are close enough that forest managers
-would consider it an acceptable transfer source.
+but are close enough that forest managers
+consider it an acceptable transfer source.
 
 Because the \dfir genome is large and incompletely assembled, 
 the SNP array used here does not carry chromosome coordinates by design. 
@@ -1589,8 +1579,6 @@ the interpretable candidates repeatedly represented processes associated with
 environmental timing, temperature acclimation, water-stress signaling, 
 membrane remodeling, and oxidative-stress response. % TODO: Add final Supplementary Data S1 file and verify all named candidate annotations against the complete annotation list.
 The complete set of high-attribution SNPs and associated functional annotations is provided in Supplementary Data~S1.
-
-
 
 
 \section{Discussion}
