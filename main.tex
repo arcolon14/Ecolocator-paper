@@ -101,15 +101,14 @@ produces allele frequency clines that parallel ecological gradients,
 as individuals carrying locally beneficial variants
 enjoy higher fitness in particular environments
 \citep{endler1977geographic, clausen_experimental_1948, kawecki_conceptual_2004}.
-These two signals are partly separable:
-neutral structure aligns primarily with geographic distance,
-whereas adaptive signals track specific environmental
-variables---temperature, moisture, seasonality
+In principle the two signals can be told apart,
+since neutral structure follows geographic distance
+while adaptive signals follow particular environmental
+variables such as temperature, moisture, or seasonality
 \citep{rellstab_practical_2015, hoban_finding_2016, tigano_genomics_2016, coop_using_2010}.
-Yet the distinction is not clean,
-because neutral demographic processes---historical
-range expansions, bottlenecks, and genetic drift---can
-themselves generate allele frequency gradients that mimic adaptive clines
+In practice the separation is never clean.
+Range expansions, bottlenecks, and drift
+can all produce allele frequency gradients that look like adaptive clines
 \citep{excoffier_genetic_2009, novembre_spatial_2009}.
 
 Local adaptation, in which populations evolve higher fitness in their local environments, 
@@ -121,44 +120,40 @@ it sustains genetic diversity across heterogeneous landscapes
 by maintaining multiple adaptive alleles,
 helping populations retain the variation
 on which selection can act as environments change \citep{hereford_quantitative_2009}.
-Classic models---Wright's isolation-by-distance
-and stepping-stone frameworks \citep{wright_isolation_1943},
-Levene's multiple-niche equilibrium \citep{levene_genetic_1953},
-and Endler's cline theory \citep{endler1977geographic}---describe
-how selection, migration, and drift interact
-to shape predictable spatial patterns of variation.
-More recent syntheses show that even modest selection
-can create steep genomic clines under limited dispersal
+The classic models of Wright \citep{wright_isolation_1943},
+Levene \citep{levene_genetic_1953},
+and Endler \citep{endler1977geographic}
+work out how selection, migration, and drift
+combine to produce predictable spatial patterns of variation,
+and later work has filled in the details.
+Even modest selection can create steep genomic clines
+when dispersal is limited
 \citep{tigano_genomics_2016, yeaman_genetic_2011},
-whereas strong gene flow can swamp adaptive alleles
+and strong gene flow will swamp adaptive alleles
 unless they are tightly linked or of large effect
 \citep{slatkin_gene_1975}.
 
-Understanding this relationship is especially urgent
-as anthropogenic climate change rapidly disrupts the match
-between populations and their environments \citep{lee_ipcc_2023}.
-As suitable geographic ranges shift,
-conservation managers face increasing pressure to anticipate
-where populations will persist under novel conditions.
-Classical approaches---common-garden experiments,
-reciprocal transplant trials, and provenance tests---have
-been indispensable in characterizing local adaptation,
-but they are slow, costly,
-and often limited in taxonomic or geographic scope
+Climate change is now pulling populations out of step
+with the environments they are adapted to \citep{lee_ipcc_2023},
+and as ranges shift, managers need to know
+where populations will persist under conditions
+they have not experienced before.
+Common-garden experiments, reciprocal transplants,
+and provenance tests are how we have learned most of what
+we know about local adaptation, but they are slow and expensive,
+and for most species they have never been done
 \citep{aitken_assisted_2013}.
-Genomic tools offer a faster, more scalable alternative,
-and the emerging field of landscape genomics
-seeks to link spatial and environmental variation
+Genomic data are cheaper and faster to collect,
+and the field of landscape genomics has grown up around
+the effort to connect spatial and environmental variation
 with patterns of genetic diversity
 \citep{manel_landscape_2003, rellstab_practical_2015}.
-For forest species in particular,
-genomic approaches are increasingly informing
+In forest trees these methods are already starting to inform
 seed transfer and assisted gene flow decisions
 \citep{aitken_bemmels_2016}.
 
-Genotype--environment association (GEA) methods
-have become central to this effort.
-These approaches identify putatively adaptive loci
+Most of this work relies on genotype--environment association (GEA) methods,
+which identify putatively adaptive loci
 by testing for statistical associations
 between allele frequencies and environmental variables
 \citep{rellstab_practical_2015}.
@@ -189,29 +184,23 @@ a window-based framework for aggregating
 single-locus GEA statistics
 into region-level summaries of adaptive signal
 \citep{booker_wza_2024}.
-Despite this progress,
-most GEA methods share key limitations:
-they are designed to \emph{test} for associations
-between genotype and environment,
-treating spatial population structure as a confounder
-to be corrected for rather than a signal
-to be modeled jointly with environment.
-Consequently, they do not return an individual's
-geographic coordinates, and---with the partial exception
-of gradient-forest and genomic-offset approaches,
-which project allele turnover under new climates
-\citep{fitzpatrick_gradient_2015}---they do not
-directly predict an individual's environment of origin
-from its genotype.
+All of these methods, old and new, are built to \emph{test}
+for associations between genotype and environment.
+Spatial population structure enters as a nuisance
+to be corrected for, not as something worth modeling in its own right.
+So none of them will tell you where an individual came from,
+and with the partial exception of gradient-forest and genomic-offset
+approaches, which project allele turnover under new climates
+\citep{fitzpatrick_gradient_2015}, none of them will predict
+an individual's environment of origin from its genotype either.
 
-We propose that machine learning (ML) can better leverage
-information in the data to outperform the existing GEA methods,
-while also providing a unique framing on the problem to gain new insights
-and interpretations about geographic structure and climate of origin.
-ML methods excel at extracting patterns
-from high-dimensional data,
-naturally handling nonlinear interactions among loci
-and correlated environmental predictors
+Machine learning (ML) offers a different way in.
+Rather than testing loci one at a time, a supervised model
+can use the whole genotype at once to predict
+geographic origin or climate of origin directly,
+and ML methods are good at pulling patterns
+out of high-dimensional data with nonlinear interactions among loci
+and correlated predictors
 \citep{schrider_supervised_2018}.
 \citet{battey_predicting_2020} demonstrated
 that a deep neural network, \texttt{Locator}, can predict
@@ -220,20 +209,17 @@ by learning from multilocus patterns of isolation by distance.
 \texttt{Locator} achieves high spatial accuracy,
 but it does not model environmental covariates
 and therefore cannot predict an individual's climate of origin.
-Other recent work incorporates ecological context
-more explicitly:
-gradient forest methods link genomic variation
+Other recent work brings in ecology more directly.
+Gradient forest methods link genomic variation
 to environmental predictors to forecast
 climate-driven maladaptation \citep{fitzpatrick_experimental_2021}, %ADK -- I replaced these citations. Not sure if these are right. Double check!
-while multi-environment deep learning architectures
-in agricultural genomics integrate weather, soil,
-and other covariates to improve genotype performance prediction
+and in crop genomics, deep learning models that take in weather, soil,
+and other covariates improve predictions of how a genotype will perform
 across climates
 \citep{washburn_predicting_2021, montesinoslopez_review_2021}.
-What remains missing is an approach that jointly models
-geographic and environmental prediction from genotypes,
-capturing both neutral spatial structure
-and adaptive environmental associations in a single framework.
+No existing method, though, predicts geography and environment
+from genotype together, in one model that can learn from
+neutral spatial structure and adaptive environmental associations at the same time.
 
 Here we introduce \ecolocator,
 a deep neural network that extends \texttt{Locator}
@@ -244,12 +230,12 @@ the model learns multilocus associations
 with both geographic position and environmental gradients,
 so that it can infer climate of origin directly from genotype
 when allele frequencies covary with climate.
-We incorporate a downstream feature attribution method (SHAP \citep{lundberg_shap_2017})
-to reveal how each input feature contributed to a given prediction,
-identifying which variants contribute most strongly
-to adaptive differentiation across landscapes.
-We evaluate \ecolocator across a range of simulations
-to identify the conditions under which it performs best,
+We pair the model with a feature attribution method, SHAP \citep{lundberg_shap_2017},
+to see which input SNPs each prediction depends on,
+and so which variants contribute most
+to adaptive differentiation across the landscape.
+We test \ecolocator on simulations to find out
+where it works well and where it does not,
 then apply it to an empirical dataset of coastal \dfir
 (\textit{Pseudotsuga menziesii} var.\ \textit{menziesii}).
 
@@ -284,21 +270,15 @@ This combination of strong local adaptation and a long history
 of ecological and silvicultural study
 makes \dfir a natural bridge
 between controlled simulations and real-world management applications.
-Seed zones in particular offer something simulations cannot:
-a standard, already used by managers, for deciding
-whether a predicted climate is close enough to the true one.
+Seed zones also give us something simulations cannot,
+which is a standard already in use by managers
+for deciding whether a predicted climate is close enough to the true one.
 
-By integrating population genetic theory,
-simulation benchmarking, and empirical application,
-our study presents the first open-source approach
-for simultaneously inferring the geographic origin of a genotype
-and the climate to which it is adapted---precisely
-the information needed as shifting climates
-outpace traditional experimental approaches.
-These advances at the intersection of evolutionary biology
-and computational science open new avenues
-for understanding the genetic basis of adaptation,
-with broad implications for conservation and species management.
+To our knowledge \ecolocator is the first open-source tool
+that infers both the geographic origin of a genotype
+and the climate it is adapted to,
+which is the information managers will need
+as climates shift faster than provenance trials can keep up.
 
 \section{\ecolocator}
 
