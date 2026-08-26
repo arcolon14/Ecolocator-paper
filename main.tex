@@ -270,19 +270,29 @@ low genetic differentiation, high gene flow, and high outcrossing rates \citep{s
 they still exhibit strong signatures of local adaptation,
 with adaptive quantitative phenotypes tracking climatic features
 such as winter cold temperatures and summer aridity \citep{stclair_genecology_2005}.
-This combination of strong local adaptation and a long history
-of ecological and silvicultural study
+A century of provenance trials and seed-transfer research
+has shown that trees express maladaptive responses
+(e.g., slow growth, poor form, disease susceptibility)
+when moved beyond their local source climate,
+with home-environment advantage and genotype--environment interactions
+structured primarily by winter cold, summer drought,
+and summer heat accumulation
+\citep{stclair_1912_2020, stclair_genecology_2005, stclair_genetic_2007}.
+To minimize maladaptation, seed zones define the geographic limits
+within which seedlings can be moved while preserving local adaptation.
+\dfir seed zones were formalized for U.S. Forest Service lands
+in the 1940s \citep{kummel_forest_1944},
+expanded to federal, state, and private lands
+in the 1960s and 1970s \citep{usdaforestservice_tree_1973},
+and later revised to incorporate climatic factors
+and experimental evidence from reciprocal transplant trials
+(e.g., \citealp{randall_forest_1996, stclair_seedlot_2022}).
+This combination of strong local adaptation and a well-developed
+biological and management framework
 makes \dfir a natural bridge
-between controlled simulations and real-world management applications.
-For the U.S. Forest Service,
-seed source--climate relationships
-are central to (mal)adaptation \citep{stclair_1912_2020},
-reforestation success, and assisted migration planning \citep{stclair_genetic_2007}.
-By matching genotypes to suitable environments,
-\ecolocator complements long-standing knowledge on seed sourcing
-(such as `seed zones' \citep{randall_forest_1996})
-and expands the management options essential for sustaining
-forest productivity and resilience under climate change.
+between controlled simulations and real-world management applications:
+seed zones give us an independent, management-relevant standard
+against which to judge \ecolocator predictions.
 Importantly, \ecolocator is not limited to this system;
 it offers a pathway to inform management
 in any species or taxon where
@@ -882,6 +892,126 @@ in the dataset. Performance was evaluated separately within each simulation regi
 allowing direct comparison of method behavior
 under both spatially explicit and Wright--Fisher evolutionary scenarios.
 
+\subsection{Empirical application to coastal \dfir}
+
+\paragraph{Samples and genotyping.}
+Our empirical dataset consisted of open-pollinated seedlings from
+348 unrelated coastal \dfir
+(\textit{Pseudotsuga menziesii} var.\ \textit{menziesii}) trees
+sampled across Oregon and Washington.
+The maternal parents of these trees were woodsrun (unimproved) `plus' trees,
+identified through field observations as well-adapted to their local environment and exceptional
+for diameter, height, and stem form. Leaf-derived DNA from individual trees was genotyped using the 58K \dfir
+Axiom Affymetrix SNP array \citep{howe_axiom_2020}, yielding 18,732 SNPs
+after filtering. The \dfir genome is large and incompletely
+assembled ($\sim$16 Gb; \cite{neale_douglas-fir_2017}), so genomic positions of array SNPs are unknown,
+precluding chromosome- or window-level analyses.
+\dfir exhibits low self-fertility and
+seeds derived from maternal parents are typically pollinated by multiple nearby
+pollen donors. While the pollen pool is heterogeneous, pollen and seed movement in \dfir
+is limited (typically <400km),
+making the maternal source environment a reasonable proxy for the source of open-pollinated
+seedlings.
+
+\paragraph{Climate variables.}
+To represent source climates,
+we chose 1970--2000 baseline climate normals modeled by
+ClimateNA \citep{mahony_global_2022} using source latitude, longitude, and elevation.
+We focused on three climate variables shown to be significantly
+associated with \dfir growth and local adaptation \citep{stclair_genecology_2005}:
+mean cold month temperature (MCMT), which shows the strongest
+associations with the timing of summer budset and annual height
+increment; and Summer Heat:Moisture Index (SHM) and mean summer
+precipitation (MSP; May--September precipitation),
+both of which show the strongest associations with
+the timing of spring bud break and the magnitude of stem taper.
+These variables capture the primary axes of climate variation
+across the species' range and correspond directly to the selection
+pressures (e.g., winter cold temperatures; aridity) that are
+managed and mitigated by USFS seed zones.
+
+\paragraph{Model training and feature attribution.}
+Genotypes, coordinates, and climate values were preprocessed as described above,
+with coordinates and covariates centered and scaled prior to training.
+We trained \ecolocator on this dataset
+using leave-one-out cross-validation,
+enabling direct comparison between
+each individual's predicted and known
+geographic coordinates and climate values.
+To test whether climate predictions carry information beyond geography,
+we also derived indirect climate estimates by looking up each
+\ecolocator-predicted location in ClimateNA
+and compared their accuracy to the direct climate predictions.
+SHAP values were summarized across leave-one-out
+folds by calculating the mean absolute attribution
+for each of the 18,732 SNPs separately for latitude, longitude,
+MCMT, MSP, and SHM. For each prediction target,
+we retained the 179 highest-attribution SNPs,
+approximately the top 1\% of the ranked SHAP distribution,
+as candidate loci for downstream comparison and biological interpretation.
+This threshold was used for prioritization rather than as a test of
+statistical significance. We then compared pairwise overlap
+among the five target-specific SNP sets to determine the extent
+to which geographic and climatic predictions relied on shared genomic features.
+Because the SNP array carries no chromosome coordinates,
+we additionally aligned array probe sequences to a recent
+draft assembly (DFv5.29) and, restricting to primary,
+high-confidence alignments (MAPQ $\geq$ 30), recovered approximate
+chromosomal positions for a subset of the genotyped SNPs.
+These positions were used only to place attribution scores in genomic context,
+not for prediction.
+
+\paragraph{Functional annotation.}
+To characterize the potential biological functions represented
+among high-attribution loci, SNP identifiers were used to retrieve their source
+cDNA sequences. Available sequence annotations included best protein matches
+to \textit{Arabidopsis thaliana} and \textit{Populus trichocarpa},
+along with Mercator gene descriptions and PANTHER functional classes and family
+identifiers. We used these annotations descriptively to identify recurring biological
+functions and functional themes among high-attribution loci and to compare these patterns
+across prediction targets. Because these functional assignments rely in part on
+homology to angiosperm proteins and SHAP quantifies predictive importance
+rather than causality, we interpret the resulting annotations as a means of
+prioritizing and biologically contextualizing candidate loci rather than as
+evidence that individual SNPs are causal targets of local adaptation.
+
+% TODO: Confirm the specific annotation resource/database versions with Rich
+% and add citations for PANTHER and Mercator as appropriate.
+
+\paragraph{Validation against USFS seed zones.}
+To assess whether prediction errors are biologically meaningful,
+we compared \ecolocator-predicted climate values to the climate ranges
+within USFS seed transfer zones. In the Pacific west, `first-generation'
+seed transfer zones \citep{usdaforestservice_tree_1973} were narrowly
+defined to restrict movement and minimize maladaptive responses to winter
+cold temperatures. `Second-generation' zones \citep{randall_forest_1996, randall_washington_2002}
+were subsequently developed after common garden experiments revealed that
+\dfir populations show broader climate tolerance than is reflected in first-generation zones.
+We compiled spatial layers for first-generation Oregon and Washington seed zones,
+along with climate summaries for seed zones divided into 1000 ft elevation bands,
+instead of the original 500-foot elevation bands \citep{shalev_zone_2026}.
+This allows us to evaluate results in the context of first-generation seed
+zone boundaries (which are widely used in forest management), while allowing for comparisons to climate
+transfers that are closer to the experimentally-supported updated second-generation zones.
+For each tree, we compared \ecolocator climate predictions to seed zone climates
+using two approaches.
+In the ``fixed-zone'' approach, map-based seed zones were treated as fixed constraints:
+a prediction is a ``match'' if it falls within
+the percentile-defined climate range of the source seed zone and elevation band.
+This map-based approach can produce non-matches when predictions are nearly identical
+to true values, because fixed map boundaries are arbitrary.
+In the ``focal point'' approach, the climate range of the source seed zone
+defines the maximum acceptable climate transfer:
+a prediction is a match if its distance from the true value
+is smaller than the climate range of the source seed zone--elevation band.
+For example, if a source seed zone--elevation band shows a
+MCMT 100th percentile range of 2\textdegree{}C, an \ecolocator MCMT prediction
+within 2\textdegree{}C of the true value is a match.
+Under both approaches we used the 100th percentile range
+(defined by the minimum and maximum values)
+and the 98th percentile range (defined by the 1st and 99th percentile values),
+and we applied the same criteria to the indirect (location plus ClimateNA) estimates.
+
 
 \section{Results}
 
@@ -1236,7 +1366,6 @@ localized genotype--environment associations.
 \end{figure}
 
 
-\sbt{THis all reads nicely, but it does depart a bit from separation of Intro, Methods, Results. Consider moving parts around to the respective sections?}
 \subsection{Predicting suitable environments
 for coastal \dfir using \ecolocator}
 
@@ -1244,116 +1373,12 @@ Simulations provide a controlled setting to benchmark \ecolocator,
 but the ultimate goal is to evaluate its performance in natural systems
 where demography, gene flow, selection, and management history
 interact in complex ways. To this end,
-we applied \ecolocator to predict the climate of origin of coastal \dfir
-(\textit{Pseudotsuga menziesii} var. \textit{menziesii}),
-a keystone conifer of western North American forests
-that has been the focus of forest genetics research for over a century \citep{stclair_1912_2020}.
-Coastal \dfir spans steep gradients in temperature,
-precipitation, elevation, and summer drought,
-and a century of provenance trials and seed-transfer research
-has shown that trees express maladaptive responses
-(e.g., slow growth, poor form, disease susceptibility) when moved beyond
-their local source climate \citep{stclair_genecology_2005,stclair_genetic_2007}.
-This pattern is well-documented in seedling and tree provenance trials,
-which consistently show home-environment advantage and genotype--environment
-interactions along climatic gradients related primarily to winter cold,
-summer drought, and summer heat accumulation.
-
-To minimize maladaptation in \dfir,
-seed zones were developed to define geographic limits
-within which seedlings can be moved while preserving local adaptation.
-\dfir seed zones were formalized for U.S. Forest
-Service forest lands in the 1940s \citep{kummel_forest_1944},
-and they were later expanded to include federal, state, and private lands
-in the 1960s and 1970s \citep{usdaforestservice_tree_1973}.
-Modern seed transfer zones
-(e.g., \citealp{randall_forest_1996, stclair_seedlot_2022})
-incorporate geographic and climatic factors,
-as well as experimental evidence from reciprocal transplant trials.
-This well-developed biological and management framework
-makes \dfir a particularly powerful empirical system
-for evaluating \ecolocator.
-
-\subsubsection*{Data and model application}
-
-Our empirical dataset consisted of open-pollinated seedlings from
-348 unrelated coastal \dfir trees
-sampled across Oregon and Washington.
-The maternal parents of these trees were woodsrun (unimproved) 'plus' trees, 
-identified through field observations as well-adapted to their local environment and exceptional 
-for diameter, height, and stem form. Leaf-derived DNA from individual trees was genotyped using the 58K \dfir 
-Axiom Affymetrix SNP array \citep{howe_axiom_2020}, yielding 18,732 SNPs 
-after filtering. The \dfir genome is large and incompletely 
-assembled ($\sim$16 Gb; \cite{neale_douglas-fir_2017}), so genomic positions of array SNPs are unknown, 
-precluding chromosome- or window-level analyses.
-
-\dfir exhibits low self-fertility and 
-seeds derived from maternal parents are typically pollinated by multiple nearby 
-pollen donors. While the pollen pool is heterogeneous, pollen and seed movement in \dfir
-is limited (typically <400km),
-making the maternal source environment a reasonable proxy for the source of open-pollinated
-seedlings.
-To represent source climates, 
-we chose 1970--2000 baseline climate normals modeled by
-ClimateNA \citep{mahony_global_2022} using source latitude, longitude, and elevation. 
-We focused on three climate variables shown to be significantly 
-associated with \dfir growth and local adaptation \citep{stclair_genecology_2005}: 
-mean cold month temperature (MCMT), which shows the strongest 
-associations with the timing of summer budset and annual height 
-increment; and Summer Heat:Moisture Index (SHM) and mean summer 
-precipitation (MSP; May--September precipitation), 
-both of which show the strongest associations with 
-the timing of spring bud break and the magnitude of stem taper. 
-These variables capture the primary axes of climate variation 
-across the species' range and correspond directly to the selection 
-pressures (e.g., winter cold temperatures; aridity) that are
-managed and mitigated by USFS seed zones.
-
-Prior to model training,
-we applied standard preprocessing to ensure comparability
-across genomic and environmental inputs,
-as detailed in the preprocessing section.
-These steps minimize technical artifacts
-and place all predictors and response variables
-on compatible scales for joint prediction.
-Following these preprocessing steps,
-we trained \ecolocator on this dataset
-using leave-one-out cross-validation,
-enabling direct comparison between
-each individual's predicted and known
-geographic coordinates and climate values.
-Geographic coordinates and environmental covariates
-were centered and scaled prior to model training.
-
-Following model training and prediction, 
-SHAP values were summarized across leave-one-out 
-folds by calculating the mean absolute attribution 
-for each of the 18,732 SNPs separately for latitude, longitude, 
-MCMT, MSP, and SHM. For each prediction target, 
-we retained the 179 highest-attribution SNPs, 
-approximately the top 1\% of the ranked SHAP distribution, 
-as candidate loci for downstream comparison and biological interpretation. 
-This threshold was used for prioritization rather than as a test of 
-statistical significance. We then compared pairwise overlap 
-among the five target-specific SNP sets to determine the extent 
-to which geographic and climatic predictions relied on shared genomic features.
-
-To characterize the potential biological functions represented 
-among high-attribution loci, SNP identifiers were used to retrieve their source 
-cDNA sequences. Available sequence annotations included best protein matches 
-to \textit{Arabidopsis thaliana} and \textit{Populus trichocarpa}, 
-along with Mercator gene descriptions and PANTHER functional classes and family 
-identifiers. We used these annotations descriptively to identify recurring biological 
-functions and functional themes among high-attribution loci and to compare these patterns 
-across prediction targets. Because these functional assignments rely in part on 
-homology to angiosperm proteins and SHAP quantifies predictive importance 
-rather than causality, we interpret the resulting annotations as a means of 
-prioritizing and biologically contextualizing candidate loci rather than as 
-evidence that individual SNPs are causal targets of local adaptation.
-
-% TODO: Confirm the specific annotation resource/database versions with Rich
-% and add citations for PANTHER and Mercator as appropriate.
-
+we applied \ecolocator to 348 coastal \dfir trees genotyped at 18,732 SNPs
+and sampled across Oregon and Washington (\Cref{fig:dfir-results}, panel f),
+predicting geographic origin together with three climate variables
+that structure local adaptation in this species: MCMT, SHM, and MSP.
+Leave-one-out cross-validation gave a predicted and a known value
+for every tree and target.
 
 \begin{figure}[H]
     \adjustimage{width=1.1\textwidth,center}{figures/dfirresults.pdf}
@@ -1384,28 +1409,15 @@ greater than 200km appeared as extreme outliers and were not associated with obv
 geographic (e.g., edge of range; clustered locations) or genetic (e.g., unusual homozygosity)
 attributes. Label errors or failed predictions may contribute to these unusually large errors. 
 
-\sbt{This paragraph is probably too much narrative for results section.}
-A central question for any genotype-to-climate model is whether
-its climate predictions reflect genuine genotype--environment signal
-or simply ride on geographic prediction,
-since climate is strongly spatially autocorrelated in natural landscapes.
-Our simulations address this in principle by decoupling environment from
-geography (H=0; see Results above),
-showing that \ecolocator \emph{can} recover environmental signal
-that geography alone cannot provide.
-The empirical data let us ask whether it \emph{does} so here.
-We evaluated climate predictions using two approaches: direct climate predictions
-from \ecolocator; or indirect climate predictions from \ecolocator geographic predictions
-combined with climate values estimated from ClimateNA.
-If \ecolocator's climate predictions were merely a relabeling of its geographic
-predictions, the indirect route---predicting location and then looking up its
-climate in ClimateNA---would do at least as well.
-Instead, direct estimates from \ecolocator
-showed higher accuracy than translating locations
-to climate via ClimateNA variables (\Cref{tab:supptable1}), indicating that \ecolocator
-identifies climate-related covariance in the geographic--genomic matrix
-beyond what geography alone supplies,
-and uses this covariance to improve local climate estimates. Among the three modeled climate variables,
+Because climate is strongly spatially autocorrelated,
+climate predictions could in principle ride entirely on geographic prediction.
+If so, the indirect route---predicting location and then looking up its
+climate in ClimateNA---would do at least as well as direct prediction.
+Instead, direct climate estimates from \ecolocator
+were more accurate than ClimateNA values at predicted locations
+for all three variables (\Cref{tab:supptable1}),
+indicating that \ecolocator recovers climate-related genomic signal
+beyond what geography alone supplies. Among the three modeled climate variables,
 Mean Cold Month Temperature (MCMT) showed the highest predicted $R^2$ of 0.72, with Mean Summer
 Precipitation (MSP) ($R^2$=0.54) and Summer Heat:Moisture Index (SHM) ($R^2$=0.52)
 showing lower and comparable prediction accuracies. These correlations are consistent 
@@ -1418,32 +1430,10 @@ between topography, slope/aspect, local rainfall, and aridity \citep{frankson_or
 
 To assess whether \ecolocator's prediction errors
 are biologically meaningful,
-we compared \ecolocator-predicted values to the climate ranges 
-within USFS seed transfer zones. In the Pacific west, 'first-generation'
-seed transfer zones \citep{usdaforestservice_tree_1973} were narrowly 
-defined to restrict movement and minimize maladaptive responses to winter 
-cold temperatures. `Second-generation' zones \citep{randall_forest_1996, randall_washington_2002}
-were subsequently developed after common garden experiments revealed that 
-\dfir populations show broader climate tolerance than is reflected in first-generation zones.  
-For our comparison, we compiled spatial layers for first-generation Oregon and Washington seed zones,
-along with climate summaries for seed zones divided into 1000 ft elevation bands, 
-instead of the original 500-foot elevation bands \citep{shalev_zone_2026}.
-This allows us to evaluate results in the context of first-generation seed 
-zone boundaries (which are widely used in forest management), while allowing for comparisons to climate 
-transfers that are closer to the experimentally-supported updated second-generation zones. 
-
-For each individual tree, we compared \ecolocator climate predictions to known seed zone climates 
-using two approaches: 
-(a) a "fixed-zone" approach where map-based seed zones were treated as fixed constraints; and
-(b) a "focal point" based approach where the climate range of the local seed zone was used
-to define the maximum acceptable climate transfer.
-With the fixed-zone approach, \ecolocator climate predictions are considered a "match" if they fall within 
-the percentile-defined range of the source seed zone and elevation band. This map-based
-approach can lead to non-matches when predictions are nearly identical to true values
-due to the arbitrary nature of fixed map boundaries. 
-We compared predicted climate values to the 100th percentile range (defined by the minimum and maximum values) 
-and the 98th percentile range (defined by the 1st and 99th percentile values).  
-Using a fixed-zone approach, we find that 66.1\%
+we compared predicted climate values to the climate ranges
+within first-generation USFS seed zone--elevation bands,
+using the fixed-zone and focal point criteria described in Methods.
+Using the fixed-zone approach, we find that 66.1\%
 of the MCMT predictions fall within seed zone--elevation band 100th 
 percentile ranges, and that the number of matches drops to 49.7\% of predictions when using the 
 98th percentile range. The proportion of matches is higher for MSP (86.2\% for the 
@@ -1468,13 +1458,7 @@ These values are all larger than similar estimates using ClimateNA predictions f
 \end{tabular}
 \end{table}
 
-With the focal point approach, the difference between \ecolocator MCMT predictions
-and true climate values is compared to the range of climate variation within the source seed 
-zone. For example, if a source seed zone--elevation band shows a 
-MCMT 100th percentile range of 2\textdegree{}C, an \ecolocator MCMT prediction 
-within 2\textdegree{}C of the true value falls inside the range of allowable transfers 
-and is considered a "match".
-Using a focal point approach, we find that 93.1\% of the MCMT predictions 
+Using the focal point approach, we find that 93.1\% of the MCMT predictions 
 show lower distances from the true value than the 100th percentile 
 range of the source seed zones, and that the number of matches 
 drops to 87.1\% of predictions when using the 98th percentile range 
@@ -1522,15 +1506,11 @@ are not just numerically accurate,
 but are close enough that forest managers
 consider it an acceptable transfer source.
 
-Because the \dfir genome is large and incompletely assembled, 
-the SNP array used here does not carry chromosome coordinates by design. 
-As a supplemental analysis, we aligned array probe sequences to a recent 
-draft assembly (DFv5.29) and, restricting to primary, 
-high-confidence alignments (MAPQ $\geq$ 30), recovered approximate 
-chromosomal positions for a subset of the genotyped SNPs. 
-Plotting mean $\lvert\mathrm{SHAP}\rvert$ against these positions 
-lets us view attribution scores in genomic context for each of the 
-five prediction targets (\Cref{fig:shap-manhattan-dfir}). 
+For the subset of SNPs with approximate chromosomal positions
+recovered from the DFv5.29 draft assembly,
+plotting mean $\lvert\mathrm{SHAP}\rvert$ against position
+lets us view attribution scores in genomic context for each of the
+five prediction targets (\Cref{fig:shap-manhattan-dfir}).
 Several genomic regions show elevated attribution for both longitude and 
 MCMT simultaneously, consistent with the fact that Mean Cold Month
 Temperature covaries with longitude across coastal \dfir's range, 
