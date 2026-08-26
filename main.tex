@@ -1040,14 +1040,11 @@ across selection regimes
 Lat. $R^2$=0.916; \(\sigma_K\)=0.5, Lon. $R^2$=0.911, 
 Lat. $R^2$=0.911; \(\sigma_K\)=0.7, 
 Lon. $R^2$=0.906, Lat. $R^2$=0.907).
-This dissociation is itself informative: environmental accuracy declined as selection weakened,
-whereas geographic accuracy remained stable because dispersal,
-and therefore the spatial structure of the populations,
-was held constant.
-Together with the spatially uncorrelated landscape (H=0),
-which prevents geography from directly predicting the environmental target,
-this result supports that \ecolocator can recover
-genotype--environment signal that is distinguishable from neutral geographic structure.
+Because dispersal, and therefore spatial structure, was held constant
+across selection regimes, and because the H=0 landscape prevents geography
+from predicting the environmental target,
+this dissociation shows that \ecolocator recovers
+genotype--environment signal that geographic structure alone does not supply.
 Varying genetic architecture produced only a slight difference in local adaptation
 ($\vec{\Delta}$LA between GA1 and GA3 = 0.008),
 despite the higher number of QTL mutations arising
@@ -1083,11 +1080,10 @@ and the environmental optimum assigned to each deme
 (Lon. $R^2$=0.986,
 Lat. $R^2$=0.985,
 Env. $R^2$=0.916).
-This high prediction accuracy is consistent with the structure
-of the Wright--Fisher simulations,
-where restricted migration among neighboring demes
-generates strong spatial structure and local adaptation is driven
-by a small number of causal loci with localized genotype--environment associations.
+This regime combines strong spatial structure from neighbor-limited migration
+with local adaptation driven by a small number of causal loci,
+which explains the high accuracy here and, as shown below,
+the stronger attribution and GEA performance in the same simulations.
 We summarize the full simulation $R^2$ results in \Cref{tab:supptable2}.
 
 \begin{figure}[H] 
@@ -1187,9 +1183,6 @@ at causal loci in this discrete-deme simulation regime.
 These results show that SHAP-based feature attribution
 can highlight loci contributing to local adaptation,
 while also capturing signal from linked regions.
-The stronger enrichment observed in the Wright--Fisher simulations
-is consistent with the structure of that regime,
-where adaptive signal is concentrated in a small number of causal loci.
 
 
 \begin{figure}[H]
@@ -1328,12 +1321,6 @@ followed by \texttt{WZA}
 (mean AUC-PR = 0.619)
 and the top-candidate method
 (mean AUC-PR = 0.102).
-The higher performance of both \ecolocator\texttimes{}SHAP
-and \texttt{WZA} in the Wright--Fisher simulations
-is consistent with the way local adaptation was modeled:
-adaptive signal was concentrated in a smaller number
-of causal loci with strong,
-localized genotype--environment associations.
 
 \begin{figure}[H]
     \adjustimage{width=1.1\textwidth,center}{figures/GEAcomparisonfig.pdf}
@@ -1586,14 +1573,8 @@ This allows us to ask not only where an individual comes from,
 but what environmental conditions it is adapted to,
 and how the recovery of each signal
 depends on evolutionary parameters.
-Our simulation results show that prediction accuracy
-scales with the strength of local adaptation:
-under restricted dispersal and strong stabilizing selection,
-the model accurately recovers both the spatial position
-and the environmental conditions experienced by individuals.
-As dispersal increases or selection weakens,
-environmental prediction degrades
-while geographic prediction is affected primarily by dispersal.
+In our simulations, dispersal degraded both geographic and environmental
+prediction, whereas selection strength affected only environmental prediction.
 This decoupling is consistent with the expectation
 that these two signals have distinct evolutionary origins:
 geographic prediction depends on isolation-by-distance patterns
@@ -1602,17 +1583,8 @@ whereas environmental prediction requires
 allele frequency clines that track ecological gradients---a
 signal that is eroded
 when gene flow overwhelms local selection.
-
-Varying genetic architecture allowed us to test whether
-\ecolocator's performance depends on how adaptive effects
-are distributed across the genome.
-Despite differences in the number and distribution of adaptive loci,
-prediction accuracy remained largely unchanged across the three
-architectures tested.
-This suggests that \ecolocator can recover geographic
-and environmental signal across both more concentrated
-and more distributed architectures,
-although the range explored here represents only a subset
+Prediction accuracy was robust to the three genetic architectures tested,
+although this range represents only a subset
 of the genetic complexity expected in natural populations.
 
 Our primary continuous-space simulations deliberately decoupled
@@ -1631,32 +1603,16 @@ shared predictive signal cannot necessarily be attributed uniquely
 to demographic structure or local adaptation,
 an important limitation that we return to below.
 
-The Wright--Fisher results illustrate the upper end of \ecolocator performance
-under strong,
-structured genotype--environment associations.
-In contrast to the continuous-space simulations,
-where individuals vary continuously across space
-and local adaptation emerges under stabilizing selection on a quantitative trait,
-the Wright--Fisher simulations impose spatial structure through discrete demes
-and directional selection on a small number of causal loci.
-\ecolocator performed particularly well in this setting,
-suggesting that the model readily recovers geographic and environmental signal
-when spatial structure is strong
-and genotype--environment associations are concentrated in the genome.
-This result is consistent with the broader pattern observed across simulations:
-\ecolocator performs best when evolutionary processes generate a clear correspondence
-between genomic variation,
-geographic position,
-and environmental conditions.
-At the same time, the contrast between the Wright--Fisher and continuous-space simulations
-highlights that prediction difficulty depends on the structure of the evolutionary problem.
-Discrete demes,
-neighbor-limited migration,
-and a small number of causal loci create a more clearly structured prediction task,
-whereas continuous space,
-diffuse genetic architectures,
-high dispersal,
-or weak selection can weaken the signals that \ecolocator is designed to learn.
+The Wright--Fisher results illustrate the upper end of \ecolocator performance.
+Discrete demes, neighbor-limited migration,
+and directional selection on a small number of causal loci
+create a clearly structured prediction task,
+whereas continuous space, diffuse genetic architectures,
+high dispersal, or weak selection weaken the signals
+that \ecolocator is designed to learn.
+The contrast between the two regimes shows that prediction difficulty
+depends on the structure of the evolutionary problem,
+not only on the model.
 
 The \dfir case study extends these findings to a natural 
 system where the ground truth is not fully known. 
@@ -1665,8 +1621,7 @@ climate variables in coastal \dfir are consistent with the
 species' well-documented patterns of local adaptation along steep 
 latitudinal and elevational gradients in western 
 North America \citep{aitken_assisted_2013}. 
-That the model performs well in this system 
-(Lon. $R^2$=0.75, Lat. $R^2$=0.83, MCMT $R^2$=0.72, MSP $R^2$=0.54, SHM $R^2$=0.52), 
+That the model performs well in this system
 despite low population differentiation \citep{krutovsky_estimation_2009}, 
 incomplete genomic resources \citep{neale_douglas-fir_2017}, 
 and a relatively modest number of SNPs, 
@@ -1687,8 +1642,7 @@ higher attribution scores than neutral sites,
 confirming that the model preferentially weights loci
 under selection.
 This signal persists across genetic architectures
-despite modest effect sizes
-(Cohen's $d \approx 0.14$--$0.18$),
+despite modest effect sizes,
 indicating that SHAP can detect the distributed signature
 of polygenic adaptation
 even when individual locus effects are small.
@@ -1822,30 +1776,26 @@ combination of these processes. High-attribution loci should therefore be
 interpreted as candidate genomic regions associated with the predicted 
 gradient rather than as confirmed causal targets of adaptation.
 
-The \dfir results nevertheless provide additional information 
-about how this signal is structured. Overlap among high-attribution SNPs 
-was greatest between prediction targets that represent closely related 
-environmental or geographic gradients: MSP and SHM shared 74.3\% of their 
-highest-attribution loci, while longitude and MCMT shared 54.2\%. 
-In contrast, latitude and MCMT shared only 7.3\% (\Cref{tab:dfir-shap-overlap}). 
-This pattern suggests that \ecolocator is not assigning uniformly high 
-attribution to the same spatially structured loci across all prediction targets, 
-but instead recovers partially target-specific genomic signal corresponding 
-to different axes of geographic and environmental variation. 
-Functional annotations provide complementary biological support for this 
-interpretation. Latitude-associated candidates represented light sensing 
-and seasonal developmental regulation, consistent with known effects of 
-photoperiod and temperature on seasonal growth 
-cessation in coastal \dfir \citep{ford_photoperiod_2017}.
-Longitude and MCMT candidates included functions related to seasonal 
-regulation and temperature acclimation, consistent with previous genomic 
-evidence for polygenic cold adaptation involving growth, phenology, 
-and stress signaling in \dfir \citep{delatorre_polygenic_2021}. 
-MSP and SHM candidates repeatedly represented ABA-mediated water-stress signaling, 
-osmotic protection, and redox response, while previous common-garden work in coastal 
-\dfir has similarly demonstrated climate-related genetic variation in drought 
-and cold hardiness across winter-temperature and summer-precipitation 
-gradients \citep{bansal_tolerance_2016}. Viewed together, 
+The \dfir results nevertheless provide additional information
+about how this signal is structured. High-attribution SNPs overlapped
+most between targets that represent closely related gradients
+(MSP and SHM; longitude and MCMT) and least between unrelated ones
+(latitude and MCMT; \Cref{tab:dfir-shap-overlap}).
+\ecolocator therefore is not assigning uniformly high
+attribution to the same spatially structured loci across all prediction targets,
+but recovers partially target-specific genomic signal corresponding
+to different axes of geographic and environmental variation.
+The functional annotations support this interpretation and agree with
+prior work in coastal \dfir: light sensing and seasonal developmental
+regulation among latitude candidates match known effects of photoperiod
+and temperature on growth cessation \citep{ford_photoperiod_2017};
+seasonal regulation and temperature acclimation among longitude and MCMT
+candidates match genomic evidence for polygenic cold adaptation
+\citep{delatorre_polygenic_2021}; and ABA-mediated water-stress signaling,
+osmotic protection, and redox response among MSP and SHM candidates match
+common-garden evidence for genetic variation in drought and cold hardiness
+along summer-precipitation and winter-temperature gradients
+\citep{bansal_tolerance_2016}. Viewed together,
 these patterns suggest that environmental timing, including the timing of growth, 
 dormancy, acclimation, and stress response, may be an important component of the 
 genotype--environment signal captured by \ecolocator in \dfir.
