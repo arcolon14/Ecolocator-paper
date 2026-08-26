@@ -173,9 +173,8 @@ through covariance matrices or latent factors.
 These methods have been widely applied,
 but they are limited in their ability to capture
 polygenic adaptation involving many loci of small effect,
-and they can be confounded by neutral demographic processes
-that generate allele frequency gradients
-correlated with environmental variation
+and they are vulnerable to the neutral allele frequency gradients
+described above
 \citep{lotterhos_whitlock_2015}.
 Newer approaches address some of these limitations
 by analyzing many loci and environmental predictors simultaneously.
@@ -215,14 +214,12 @@ naturally handling nonlinear interactions among loci
 and correlated environmental predictors
 \citep{schrider_supervised_2018}.
 \citet{battey_predicting_2020} demonstrated
-that deep neural networks can predict
-the geographic origin of an individual from its genotype alone,
-using a tool called Locator.
-By learning from multilocus patterns of isolation by distance,
-Locator achieves high spatial accuracy,
-but it does not incorporate environmental covariates
-and therefore cannot distinguish adaptive signals
-from neutral spatial structure.
+that a deep neural network, \texttt{Locator}, can predict
+the geographic origin of an individual from its genotype alone
+by learning from multilocus patterns of isolation by distance.
+\texttt{Locator} achieves high spatial accuracy,
+but it does not model environmental covariates
+and therefore cannot predict an individual's climate of origin.
 Other recent work incorporates ecological context
 more explicitly:
 gradient forest methods link genomic variation
@@ -239,18 +236,14 @@ capturing both neutral spatial structure
 and adaptive environmental associations in a single framework.
 
 Here we introduce \ecolocator,
-a deep neural network that extends the geographic prediction
-framework of \texttt{Locator} \citep{battey_predicting_2020} by jointly predicting
-geographic location and climate of origin from genomic data.
+a deep neural network that extends \texttt{Locator}
+by jointly predicting geographic location and climate of origin from genomic data.
 Trained on georeferenced genotypes paired
 with historical climate data,
 the model learns multilocus associations
-between genetic variation and environmental gradients.
-When allele frequencies covary with climate variables,
-the model can infer climate of origin directly from genotype.
-By coupling spatial and environmental inference,
-\ecolocator can leverage signals of both isolation by distance
-and local adaptation.
+with both geographic position and environmental gradients,
+so that it can infer climate of origin directly from genotype
+when allele frequencies covary with climate.
 We incorporate a downstream feature attribution method (SHAP \citep{lundberg_shap_2017})
 to reveal how each input feature contributed to a given prediction,
 identifying which variants contribute most strongly
@@ -293,10 +286,6 @@ makes \dfir a natural bridge
 between controlled simulations and real-world management applications:
 seed zones give us an independent, management-relevant standard
 against which to judge \ecolocator predictions.
-Importantly, \ecolocator is not limited to this system;
-it offers a pathway to inform management
-in any species or taxon where
-empirical knowledge of local adaptation is scarce.
 
 By integrating population genetic theory,
 simulation benchmarking, and empirical application,
