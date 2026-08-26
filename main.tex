@@ -572,67 +572,40 @@ and neutral background variation separately.
 \subsection{Varying dispersal, selection, and genetic architecture parameters}
 To evaluate the robustness of \ecolocator
 across diverse evolutionary contexts,
-we varied three parameters---dispersal,
+we varied three parameters: dispersal,
 the strength of stabilizing selection,
-and the genomic architecture of adaptive loci.
-These axes of variation were chosen because they represent
-core processes shaping the detectability of local adaptation:
-gene flow homogenizes allele frequencies across space,
-selection drives divergence between environments,
-and genomic architecture determines
-how adaptive alleles are distributed across the genome.
-By exploring combinations of these parameters,
-we can assess under which evolutionary regimes
-spatial--environmental signals of adaptation
-are most readily captured.
-Dispersal distance (\(\sigma_D\), sets the spatial scale
-of gene flow in the simulation.
-Smaller values correspond to restricted movement,
-leading to stronger genetic differentiation
-among neighboring regions,
-whereas larger values represent more mixing across the landscape.
-We tested three dispersal regimes
-(\(\sigma_D = 0.1, 0.3, 0.5\)),
-which span cases where individuals remain close to their birthplace
-versus scenarios where they disperse broadly
-and homogenize allele frequencies.
-The strength of stabilizing selection is governed
-by the standard deviation parameter (\(\sigma_K\))
-in the Gaussian fitness function.
-Small values of \(\sigma_K\) impose strong penalties
-on phenotypes deviating from the local optimum,
-leading to sharper differentiation between environments,
-whereas large values correspond to weaker selection
-that tolerates a broader range of phenotypes.
-We evaluated three values (\(\sigma_K = 0.3, 0.5, 0.7\))
-to capture strong, intermediate, and weak selection regimes.
-These parameter combinations generate
-a set of evolutionary scenarios that differ in the balance
-between gene flow, selection,
-and genomic distribution of adaptive alleles.
-In each parameterization test case,
-we held the other parameters at an intermediate value
-(i.e., when testing dispersal parameters,
-we held \(\sigma_K\) at 0.5).
+and the genomic architecture of adaptive loci (described above).
+We picked these three because each one governs
+a process that sets how detectable local adaptation is.
+Gene flow homogenizes allele frequencies across space,
+selection pulls populations in different environments apart,
+and genetic architecture decides where in the genome
+the adaptive alleles sit.
+Dispersal distance (\(\sigma_D\)) sets the spatial scale
+of gene flow. Small values keep offspring near their parents
+and let neighboring regions differentiate;
+large values mix individuals across the landscape.
+We tested \(\sigma_D = 0.1, 0.3, 0.5\).
+The strength of stabilizing selection is set
+by the standard deviation (\(\sigma_K\))
+of the Gaussian fitness function.
+Small \(\sigma_K\) punishes phenotypes far from the local optimum,
+large \(\sigma_K\) tolerates them.
+We tested \(\sigma_K = 0.3, 0.5, 0.7\)
+for strong, intermediate, and weak selection.
+When varying one parameter we held the others fixed:
+the dispersal sweep used \(\sigma_K = 0.5\) and genetic architecture 1,
+the selection sweep used \(\sigma_D = 0.3\) and genetic architecture 1,
+and the architecture sweep used \(\sigma_D = 0.1\) and \(\sigma_K = 0.5\).
 Spatial and phenotypic scales in these simulations are defined relative to the simulated landscape
 and environmental gradient rather than to physical distances,
-and are therefore best interpreted as ratios 
+and are therefore best interpreted as ratios
 (mutation and recombination rates, by contrast, are in standard per-base, per-generation units).
-Smaller dispersal values correspond to localized neighborhoods,
-smaller (\(\sigma_K\)) values correspond
-to stronger local adaptation pressures,
-and the three genomic architectures distribute adaptive variation
-differently along the chromosome,
-from a single 200 kb QTL window
-to three or five 100 kb windows
-spaced evenly across the 1 Mb element.
-By exploring this parameter space,
-we created simulations that range from highly structured,
-strongly adapted populations
-to less structured, weakly adapted populations.
-This variation provides the basis for evaluating
-when and where \ecolocator most effectively detects
-spatial--environmental signals of adaptation.
+Taken together these runs span populations that are highly structured
+and strongly adapted at one end
+and weakly structured and weakly adapted at the other,
+which is the range over which we wanted to see
+where \ecolocator works and where it does not.
 
 \subsection{Simulating local adaptation in discrete space (Wright--Fisher)}
 
@@ -693,17 +666,11 @@ as the local phenotypic optimum for each deme.
 Genotype matrices were extracted from tree sequences
 and used as input for both \ecolocator
 and downstream GEA analyses.
-The Wright--Fisher simulations provide a complementary scenario
-to our main simulations,
-in which local adaptation is driven by a smaller number
-of loci under directional selection
-and spatial structure is defined by discrete demes.
-As a result, they represent a comparatively simpler setting
-in which genotype--environment associations are strong
-and more localized in the genome.
-This allows us to assess how \ecolocator performs
-in a simpler regime,
-providing a useful contrast to more complex spatial scenarios.
+With few loci under directional selection and structure imposed by discrete demes,
+these simulations are a simpler setting than our continuous-space ones,
+with genotype--environment associations that are strong
+and confined to a small part of the genome.
+They give us a useful contrast to the harder spatial scenarios.
 
 \subsection{Feature attribution}
 
