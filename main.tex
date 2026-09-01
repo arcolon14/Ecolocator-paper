@@ -109,7 +109,11 @@ variables such as temperature, moisture, or seasonality
 In practice the separation is never clean.
 Range expansions, bottlenecks, and drift
 can all produce allele frequency gradients that look like adaptive clines
-\citep{excoffier_genetic_2009, novembre_spatial_2009}.
+\citep{excoffier_genetic_2009, novembre_spatial_2009}, while spatially 
+autocorrelated environmental variables can make real 
+adaptive gradients look like isolation by distance, 
+inflating false-positive rates in tests 
+used to distinguish them \citep[e.g.,][]{guillot_dismantling_2013,legendre_should_2015}.
 
 Local adaptation, in which populations evolve higher fitness in their local environments, 
 can generate covariation of allele frequencies with environmental gradients 
@@ -117,12 +121,14 @@ when spatially heterogeneous selection outweighs the homogenizing effects of gen
 \citep{savolainen_ecological_2013, lenormand_gene_2002}.
 Beyond increasing local fitness,
 it sustains genetic diversity across heterogeneous landscapes
-by maintaining multiple adaptive alleles,
+by maintaining quantitative genetic variance and, at some loci, multiple adaptive alleles,
 helping populations retain the variation
 on which selection can act as environments change \citep{hereford_quantitative_2009}.
-The classic models of Wright \citep{wright_isolation_1943},
-Levene \citep{levene_genetic_1953},
-and Endler \citep{endler1977geographic}
+The classic models of 
+\citet{wright_isolation_1943}, 
+\citet{levene_genetic_1953},
+and 
+\citet{endler1977geographic}
 work out how selection, migration, and drift
 combine to produce predictable spatial patterns of variation,
 and later work has filled in the details.
@@ -198,17 +204,31 @@ Machine learning (ML) offers a different way in.
 Rather than testing loci one at a time, a supervised model
 can use the whole genotype at once to predict
 geographic origin or climate of origin directly,
-and ML methods are good at pulling patterns
+and ML methods can be effective at pulling patterns
 out of high-dimensional data with nonlinear interactions among loci
 and correlated predictors
-\citep{schrider_supervised_2018}.
+\citep{schrider_supervised_2018}, though performance depends 
+on how well the training data represent the populations and 
+conditions where the model is applied.
 \citet{battey_predicting_2020} demonstrated
 that a deep neural network, \texttt{Locator}, can predict
 the geographic origin of an individual from its genotype alone
 by learning from multilocus patterns of isolation by distance.
 \texttt{Locator} achieves high spatial accuracy,
-but it does not model environmental covariates
-and therefore cannot predict an individual's climate of origin.
+but it does not model environmental covariates,
+so its predictions give a climate of origin only indirectly, 
+through a lookup at the predicted location. While, 
+a location prediction implies a climate of origin once 
+paired with a map of historical climate normals, 
+that inference assumes the climate at a given location 
+stays put — an assumption that erodes as climates shift 
+faster than the normals they're being compared against, 
+and offers nothing where future conditions 
+have no analog anywhere on today's landscape. 
+Predicting climate of origin directly from genotype, 
+rather than through an intermediate geographic prediction, 
+sidesteps that assumption.
+
 Other recent work brings in ecology more directly.
 Gradient forest methods link genomic variation
 to environmental predictors to forecast
