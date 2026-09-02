@@ -500,7 +500,15 @@ and local mating govern the survival and reproduction of individuals.
 Local adaptation can then be quantified
 as the mean absolute difference between each individual's phenotype
 and its local optimum,
-such that smaller values correspond to stronger local adaptation. Because dispersal, selection strength, and genetic architecture
+such that smaller values correspond to stronger local adaptation:
+\begin{equation}
+\mathrm{Local\;Adaptation} \;=\;
+\frac{1}{N} \sum_{i=1}^{N} \left| P_i - O_i \right|
+\label{eq:localadapt}
+\end{equation} 
+where $P_i$ is the phenotype of individual $i$, $O_i$ is the local optimum at 
+individual $i$'s location, and $N$ is the total number of individuals.
+Because dispersal, selection strength, and genetic architecture
 interact to determine how much local adaptation actually emerges,
 this metric lets us measure the realized outcome of each parameter 
 combination directly, rather than inferring it from the parameters alone,
@@ -521,19 +529,18 @@ across the chromosome per meiosis,
 reducing long-range LD and allowing clearer evaluation of locus-level
 feature attribution (\Cref{fig:ld-decay}).
 
-To explore whether the genomic distribution of adaptive loci 
-influences the detectability of local adaptation, 
-we varied the arrangement of QTLs along the chromosome 
-across three genetic architectures. In the first, 
-all QTLs were clustered in a single window spanning 20\% 
-of the chromosome, centered at its midpoint. In the second, 
-QTLs were split across three windows, each spanning 10\% of 
-the chromosome and centered at even intervals along its 
-length (at the 25\%, 50\%, and 75\% positions). 
-In the third, QTLs were split across five windows, each also spanning
-10\% of the chromosome, 
-centered at even intervals at approximately the 17\%, 33\%, 50\%, 67\%, 
-and 83\% positions. 
+To explore whether the genomic distribution of adaptive loci
+influences the detectability of local adaptation,
+we varied the arrangement of QTLs along the chromosome
+across three genetic architectures. In the first,
+all QTLs were clustered in a single 200 kb window
+(bases 400,000--599,999; 20\% of the chromosome), centered at its midpoint. In the second,
+QTLs were split across three 100 kb windows (10\% of the chromosome each),
+centered at bases 250,000, 500,000, and 750,000
+(the 25\%, 50\%, and 75\% positions).
+In the third, QTLs were split across five windows of the same size,
+centered at approximately bases 166,667, 333,333, 500,000, 666,667, and 833,333
+(the 17\%, 33\%, 50\%, 67\%, and 83\% positions).
 These treatments allowed us to test whether adaptive 
 signals are easier to detect when concentrated in 
 specific genomic regions versus dispersed more broadly 
