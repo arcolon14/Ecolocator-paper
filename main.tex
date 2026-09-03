@@ -19,6 +19,7 @@
 \usepackage{xspace}
 \usepackage{xcolor}
 \usepackage{multirow}
+\usepackage[normalem]{ulem}
 \linenumbers
 
 %%%%%% Running header %%%%%%
@@ -293,7 +294,7 @@ and experimental evidence from reciprocal transplant trials
 This combination of strong local adaptation and a long history
 of ecological and silvicultural study
 makes \dfir a natural bridge
-between controlled simulations and real-world management applications.
+between controlled simulations and real-world management applications. % ARC - I think this should be the last sentence of the paragraph. Maybe moving the next one about the seed zones up and then finishing with this summary about Dfir.
 Seed zones also give us something simulations cannot,
 which is a standard already in use by managers
 for deciding whether a predicted climate is close enough to the true one.
@@ -320,7 +321,8 @@ and signals of local adaptation,
 providing a scalable, biologically informed approach
 for studying complex evolutionary patterns.
 Both the CLI and Python API accept standard genotype formats 
-(VCF, Zarr, tab-delimited matrices), facilitating integration into existing 
+(e.g., VCF, Zarr, tab-delimited matrices) as input,
+facilitating integration into existing 
 genomic workflows whether scripting interactively or from the command line.
 
 \subsection{Preprocessing}
@@ -377,7 +379,6 @@ By explicitly coupling geographic and climatic inference, the model captures
 both neutral spatial structure and environment-associated genomic variation.
 
 
-
 \begin{figure}[H]
     \adjustimage{width=1.1\textwidth,center}{figures/EcolocatorARC.pdf}
     \caption{\ecolocator architecture. \textbf{Panel A} shows the training regime,
@@ -391,7 +392,7 @@ both neutral spatial structure and environment-associated genomic variation.
 
 In practice, an end-to-end \ecolocator analysis consists of five steps:
 \begin{enumerate}
-\item Assemble a training dataset consisting of genotype data 
+\item Assemble a training dataset consisting of filtered genotype data 
 in a supported format (VCF, Zarr, or tab-delimited matrix) 
 and a sample metadata file pairing each individual with its 
 known geographic coordinates and environmental covariate values. 
@@ -431,7 +432,7 @@ More details are given below.
 To explore under which evolutionary scenarios \ecolocator performs best,
 we used \slim \texttt{v.4.2.2} \citep{haller2023slim4} 
 to simulate a spatially explicit non-Wright--Fisher population
-experiencing local adaptation of a quantitative trait
+experiencing local adaptation of a quantitative trait % ARC - of a quantitative trait? from a quantiative trait?
 that evolves to track a single continuously varying environmental axis.
 By varying simulation parameters such as dispersal, genetic architecture of the quantitative trait,
 and the strength of stabilizing selection,
@@ -473,8 +474,10 @@ similarity in environment:
 individuals on opposite sides of the landscape can share 
 the same optimum, while individuals in adjacent 
 cells can be adapted to entirely different ones.
-Geographic and environmental prediction are therefore decoupled: 
-any accuracy \ecolocator achieves on the
+Geographic and environmental prediction are therefore decoupled;
+% ARC - changed this to have a different sentence structure from the
+% one before.
+therefore, any accuracy \ecolocator achieves on the
 environmental target cannot arise from geographic
 proximity or from neutral spatial structure driven by isolation by distance,
 but must instead reflect genotype--environment covariance
@@ -487,7 +490,6 @@ centered on the local optimum (\Cref{eq:stabsel}),
 where $z$ is the individual's phenotype,
 $\theta$ is the optimum in the corresponding grid cell,
 and $\sigma_K$ controls the strength of selection:
-
 \begin{equation}
 w(z, \theta) = \exp\!\left[-\frac{(z - \theta)^2}{2\sigma_K^2}\right].
 \label{eq:stabsel}
@@ -529,7 +531,7 @@ such that smaller values correspond to stronger local adaptation:
 \mathrm{Local\;Adaptation} \;=\;
 \frac{1}{N} \sum_{i=1}^{N} \left| P_i - O_i \right|
 \label{eq:localadapt}
-\end{equation} 
+\end{equation}
 where $P_i$ is the phenotype of individual $i$, $O_i$ is the local optimum at 
 individual $i$'s location, and $N$ is the total number of individuals.
 Because dispersal, selection strength, and genetic architecture
@@ -558,22 +560,35 @@ influences the detectability of local adaptation,
 we varied the arrangement of QTLs along the chromosome
 across three genetic architectures. In the first,
 all QTLs were clustered in a single 200 kb window
-(bases 400,000--599,999; 20\% of the chromosome), centered at its midpoint. In the second,
-QTLs were split across three 100 kb windows (10\% of the chromosome each),
-centered at bases 250,000, 500,000, and 750,000
-(the 25\%, 50\%, and 75\% positions).
-In the third, QTLs were split across five windows of the same size,
-centered at approximately bases 166,667, 333,333, 500,000, 666,667, and 833,333
-(the 17\%, 33\%, 50\%, 67\%, and 83\% positions).
+\sout{(bases 400,000--599,999; 20\% of the chromosome),} centered at its midpoint.
+In the second,
+QTLs were split across three evenly-spaced 100 kb windows (10\% of the chromosome each, 30\% total),
+\sout{centered at bases 250,000, 500,000, and 750,000
+(the 25\%, 50\%, and 75\% positions)}.
+% ARC - OK, for this I am not sure if saying "25% positions" is the most accurate
+% term. I think of the % about being a proportion of the span. The window does
+% not span 25% of the total chromsoome. Instead, it starts one quarter of the way.
+% I do admit that the two can be similarly interpreted which makes this confusing.
+% One suggestion here is that you change the text to say, e.g., "three evenly-spaced
+% 100 kbp windows, each spanning 10\% of the chromosome length". You don't mention
+% the positions and percentages here. Instead, you have a supplemental figure that
+% shows how they are organized. Something like you have in Fig 2 but only showing
+% the architecture in more detail, which a dedicated grid and drawn to scale.
+% Happy to chat more about this.
+In the third, QTLs were split across five evenly-spaced windows of the same size, % 100 kb? total span?
+\sout{centered at approximately bases 166,667, 333,333, 500,000, 666,667, and 833,333
+(the 17\%, 33\%, 50\%, 67\%, and 83\% positions)}.
+% ARC - Same here, "split across five evenly spaced 100 kbp windows (Fig SX)",
+% removing the number and percentages, referring to the Sup figure instead.
 These treatments allowed us to test whether adaptive 
 signals are easier to detect when concentrated in 
 specific genomic regions versus dispersed more broadly 
 (\Cref{fig:sim-performance}, panel a).
 We only simulate non-neutral mutations within \slim.
 Genomic information is stored in tree sequences
-and recapitated using pyslim 1.0.4 \citep{haller2019treeseq}.
+and recapitated using \texttt{pyslim} 1.0.4 \citep{haller2019treeseq}.
 Neutral mutations are then overlaid onto the recapitated tree sequences
-using msprime \texttt{v.1.1.1} \citep{baumdicker2022efficient},
+using \texttt{msprime} \texttt{v.1.1.1} \citep{baumdicker2022efficient},
 allowing us to track both adaptive
 and neutral background variation separately.
 
