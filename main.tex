@@ -99,14 +99,14 @@ than among those farther apart
 Environmental selection, in contrast,
 produces allele frequency clines that parallel ecological gradients,
 as individuals carrying locally beneficial variants
-enjoy higher fitness in particular environments
+display higher fitness in particular environments
 \citep{endler1977geographic, clausen_experimental_1948, kawecki_conceptual_2004}.
 In principle the two signals can be told apart,
 since neutral structure follows geographic distance
 while adaptive signals follow particular environmental
 variables such as temperature, moisture, or seasonality
 \citep{rellstab_practical_2015, hoban_finding_2016, tigano_genomics_2016, coop_using_2010}.
-In practice the separation is never clean.
+In practice, the separation is never clean.
 Range expansions, bottlenecks, and drift
 can all produce allele frequency gradients that look like adaptive clines
 \citep{excoffier_genetic_2009, novembre_spatial_2009}, while spatially 
@@ -120,7 +120,7 @@ can generate covariation of allele frequencies with environmental gradients
 when spatially heterogeneous selection outweighs the homogenizing effects of gene flow
 \citep{savolainen_ecological_2013, lenormand_gene_2002}.
 Beyond increasing local fitness,
-it sustains genetic diversity across heterogeneous landscapes
+local adaptation sustains genetic diversity across heterogeneous landscapes
 by maintaining quantitative genetic variance and, at some loci, multiple adaptive alleles,
 helping populations retain the variation
 on which selection can act as environments change \citep{hereford_quantitative_2009}.
@@ -141,12 +141,12 @@ unless they are tightly linked or of large effect
 
 Climate change is now pulling populations out of step
 with the environments they are adapted to \citep{lee_ipcc_2023},
-and as ranges shift, managers need to know
+and as ranges shift, managers and stakeholders need to know
 where populations will persist under conditions
 they have not experienced before.
-Common-garden experiments, reciprocal transplants,
-and provenance tests are how we have learned most of what
-we know about local adaptation, but they are slow and expensive,
+Most of what we have learned about local adaptation comes from
+common-garden experiments, reciprocal transplants,
+and provenance tests; however these approaches are slow and expensive,
 and for most species they have never been done
 \citep{aitken_assisted_2013}.
 Genomic data are cheaper and faster to collect,
@@ -158,21 +158,24 @@ In forest trees these methods are already starting to inform
 seed transfer and assisted gene flow decisions
 \citep{aitken_bemmels_2016}.
 
-Most of this work relies on genotype--environment association (GEA) methods,
-which identify putatively adaptive loci
+Most landscape genetics work relies on genotype--environment association
+(GEA) methods, which identify putatively adaptive loci
 by testing for statistical associations
 between allele frequencies and environmental variables
 \citep{rellstab_practical_2015}.
-Methods such as Bayenv2
+Methods such as \texttt{Bayenv2}
+% ARC - You have some of the software names formatted below so I
+% added it here as well. I like having them formatted differently
+% from the "regular" text as well.
 \citep{guenther_bayenv2_2013},
 latent factor mixed models
 \citep{frichot_lfmm_2013},
-and BayPass \citep{gautier_baypass_2015}
+and \texttt{BayPass} \citep{gautier_baypass_2015}
 test loci one at a time against environmental predictors,
 typically while controlling for population structure
 through covariance matrices or latent factors.
-These methods have been widely applied,
-but they are limited in their ability to capture
+While widely applied, these methods
+are limited in their ability to capture
 polygenic adaptation involving many loci of small effect,
 and the neutral gradients described above
 can produce false positives
@@ -203,8 +206,8 @@ an individual's environment of origin from its genotype either.
 Machine learning (ML) offers a different way in.
 Rather than testing loci one at a time, a supervised model
 can use the whole genotype at once to predict
-geographic origin or climate of origin directly,
-and ML methods can be effective at pulling patterns
+geographic origin or climate of origin directly.
+ML methods can also be effective at pulling patterns
 out of high-dimensional data with nonlinear interactions among loci
 and correlated predictors
 \citep{schrider_supervised_2018}, though performance depends 
@@ -217,13 +220,14 @@ by learning from multilocus patterns of isolation by distance.
 \texttt{Locator} achieves high spatial accuracy,
 but it does not model environmental covariates,
 so its predictions give a climate of origin only indirectly, 
-through a lookup at the predicted location. While, 
+through a lookup at the predicted location. While
 a location prediction implies a climate of origin once 
 paired with a map of historical climate normals, 
 that inference assumes the climate at a given location 
 stays put — an assumption that erodes as climates shift 
-faster than the normals they're being compared against, 
-and offers nothing where future conditions 
+faster than the normals they're being compared against.
+% ARC - Just trying to break down the longer sentence
+Moreover, these prediction offer nothing where future conditions 
 have no analog anywhere on today's landscape. 
 Predicting climate of origin directly from genotype, 
 rather than through an intermediate geographic prediction, 
@@ -232,8 +236,8 @@ sidesteps that assumption.
 Other recent work brings in ecology more directly.
 Gradient forest methods link genomic variation
 to environmental predictors to forecast
-climate-driven maladaptation \citep{fitzpatrick_experimental_2021}, %ADK -- I replaced these citations. Not sure if these are right. Double check!
-and in crop genomics, deep learning models that take in weather, soil,
+climate-driven maladaptation \citep{fitzpatrick_experimental_2021}. %ADK -- I replaced these citations. Not sure if these are right. Double check!
+In crop genomics, for example, deep learning models that take in weather, soil,
 and other covariates improve predictions of how a genotype will perform
 across climates
 \citep{washburn_predicting_2021, montesinoslopez_review_2021}.
@@ -250,7 +254,8 @@ the model learns multilocus associations
 with both geographic position and environmental gradients,
 so that it can infer climate of origin directly from genotype
 when allele frequencies covary with climate.
-We pair the model with a feature attribution method, SHAP \citep{lundberg_shap_2017},
+We pair the model with a feature attribution method,
+\texttt{SHAP} \citep{lundberg_shap_2017},
 to see which input SNPs each prediction depends on,
 and so which variants contribute most
 to adaptive differentiation across the landscape.
@@ -259,11 +264,10 @@ where it works well and where it does not,
 then apply it to an empirical dataset of coastal \dfir
 (\textit{Pseudotsuga menziesii} var.\ \textit{menziesii}).
 
-
 Coastal \dfir is a member of the pine family
 with a lineage dating to the Paleocene \citep{hermann_genus_1985}
 and a natural range spanning extensive climatic
-gradients along the North American Pacific coast from California
+gradients along the North American Pacific coast, from California
 to British Columbia. Although most populations are characterized by
 low genetic differentiation, high gene flow, and high outcrossing rates \citep{slavov_pollen_2005},
 they still exhibit strong signatures of local adaptation,
