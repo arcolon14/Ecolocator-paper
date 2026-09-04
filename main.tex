@@ -1069,7 +1069,7 @@ and environmental covariate prediction accuracy was similarly stable
 (GA1 - Env. $R^2$=0.759; 
 GA2 - Env. $R^2$=0.771; 
 GA3 - Env. $R^2$=0.787).
-Although genetic architecture 1
+Although genetic architecture 1 
 exhibited more extreme outliers and genetic architecture 3 showed slightly higher environmental prediction accuracy,
 \ecolocator performance was relatively robust 
 to the genomic distribution of adaptive loci within the range explored here. 
@@ -1080,7 +1080,8 @@ using genetic architecture 3, under two combined dispersal/selection
 regimes: limited dispersal with strong selection 
 ($\sigma_D=0.1$, $\sigma_K=0.5$), and higher dispersal with 
 weaker selection ($\sigma_D=0.5$, $\sigma_K=0.7$) (\Cref{fig:env-map-correlated}). 
-Per-replicate LOOCV $R^2$ again declined with 
+Per-replicate leave-one-out cross validation (LOOCV) $R^2$ 
+again declined with 
 increasing dispersal and weakening selection under this design, 
 most sharply for latitude (\Cref{fig:loocv-accuracy}).
 \ecolocator also performed strongly under the discrete-space,
@@ -1143,12 +1144,9 @@ and in distributions aggregated across all replicates.
 
 Under genetic architecture 1
 (\Cref{fig:shap-attribution}, panel a),
-non-neutral variants exhibited higher mean attribution values
-($\mu = 0.390$)
-relative to neutral and LD sites combined
-($\mu = 0.292$),
-with this difference highly significant
-($p = 2.21 \times 10^{-4}$).
+non-neutral variants exhibited significantly higher mean attribution values
+($\mu = 0.390$) relative to neutral and LD sites combined
+($\mu = 0.292$; $p = 2.21 \times 10^{-4}$).
 A similar pattern was observed under genetic architecture 2
 (\Cref{fig:shap-attribution}, panel b),
 where non-neutral variants again showed elevated SHAP values
@@ -1165,14 +1163,14 @@ relative to neutral and LD sites
 
 Although effect sizes were modest
 (Cohen's $d \approx 0.14$--$0.18$ across architectures),
-the consistent shift in attribution distributions indicates that
-adaptive loci are preferentially weighted by the model.
+the consistent shift in the distribution of attribution values
+indicates that adaptive loci are preferentially weighted by the model.
 Notably,
 the magnitude of separation between non-neutral and neutral variants
 was similar across genetic architectures,
 despite differences in the total number of causal loci
 and the extent of linkage disequilibrium.
-This suggests that feature attribution performance is robust 
+This observation suggests that feature attribution performance is robust 
 to variation in genetic architecture within the range explored here, 
 which also held under the spatially correlated environment design 
 described above (\Cref{fig:env-map-correlated}): non-neutral loci again showed 
@@ -1201,16 +1199,26 @@ while also capturing signal from linked regions.
 \begin{figure}[H]
     \adjustimage{width=1.1\textwidth, max totalheight=0.85\textheight, center}{figures/shapfigMAIN.pdf}
     \caption{Feature attribution across genetic architectures. Each panel on the left shows
-    mean absolute SHAP scores across the simulated genomic element for neutral sites
+    mean absolute SHAP scores across the simulated genomic element for neutral sites % Why not "the simulated chromosome"?
     (blue), non-neutral sites (pink), and sites in linkage disequilibrium with
     non-neutral variants (yellow). \textbf{Panel a)} represents simulations under
     genetic architecture 1, \textbf{Panel b)} represents simulations under
     genetic architecture 2, and \textbf{Panel c)} represents simulations under
     genetic architecture 3. Across panels a, b, and c, dispersal was held constant
     at (d = 0.1), and the standard deviation of the fitness function was held
-    constant at (\(\sigma_K\) = 0.5). \textbf{Panel d)} shows SHAP attributions
-    for the Wright--Fisher, discrete-space simulation regime, where 12 large-effect
-    causal loci were simulated.}
+    constant at (\(\sigma_K\) = 0.5). 
+    % I don't see a description for the horizontal lines, so I am adding this.
+    % Please double check.
+    In panels a, b, c, horizontal lines in the
+    x axis indicate the location of the causal loci.
+    \textbf{Panel d)} shows SHAP attributions
+    for the Wright--Fisher, discrete-space simulation regime, where 12
+    large-effect causal loci (shown as dots on the x-axis) were simulated.
+    % There was no description for the boxplots on the right, so I added
+    % this. Please check.
+    For all simulations, bloxplots on the right show the distribution of
+    absolute SHAP values between neutral and non-neutral sites.}
+
     \label{fig:shap-attribution}
 \end{figure}
 
@@ -1242,16 +1250,15 @@ To quantify detection accuracy,
 we calculated empirical FDR scores
 from SHAP rankings
 and evaluated performance using precision--recall curves
-(\Cref{fig:gea-comparison}). The random baseline represents the AUC-PR expected if variants were ranked at random,
+(\Cref{fig:gea-comparison}). The random baseline represents the AUC-PR
+expected if variants were ranked at random,
 given the proportion of adaptive variants in each simulation regime.
 For each simulation regime,
 the precision--recall curves were constructed by pooling SNPs
 across all simulation replicates,
 so the resulting AUC-PR values reflect global discriminatory performance.
 We also calculated replicate-level AUC-PR values,
-shown as violin plots,
-where each point represents one simulation replicate
-and the horizontal bar indicates the mean.
+shown as violin plots. % I removed text here since it is in the caption
 Thus,
 the pooled AUC-PR values summarize overall variant-level discrimination
 across all replicates,
@@ -1263,19 +1270,19 @@ SHAP-based attribution consistently recovered
 a higher proportion of true adaptive variants
 than either comparison method in the pooled precision--recall analysis.
 Under genetic architecture 1,
-SHAP achieved a pooled AUC-PR of 0.173,
+SHAP achieved a pooled AUC-PR of 0.173, % Is this number explicitly in Fig 4? For GA1 I see ELxSHAP=0.21. Maybe this is not the right number?
 substantially exceeding \texttt{WZA} (0.079)
 and the top-candidate approach (0.078),
 and outperforming the random expectation (0.043).
 Under genetic architecture 2,
 SHAP again showed improved performance
-(pooled AUC-PR = 0.187)
+(pooled AUC-PR = 0.187) % Same here.
 relative to \texttt{WZA} (0.065)
 and the top-candidate method (0.063),
 with a random baseline of 0.051.
 Similarly,
 under genetic architecture 3,
-SHAP yielded a pooled AUC-PR of 0.179,
+SHAP yielded a pooled AUC-PR of 0.179, % And here too
 compared to 0.082 for \texttt{WZA}
 and 0.079 for the top-candidate approach
 (random = 0.071).
@@ -1320,7 +1327,7 @@ this same spatially correlated design (\Cref{fig:gea-comparison-regimes}).
 In the discrete-space Wright--Fisher simulations,
 \ecolocator\texttimes{}SHAP showed particularly strong recovery
 of adaptive loci,
-achieving a pooled AUC-PR of 0.843
+achieving a pooled AUC-PR of 0.843 % OK, this one matches the fig
 relative to a random baseline of 0.0149
 (\Cref{fig:gea-comparison}, panel d).
 \texttt{WZA} also performed well in this regime
@@ -1337,6 +1344,17 @@ and the top-candidate method
 
 \begin{figure}[H]
     \adjustimage{width=1.1\textwidth,center}{figures/GEAcomparisonfig.pdf}
+    % One comment here about the axis labels. I think having
+    % the "recall" in the X-axis at the very bottom is a bit
+    % confusing, since it only applies to the X-axis of the 
+    % top row. The X-axis for the bottom row are the
+    % categorical values for the three analyses. Then you 
+    % have the architecture diagrams on the X too, adding to
+    % the confusion. I think you can move the diagrams to the
+    % top (next to the a, b, ...), since it applies to all
+    % the panels in the column. The "Recall" should be only 
+    % for the top row. The X-axis label for the bottom row 
+    % could then be "method" or something like that.
     \caption{AUC-PR curve comparison between SHAP, \texttt{WZA}, and top-candidate methods.
     Each column represents a different simulation regime. \textbf{Panel a)} represents
     genetic architecture 1, \textbf{Panel b)} represents genetic architecture 2,
