@@ -182,7 +182,7 @@ and the neutral gradients described above
 can produce false positives
 \citep{lotterhos_whitlock_2015}.
 Newer approaches address some of these limitations
-by analyzing many loci and environmental predictors simultaneously.
+by analysing many loci and environmental predictors simultaneously.
 Redundancy analysis (RDA) has proven effective
 at detecting multilocus adaptive signatures
 \citep{forester_comparing_2018, capblancq_rda_2021},
@@ -256,7 +256,7 @@ with both geographic position and environmental gradients,
 so that it can infer climate of origin directly from genotype
 when allele frequencies covary with climate.
 We pair the model with a feature attribution method,
-\texttt{SHAP} \citep{lundberg_shap_2017},
+\texttt{SHAP} \citep{lundberg_shap_2017}, % First time mentioning SHAP so consider movinb the whole name here
 to see which input SNPs each prediction depends on,
 and so which variants contribute most
 to adaptive differentiation across the landscape.
@@ -613,19 +613,19 @@ The strength of stabilizing selection is set
 by the standard deviation (\(\sigma_K\))
 of the Gaussian fitness function.
 Small \(\sigma_K\) punishes phenotypes far from the local optimum,
-large \(\sigma_K\) tolerates them.
+while large \(\sigma_K\) tolerates them.
 We tested \(\sigma_K = 0.3, 0.5, 0.7\)
 for strong, intermediate, and weak selection.
 When varying one parameter we held the others fixed:
 the dispersal sweep used \(\sigma_K = 0.5\) and genetic architecture 1,
 the selection sweep used \(\sigma_D = 0.3\) and genetic architecture 1,
 and the architecture sweep used \(\sigma_D = 0.1\) and \(\sigma_K = 0.5\).
-Spatial and phenotypic scales in these simulations are defined relative to the simulated landscape
-and environmental gradient rather than to physical distances,
-and are therefore best interpreted as ratios
-(mutation and recombination rates, by contrast, are in standard per-base, per-generation units).
+Spatial and phenotypic scales in these simulations are defined relative to the 
+simulated landscape and environmental gradient rather than to physical distances,
+and are therefore best interpreted as ratios.
+Mutation and recombination rates, by contrast, are in standard per-base, per-generation units.
 Taken together these runs span populations that are highly structured
-and strongly adapted at one end
+and strongly adapted at one end,
 and weakly structured and weakly adapted at the other,
 which is the range over which we wanted to see
 where \ecolocator works and where it does not.
@@ -709,8 +709,9 @@ They give us a useful contrast to the harder spatial scenarios.
 
 To quantify the contribution of individual genetic features
 to \ecolocator's predictions,
-we applied SHapley Additive exPlanations (SHAP) using the Python \texttt{SHAP} package (\texttt{v.$\geq$0.47.0})
-\citep{lundberg_shap_2017},
+we applied SHapley Additive exPlanations (SHAP) using the Python
+% ARC - See my comment above about moving the full name for SHAP
+\texttt{SHAP} package (\texttt{v.$\geq$0.47.0}) \citep{lundberg_shap_2017},
 which assigns importance scores
 based on each feature's marginal contribution to the model output
 across all possible feature coalitions.
@@ -763,13 +764,13 @@ SHAP values do not inherently provide a measure of statistical significance,
 as they represent model-derived feature importance scores
 rather than hypothesis test statistics.
 To enable direct comparison with GEA methods,
-which report p-values for association,
+which report $p$-values for association,
 we transformed SHAP-based rankings into an empirical FDR score framework.
 SHAP values were first aggregated across samples
 by computing the mean absolute SHAP value per SNP.
 Variants were then ranked from highest to lowest
 based on this aggregated score.
-To enable comparison with GEA-derived p-values,
+To enable comparison with GEA-derived $p$-values,
 we calculated an empirical FDR score for each variant
 using a rank-based framework.
 At each rank position $i$,
@@ -820,8 +821,8 @@ Following \citet{booker_wza_2024},
 we first computed per-SNP association statistics
 by measuring the correlation
 between genotype and environmental values,
-and obtained a p-value for each SNP.
-These SNP-level p-values were then transformed
+and obtained a $p$-value for each SNP.
+These SNP-level $p$-values were then transformed
 into Z-scores and combined within genomic windows
 using a weighted Z-test,
 where weights are proportional to expected heterozygosity,
@@ -834,19 +835,21 @@ we applied a polynomial-based correction
 in which the expected mean and variance
 of window-level Z-scores were modeled
 as functions of SNP count.
-Corrected p-values (\texttt{Z\_pVal})
+Corrected $p$-values (\texttt{Z\_pVal})
 were then obtained under the assumption of normality.
+% ARC - I know it is short, but maybe having this with its own
+% \paragraph{Top-candidate method} header
 In parallel,
 the top-candidate method identifies windows
 enriched for highly significant SNPs
 using a binomial test based on the upper tail
-of the SNP-level p-value distribution.
+of the SNP-level $p$-value distribution.
 
 \paragraph{Integration across methods.}
 For each simulation replicate,
 we combined SNP-level SHAP FDR scores,
-window-level \texttt{WZA} p-values,
-and top-candidate p-values
+window-level \texttt{WZA} $p$-values,
+and top-candidate $p$-values
 into a unified dataset.
 Window-based statistics were mapped back to individual SNPs
 using SNP-to-window assignments,
@@ -864,18 +867,18 @@ using precision--recall (PR) curves,
 which are appropriate for imbalanced datasets
 with relatively few adaptive variants.
 For each method,
-p-values (or, for SHAP, empirical FDR scores) were transformed to scores
+$p$-values (or, for SHAP, empirical FDR scores) were transformed to scores
 ($-\log_{10}$),
 such that larger values correspond
 to stronger evidence of association.
-Because AUC-PR depends only on the rank ordering each score induces,
+Because area under the precision--recall curve (AUC-PR) depends only
+on the rank ordering each score induces,
 comparing methods this way does not require their underlying
 significance measures to share a common statistical interpretation
 or null distribution --- only that each score ranks variants
 consistently from most to least likely adaptive within its own method.
 Precision and recall were computed
-across all thresholds,
-and area under the precision--recall curve (AUC-PR)
+across all thresholds, and AUC-PR 
 was used as a summary statistic.
 The random baseline was defined
 as the proportion of adaptive variants
@@ -894,13 +897,15 @@ The maternal parents of these trees were woodsrun (unimproved) `plus' trees,
 identified through field observations as well-adapted to their local environment and exceptional
 for diameter, height, and stem form. Leaf-derived DNA from individual trees was genotyped using the 58K \dfir
 Axiom Affymetrix SNP array \citep{howe_axiom_2020}, yielding 18,732 SNPs
-after filtering. The \dfir genome is large and incompletely
-assembled ($\sim$16 Gb; \cite{neale_douglas-fir_2017}), so genomic positions of array SNPs are unknown,
+after filtering. % ARC - this might be in the publication, but info for filtering? I am curious about the missing data proportions since the data processing steps involves an imputation step. This could be as simple as "removing variant with more than X% missing genotypes".
+The \dfir genome is large and incompletely
+assembled ($\sim$16 Gb; \cite{neale_douglas-fir_2017}), % ARC - 16 Gb?! Nope!
+so genomic positions of array SNPs are unknown,
 precluding chromosome- or window-level analyses.
 \dfir exhibits low self-fertility and
 seeds derived from maternal parents are typically pollinated by multiple nearby
-pollen donors. While the pollen pool is heterogeneous, pollen and seed movement in \dfir
-is limited (typically <400km),
+pollen donors. While the pollen pool is heterogeneous, pollen and seed movement
+in \dfir is limited (typically $<400$~km),
 making the maternal source environment a reasonable proxy for the source of open-pollinated
 seedlings.
 
@@ -1027,12 +1032,12 @@ stronger selection (\(\sigma_K\)=0.5),
 simulated populations became strongly locally adapted
 to their environments (LA $<$ 0.1) after 10,000 generations. 
 \ecolocator performed best when dispersal was constrained
-(d = 0.1, Lon. $R^2$=0.968, Lat. $R^2$=0.967, 
-Env. $R^2$=0.769) (\Cref{fig:sim-performance}, panel a),
+(d = 0.1, Lon. $R^2$=0.968, Lat. $R^2$=0.967, Env. $R^2$=0.769;
+\Cref{fig:sim-performance}, panel a),
 while increasing dispersal reduced accuracy
 for both geographic and environmental prediction 
-(d=0.5, Lon. $R^2$=0.815, 
-Lat. $R^2$=0.814, Env. $R^2$=0.336) (\Cref{fig:sim-performance}, panel a).
+(d=0.5, Lon. $R^2$=0.815, Lat. $R^2$=0.814, Env. $R^2$=0.336; 
+\Cref{fig:sim-performance}, panel a).
 This pattern is consistent with increasing gene flow weakening both
 isolation-by-distance structure and genotype--environment correspondence.
 Weakening selection also reduced environmental prediction accuracy 
@@ -1041,21 +1046,21 @@ Weakening selection also reduced environmental prediction accuracy
 \(\sigma_K\)=0.7, Env. $R^2$=0.421).
 In contrast, geographic prediction remained largely unchanged
 across selection regimes 
-(\(\sigma_K\)=0.3, Lon. $R^2$=0.917, 
-Lat. $R^2$=0.916; \(\sigma_K\)=0.5, Lon. $R^2$=0.911, 
-Lat. $R^2$=0.911; \(\sigma_K\)=0.7, 
-Lon. $R^2$=0.906, Lat. $R^2$=0.907).
+% Moving this for readability in the tex doc. No changes to actual text.
+(\(\sigma_K\)=0.3, Lon. $R^2$=0.917, Lat. $R^2$=0.916;
+ \(\sigma_K\)=0.5, Lon. $R^2$=0.911, Lat. $R^2$=0.911;
+ \(\sigma_K\)=0.7, Lon. $R^2$=0.906, Lat. $R^2$=0.907).
 This dissociation is itself informative.
-Dispersal, and so the spatial structure of the population,
+Dispersal, and thus the spatial structure of the population,
 was held constant across selection regimes,
 and on an H=0 landscape geography carries no information about the environmental target.
 The environmental signal that \ecolocator recovers here
 must therefore come from something other than geographic structure.
+
 Varying genetic architecture produced only a slight difference in local adaptation
-($\vec{\Delta}$LA between GA1 and GA3 = 0.008),
+($\vec{\Delta}$LA=0.008 between GA1 and GA3),
 despite the higher number of QTL mutations arising
-under genetic architecture 3 
-(GA1=25, GA3=35).
+under genetic architecture 3 (GA1=25, GA3=35).
 Geographic prediction accuracy remained nearly identical across architectures
 (GA1 - Lon. $R^2$=0.967, Lat. $R^2$=0.967; 
 GA2 - Lon. $R^2$=0.967, Lat. $R^2$=0.967; 
@@ -1891,7 +1896,7 @@ by sparse sampling or rapidly changing environmental gradients.
 
 At the same time,
 the interpretation of \ecolocator predictions depends on
-the sampling history and biological structure of the material being analyzed.
+the sampling history and biological structure of the material being analysed.
 The \dfir individuals used here were designated as ``plus'' trees,
 meaning they were identified through provenance trials
 or field observations as being particularly well-adapted
@@ -1933,7 +1938,7 @@ More broadly,
 the approach is not limited to \dfir
 or to species with extensive prior characterization.
 Any system with georeferenced genotypes and associated environmental data
-can be analyzed with \ecolocator,
+can be analysed with \ecolocator,
 making it a useful tool for less-studied species
 where common-garden data are scarce or absent.
 In these systems,
@@ -2312,7 +2317,7 @@ over single-task or univariate alternatives.
     mean $\lvert\mathrm{SHAP}\rvert$ for the environmental covariate, ranked by an empirical FDR
     score computed from known ground-truth adaptive status), \texttt{WZA} (yellow), and top-candidate (blue).
     Top row: precision-recall curves pooling all SNPs across 100 simulation replicates per regime,
-    scored by $-\log_{10}$ of each method's p-value or empirical FDR score against true adaptive status;
+    scored by $-\log_{10}$ of each method's $p$-value or empirical FDR score against true adaptive status;
     dashed line = random-baseline AUC-PR (proportion of adaptive SNPs). Bottom row: distribution of
     AUC-PR computed separately within each of the 100 replicates, showing the consistency of each
     method's performance across independent simulations. Left: limited-dispersal, strong-selection
