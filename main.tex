@@ -1593,6 +1593,8 @@ and pervasive signatures in genomic data,
 influencing diversity statistics, demographic inference,
 and genotype--environment associations
 in ways that discrete-deme models fail to capture
+% The Battey2020 citaions is rendering weirdly to me, with the full
+% names of Peter and Andy. Not a big deal, just FYI.
 \citep{battey_space_2020, chevy_popgen_ecology_2025}.
 \citet{battey_predicting_2020} demonstrated
 that these spatial signatures are rich enough
@@ -1647,8 +1649,8 @@ Continuous space, diffuse genetic architectures,
 high dispersal, or weak selection all erode the signals
 that \ecolocator is designed to learn,
 and the contrast between the two regimes is a reminder that
-how hard the prediction problem is depends on the biology
-as much as on the model.
+the difficulty of the prediction problem is depends on the biology
+as much as on the model. % This sentence reads a bit weird to me, so I did some rewording. Please disregard as needed.
 
 The \dfir case study extends these findings to a natural 
 system where the ground truth is not fully known. 
@@ -1780,7 +1782,7 @@ whose individual marginal correlations with environment are weak
 but whose combined effect is detectable
 in the context of the full genotype.
 This shows that supervised prediction
-followed by post hoc feature attribution
+followed by \textit{post hoc} feature attribution
 can be a powerful complement to traditional GEA approaches,
 particularly under polygenic adaptation
 where per-locus signals are subtle.
@@ -1799,7 +1801,7 @@ In nature the two usually covary, and when they do,
 attribution alone cannot tell us whether a high-attribution locus
 reflects environmental selection, demographic structure,
 linkage to a selected locus, or some mix of these
-(we return to this under Strengths and limitations).
+(we return to this under Strengths and limitations). % Maybe add a link to this?
 High-attribution loci should therefore be read as candidate
 genomic regions associated with the predicted gradient,
 not as confirmed targets of adaptation.
@@ -1809,7 +1811,7 @@ about how this signal is structured.
 The high-attribution SNP sets overlapped most for pairs of targets
 that track related gradients, MSP with SHM and longitude with MCMT,
 and hardly at all for latitude and MCMT (\Cref{tab:dfir-shap-overlap}).
-So \ecolocator is not simply handing the same spatially structured loci
+Thus, \ecolocator is not simply handing the same spatially structured loci
 high attribution for every target; a good part of the signal
 is specific to each axis of geographic or environmental variation.
 The functional annotations point the same way and line up with
