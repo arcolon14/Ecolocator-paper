@@ -1393,15 +1393,17 @@ could be compared to a known value.
     \caption{\dfir case study results. \textbf{Panels a-e.} show true
     vs. predicted scatterplots across all prediction targets. From left to right,
     we show Longitude ($R^2$=0.75), Latitude ($R^2$= 0.83), 
-    Mean Cold Month Temperature (MCMT) ($R^2$= 0.72), Summer Heat:Moisture Index (SHM) 
-    ($R^2$= 0.52), and Mean Summer Precipitation (MSP) ($R^2$= 0.54). \textbf{Panels f-g.}
+    Mean Cold Month Temperature (MCMT; $R^2$= 0.72), Summer Heat:Moisture Index 
+    (SHM; $R^2$= 0.52), and Mean Summer Precipitation (MSP; $R^2$= 0.54).
+    \textbf{Panels f-g.}
     both show the sampling range, with \textbf{Panel f.} being the sample locations
-    and \textbf{Panel g.} being the seed zone map, with labels only on the seed zones containing
-    samples. \textbf{Panels h-j.} show where \ecolocator predictions fall within the 
+    and \textbf{Panel g.} being the seed zone map, with labels only on the seed 
+    zones containing samples.
+    \textbf{Panels h-j.} show where \ecolocator predictions fall within the 
     established seed zones, with gray boxes showing the environmental covariate's ranges in a
-    given zone, 'x's' representing the source sample value, and colored dots representing \ecolocator 
-    predictions inside each zone. From left to right, we show MCMT in pink, SHM in yellow, and MSP
-    in orange. 
+    given zone, '$\times$'s' representing the source sample value, and colored dots representing \ecolocator 
+    predictions inside each zone. From left to right, we show MCMT in pink, SHM 
+    in yellow, and MSP in orange. 
     }
     \label{fig:dfir-results}
 \end{figure}
@@ -1446,12 +1448,12 @@ of the MCMT predictions fall within seed zone--elevation band 100th
 percentile ranges, and that the number of matches drops to 49.7\% of predictions when using the 
 98th percentile range. The proportion of matches is higher for MSP (86.2\% for the 
 100th percentile range) and SHM (87.6\% for the 100th percentile range) (\Cref{tab:table1}). 
-These values are all larger than similar estimates using ClimateNA predictions from 
+These values are all larger than those estimated using ClimateNA predictions from 
 \ecolocator geographic predictions (\Cref{tab:table1}). 
 
 \begin{table}[ht]
   \centering
-  \caption{Comparison of \ecolocator and Location+ClimateNA predictions across climate variables.}
+  \caption{Comparison of \ecolocator and Location+ClimateNA predictions across climate variables using the fixed-zone approach.} % ARC - I think you could add something here to differentiate it from Table 2. I added it to the header as an example.
   \label{tab:table1}
   \begin{tabular}{lcccc}
   \hline
@@ -1467,19 +1469,19 @@ These values are all larger than similar estimates using ClimateNA predictions f
 \end{table}
 
 Using the focal point approach, we find that 93.1\% of the MCMT predictions 
-show lower distances from the true value than the 100th percentile 
-range of the source seed zones, and that the number of matches 
+show lower deviations from the true value than the 100th percentile 
+range of the source seed zones. The number of matches 
 drops to 87.1\% of predictions when using the 98th percentile range 
 (\Cref{tab:table2}). Predictions for MSP and SHM showed higher accuracies,
 with 98.6\% and 97.7\% of estimates falling within the 100th 
-percentile range of the source seed zone. As was observed with 
+percentile range of the source seed zone, respectively. As was observed with 
 predictions within seed zones, \ecolocator showed higher prediction 
 accuracy than estimates using ClimateNA predictions from \ecolocator 
 geographic predictions (\Cref{tab:table2}).
 
 \begin{table}[ht]
   \centering
-  \caption{Comparison of \ecolocator and Location+ClimateNA predictions across climate variables.}
+  \caption{Comparison of \ecolocator and Location+ClimateNA predictions across climate variables using the focal point approach.} % Same here, adding to differentiate from Table 1
   \label{tab:table2}
   \begin{tabular}{lcccc}
   \hline
@@ -1494,27 +1496,27 @@ geographic predictions (\Cref{tab:table2}).
   \end{tabular}
 \end{table}
 
-
 Prediction error for different climate variables was not uniform across seed zones,
 and patterns differed by MCMT, MSP, and SHM
 (\Cref{fig:dfir-results}, panels h-j). In our sample, trees from coastal seed 
 zones in Oregon and Washington (e.g., zones 031, 041, 051, 061) showed lower prediction
 errors for MCMT than either Cascade or Cascade Crest sources.
 Conversely, trees from Oregon and Washington Cascades seed zones showed
-lower prediction errors for MSP and SHM than did Coastal or Cascade Crest trees.  
-
+lower prediction errors for MSP and SHM than did Coastal or Cascade Crest trees. 
 These results demonstrate that \ecolocator
 can predict the climate of origin of individual genotypes
 at a resolution finer than the climatic breadth of existing seed zones,
 the tolerance that actually governs seed transfer decisions.
-They further illustrate the value of seed zone benchmarking
+Our results further illustrate the value of seed zone benchmarking
 as a biologically grounded validation framework:
 predictions that fall within a seed zone climate envelope
 are not just numerically accurate,
 but are close enough that forest managers
 consider it an acceptable transfer source.
 
-Although the array itself carries no genomic coordinates,
+% The mention of "the array" here comes a bit out of nowhere, so I am adding 
+% some more context.
+Although the genotype array used for inference carries no genomic coordinates,
 our alignment to the DFv5.29 draft assembly placed a subset of SNPs
 on chromosomes, and plotting mean $\lvert\mathrm{SHAP}\rvert$ against these positions
 lets us view attribution scores in genomic context for each of the
@@ -1526,6 +1528,7 @@ with coastal populations experiencing milder winters than those toward
 the Cascade crest---the same pattern we recover in simulation when 
 environment is spatially correlated with geography (\Cref{fig:env-map-correlated}, \Cref{fig:shap-manhattan-sim}). 
 
+% I like the information here a lot! It is very nice to see these relationships!
 We next asked whether the same genomic features contributed strongly across geographic 
 and climatic prediction targets. Comparing the 179 highest-attribution SNPs for 
 each target revealed substantial variation in pairwise overlap (\Cref{tab:dfir-shap-overlap}). 
@@ -1533,10 +1536,10 @@ Only 13 SNPs were shared between latitude and MCMT (7.3\%),
 whereas longitude and MCMT shared 97 SNPs (54.2\%). 
 The strongest overlap occurred between MSP and SHM, which shared 133 SNPs (74.3\%). 
 These overlap patterns mirror relationships among the prediction targets themselves. 
-MSP and SHM both capture variation related to summer moisture availability and showed 
-the strongest overlap among high-attribution SNPs. Similarly, 
-MCMT varies strongly along the longitudinal transition from relatively mild 
-maritime environments toward colder environments closer to the Cascade Range 
+MSP and SHM both capture variation related to summer moisture availability, a 
+relationship that is reflected by the largest overlap among high-attribution SNPs. 
+Similarly, MCMT varies strongly along the longitudinal transition from relatively 
+mild maritime environments toward colder environments closer to the Cascade Range 
 and shares substantial genomic signal with longitude. In contrast, 
 latitude and MCMT shared relatively few high-attribution loci (7.3\%), 
 consistent with latitude representing a north--south geographic axis rather 
